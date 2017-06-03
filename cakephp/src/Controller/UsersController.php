@@ -13,6 +13,26 @@ use Cake\Event\Event;
  */
 class UsersController extends AppController
 {
+    public $paginate = [
+        'limit' => 5,
+        'order' => [
+            'id' => 'DESC'
+        ]
+    ];
+
+    public $helpers = [
+        'Paginator' => [
+            'templates' => [
+                'first' => '<li class="page-item first"><a href="{{url}}" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>',
+                'last' => '<li class="page-item last"><a href="{{url}}" class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>',
+                'number' => '<li class="page-item"><a href="{{url}}" class="page-link">{{text}}</a></li>',
+                'current' => '<li class="page-item active"><a href="" class="page-link">{{text}}</a></li>',
+                'sortAsc' => '<a class="asc" href="{{url}}">{{text}}<i class="fa fa-sort-asc" aria-hidden="true"></i></a>',
+                'sortDesc' => '<a class="desc" href="{{url}}">{{text}}<i class="fa fa-sort-desc" aria-hidden="true"></i></a>'
+            ]
+        ]
+    ];
+
     public function initialize()
     {
         parent::initialize();
@@ -27,6 +47,19 @@ class UsersController extends AppController
                 'action' => 'index'
             ]
         ]);
+        
+        $this->viewBuilder()->layout('users');
+        $this->set('header', 'Users/header');
+        $this->set('style', 'index');
+        
+        $this->Session = $this->request->session();
+        $screen_name = $this->Session->read('Auth.User.nickname');
+        if ($screen_name == null) {
+            $screen_name = $this->Session->read('Auth.User.username');
+        }
+        $this->set('user_name', $screen_name);
+        $this->set('user_role', $this->Session->read('Auth.User.role'));
+        $this->set('user_id', $this->Session->read('Auth.User.id'));
     }
 
     public function beforeFilter(Event $event)
@@ -40,34 +73,22 @@ class UsersController extends AppController
         return true;
     }
 
+    public function index()
+    {
+        
+    }
+
     /**
-     * Index method
+     * Rookup method
      *
      * @return \Cake\Http\Response|null
      */
-    public function index()
+    public function lookup()
     {
         $users = $this->paginate($this->Users);
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => []
-        ]);
-
-        $this->set('user', $user);
-        $this->set('_serialize', ['user']);
     }
 
     /**
@@ -95,6 +116,9 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
+        
+        $this->set('header', 'Users/header_add');
+        $this->set('style', 'add');
     }
 
     /**
@@ -106,6 +130,9 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        if ($id == null) {
+            return $this->redirect(['action' => 'lookup']);
+        }
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -113,10 +140,9 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
@@ -139,7 +165,7 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'lookup']);
     }
 
     public function login()
@@ -152,6 +178,9 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('Invalid username or password, try again'));
         }
+        
+        $this->set('header', 'Users/header_login');
+        $this->set('style', 'login');
     }
 
     public function logout()

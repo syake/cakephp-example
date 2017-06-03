@@ -1,0 +1,51 @@
+<?php
+    $this->assign('title', 'List Users' );
+    $index = ($this->Paginator->param('page') - 1) * 5 + 1;
+?>
+<div class="content lookup-content">
+    <h1><?= $this->fetch('title') ?></h1>
+    <?= $this->Flash->render() ?>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <?= $this->Html->tableHeaders([
+                [$this->Paginator->sort('id', '#') => ['class' => 'num']],
+                $this->Paginator->sort('username'),
+                $this->Paginator->sort('nickname'),
+                $this->Paginator->sort('role'),
+                'created',
+                'modified',
+                ''
+            ]) ?>
+        </thead>
+        <tbody>
+            <?php foreach($users as $i => $user): ?>
+            <?php
+                if ($user_id == $user->id) {
+                    $col_style = 'active';
+                } else if ($user->role == 'invalid') {
+                    $col_style = 'invalid';
+                } else {
+                    $col_style = '';
+                }
+            ?>
+            <tr class="<?= $col_style ?>">
+                <td class="num"><?= $i + $index ?></td>
+                <td><?= h($user->username) ?></td>
+                <td><?= h($user->nickname) ?></td>
+                <td><?= h($user->role) ?></td>
+                <td><?= $this->Time->format($user->created, 'yyyy/MM/dd HH:mm:ss') ?></td>
+                <td><?= $this->Time->format($user->modified, 'yyyy/MM/dd HH:mm:ss') ?></td>
+                <td><?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id], ['class' => 'edit-link']) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <?= $this->Paginator->first() ?>
+            <?= $this->Paginator->numbers(['modulus' => 4]); ?>
+            <?= $this->Paginator->last() ?>
+        </ul>
+        <p class="pagination-doc"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+    </nav>
+</div>

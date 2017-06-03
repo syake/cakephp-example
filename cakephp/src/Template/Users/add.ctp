@@ -1,25 +1,16 @@
 <?php
-/**
-  * @var \App\View\AppView $this
-  */
+    $this->assign('title', 'Add User');
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['action' => 'index']) ?></li>
-    </ul>
-</nav>
-<div class="users form large-9 medium-8 columns content">
+<div class="content add-content">
+    <h1><?= $this->fetch('title') ?></h1>
     <?= $this->Form->create($user) ?>
-    <fieldset>
-        <legend><?= __('Add User') ?></legend>
-        <?php
-            echo $this->Form->control('username');
-            echo $this->Form->control('password');
-            echo $this->Form->control('role');
-            echo $this->Form->control('nickname');
-        ?>
+    <fieldset class="field-content">
+        <p class="doc"><?= __('Create your account') ?></p>
+        <?= $this->Flash->render() ?>
+        <?= $this->Form->control('username') ?>
+        <?= $this->Form->control('password') ?>
+        <?= $this->Form->control('nickname') ?>
     </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->button(__('Create an account'), ['class' => 'btn-primary']); ?>
     <?= $this->Form->end() ?>
 </div>

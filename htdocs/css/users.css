@@ -1,0 +1,161 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* basic
+-------------------------------------------*/
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
+body {
+    background-color: #f9f9f9;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+}
+main {
+    background-color: white;
+}
+.btn {
+    cursor: pointer;
+}
+a.edit-link:before,
+a.back-link:before {
+    font-family: FontAwesome;
+    padding-right: 0.4rem;
+}
+a.edit-link:before {
+    content: '\f044';
+}
+a.back-link:before {
+    content: '\f104';
+}
+
+/* footer
+-------------------------------------------*/
+footer {
+    padding: 2rem 0;
+    color: #9b9b9b;
+    text-align: center;
+}
+
+/* topicpath
+-------------------------------------------*/
+.topicpath {
+    margin-left: -0.5em;
+}
+
+/* content
+-------------------------------------------*/
+.content {
+    padding: 40px 0;
+}
+.content h1 {
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+/* field content
+-------------------------------------------*/
+.field-content {
+    margin-bottom: 1.5rem;
+}
+.field-content p.doc {
+    margin-bottom: 1.5rem;
+}
+.field-content .required > label {
+    font-weight: 600;
+}
+.field-content .required > label:after {
+    content: ' *';
+    color: #C3232D;
+}
+.field-content .help-block.error-message {
+    color: #a94442
+}
+.field-content .help-block.error-message:before {
+    content: '\f071';
+    font-family: FontAwesome;
+    padding-right: 0.2rem;
+}
+
+/* table
+-------------------------------------------*/
+table.table .num {
+    width: 4rem;
+    text-align: center;
+    font-weight: 400;
+}
+table.table .delete {
+    width: 5rem;
+    text-align: center;
+}
+table.table .active td {
+    font-weight: 700;
+    background-color: #d9edf7;
+    border-color: #bcdff1;
+    color: #31708f
+}
+table.table .invalid td {
+    color: #9b9b9b;
+}
+table.table a i {
+    vertical-align: middle;
+    padding-left: 0.2rem;
+}
+
+/* login
+-------------------------------------------*/
+.login main {
+    padding: 50px 0 30px;
+    background-color: inherit;
+}
+.login .container {
+    width: 340px;
+}
+
+.login-content h1 {
+    text-align: center;
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+.login-content .field-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+}
+.login-content .control-label {
+    font-weight: 600;
+}
+.login-content div.create-account-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* edit
+-------------------------------------------*/
+.edit-content {
+    position: relative;
+    padding: 20px 0;
+}
+.edit-content a.btn-delete {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.edit-content a.btn-delete:before {
+    content: '\f1f8';
+    font-family: FontAwesome;
+    padding-right: 0.4rem;
+}
+
+/*
+-------------------------------------------*/
+p.pagination-doc {
+    color: #9b9b9b;
+    text-align: right;
+}

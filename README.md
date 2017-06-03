@@ -1,8 +1,6 @@
 # cakephp-example
 
-## users
-
-### step1. MYSQL にテーブルを用意する
+## step1. MYSQL に users テーブルを用意する
 
 ```mysql
 CREATE TABLE users (
@@ -15,7 +13,7 @@ CREATE TABLE users (
 );
 ```
 
-### step2. bakeコマンドでMVC生成
+## step2. bakeコマンドでMVC生成
 
 ```console
 $ bin/cake bake all users

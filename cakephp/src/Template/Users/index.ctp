@@ -3,4 +3,5 @@
 ?>
 <div class="content index-content">
     <h1><?= $this->fetch('title') ?></h1>
+    <?= $this->Flash->render() ?>
 </div>

@@ -53,13 +53,15 @@ class UsersController extends AppController
         $this->set('style', 'index');
         
         $this->Session = $this->request->session();
-        $screen_name = $this->Session->read('Auth.User.nickname');
-        if ($screen_name == null) {
-            $screen_name = $this->Session->read('Auth.User.username');
+        $id = $this->Session->read('Auth.User.id');
+        $user = $this->Users->get($id);
+        $screen_name = $user->nickname;
+        if (($screen_name == null) || empty($screen_name)) {
+            $screen_name = $user->username;
         }
         $this->set('user_name', $screen_name);
-        $this->set('user_role', $this->Session->read('Auth.User.role'));
-        $this->set('user_id', $this->Session->read('Auth.User.id'));
+        $this->set('user_role', $user->role);
+        $this->set('user_id', $id);
     }
 
     public function beforeFilter(Event $event)
@@ -70,6 +72,13 @@ class UsersController extends AppController
 
     public function isAuthorized($user = null)
     {
+        $action = $this->request->params['action'];
+        if (in_array($action, ['lookup', 'delete'])) {
+            if (isset($user['role']) && $user['role'] === 'admin') {
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 
@@ -89,6 +98,9 @@ class UsersController extends AppController
 
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
+        
+        $this->set('topicpath_title', 'Home');
+        $this->set('topicpath_link', '/users');
     }
 
     /**
@@ -130,10 +142,20 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        if ($id == null) {
-            return $this->redirect(['action' => 'lookup']);
+        $is_profile = false;
+        $current_id = $id;
+        $user_id = $this->Session->read('Auth.User.id');
+        if ($this->Session->read('Auth.User.role') == 'admin') {
+            if (($id == null) || ($id == $user_id)) {
+                $current_id = $user_id;
+                $is_profile = true;
+            }
+        } else {
+            $current_id = $user_id;
+            $is_profile = true;
         }
-        $user = $this->Users->get($id, [
+        
+        $user = $this->Users->get($current_id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -146,6 +168,18 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
+        
+        if ($id == null) {
+            $this->set('topicpath_title', 'Home');
+            $this->set('topicpath_link', '/users');
+        } else {
+            $this->set('topicpath_title', 'List Users');
+            $this->set('topicpath_link', '/users/lookup');
+        }
+        
+        if (!$is_profile) {
+            $this->render('edit_admin');
+        }
     }
 
     /**

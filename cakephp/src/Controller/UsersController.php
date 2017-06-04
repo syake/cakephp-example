@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use \Exception;
 
 /**
  * Users Controller
@@ -52,15 +53,21 @@ class UsersController extends AppController
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
         
+        $screen_name = null;
+        $role = null;
+        $id = null;
         $this->Session = $this->request->session();
-        $id = $this->Session->read('Auth.User.id');
-        $user = $this->Users->get($id);
-        $screen_name = $user->nickname;
-        if (($screen_name == null) || empty($screen_name)) {
-            $screen_name = $user->username;
+        if ($this->Session->check('Auth.User')) {
+            $id = $this->Session->read('Auth.User.id');
+            $user = $this->Users->get($id);
+            $screen_name = $user->nickname;
+            $role = $user->role;
+            if (($screen_name == null) || empty($screen_name)) {
+                $screen_name = $user->username;
+            }
         }
         $this->set('user_name', $screen_name);
-        $this->set('user_role', $user->role);
+        $this->set('user_role', $role);
         $this->set('user_id', $id);
     }
 
@@ -128,7 +135,6 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
-        
         $this->set('header', 'Users/header_add');
         $this->set('style', 'add');
     }
@@ -142,20 +148,13 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        $is_profile = false;
-        $current_id = $id;
-        $user_id = $this->Session->read('Auth.User.id');
         if ($this->Session->read('Auth.User.role') == 'admin') {
-            if (($id == null) || ($id == $user_id)) {
-                $current_id = $user_id;
-                $is_profile = true;
-            }
-        } else {
-            $current_id = $user_id;
-            $is_profile = true;
+            $this->setAction('editAdmin', $id);
+            return;
         }
         
-        $user = $this->Users->get($current_id, [
+        $id = $this->Session->read('Auth.User.id');
+        $user = $this->Users->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -168,17 +167,40 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
-        
-        if ($id == null) {
-            $this->set('topicpath_title', 'Home');
-            $this->set('topicpath_link', '/users');
+        $this->set('backto_list', false);
+    }
+
+    public function editAdmin($id = null){
+        $user_id = $this->Session->read('Auth.User.id');
+        if (($id == null) || ($id == $user_id)) {
+            $id = $user_id;
+            $is_profile = true;
         } else {
-            $this->set('topicpath_title', 'List Users');
-            $this->set('topicpath_link', '/users/lookup');
+            $is_profile = false;
         }
         
-        if (!$is_profile) {
-            $this->render('edit_admin');
+        if ($this->Users->exists(['id' => $id]) == false) {
+            return $this->redirect(['action' => 'lookup']);
+        }
+        
+        $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'));
+            } else {
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            }
+        }
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+        if ($is_profile) {
+            $this->set('backto_list', true);
+            $this->render('edit');
+        } else {
+            $this->render('edit_user');
         }
     }
 

@@ -2,7 +2,11 @@
     $this->assign('title', 'Edit Profile' );
 ?>
 <nav class="nav topicpath">
-    <?= $this->Html->link($topicpath_title, $topicpath_link, ['class' => 'nav-link back-link']) ?>
+<?php if ($backto_list): ?>
+    <?= $this->Html->link('List Users', '/users/lookup', ['class' => 'nav-link back-link']) ?>
+<?php else: ?>
+    <?= $this->Html->link('Home', '/users', ['class' => 'nav-link back-link']) ?>
+<?php endif; ?>
 </nav>
 <div class="content edit-content">
     <h1><?= $this->fetch('title') ?></h1>

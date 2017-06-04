@@ -16,6 +16,7 @@ main {
 .btn {
     cursor: pointer;
 }
+
 a.edit-link:before,
 a.back-link:before {
     font-family: FontAwesome;
@@ -28,29 +29,30 @@ a.back-link:before {
     content: '\f104';
 }
 
-/* footer
--------------------------------------------*/
-footer {
-    padding: 2rem 0;
-    color: #9b9b9b;
-    text-align: center;
-}
-
-/* topicpath
--------------------------------------------*/
 .topicpath {
     margin-left: -0.5em;
+    padding-top: 0.5rem;
 }
 
-/* content
--------------------------------------------*/
+p.pagination-doc {
+    color: #9b9b9b;
+    text-align: right;
+}
+
 .content {
-    padding: 40px 0;
+    padding: 20px 0;
+    position: relative;
 }
 .content h1 {
     font-weight: 400;
     margin-bottom: 1.5rem;
     font-size: 2rem;
+}
+
+footer {
+    padding: 2rem 0;
+    color: #9b9b9b;
+    text-align: center;
 }
 
 /* field content
@@ -138,10 +140,6 @@ table.table a i {
 
 /* edit
 -------------------------------------------*/
-.edit-content {
-    position: relative;
-    padding: 20px 0;
-}
 .edit-content a.btn-delete {
     position: absolute;
     right: 0;
@@ -153,9 +151,8 @@ table.table a i {
     padding-right: 0.4rem;
 }
 
-/*
+/* index
 -------------------------------------------*/
-p.pagination-doc {
-    color: #9b9b9b;
-    text-align: right;
+.index-content {
+    padding: 40px 0;
 }

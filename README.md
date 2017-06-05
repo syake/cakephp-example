@@ -36,8 +36,27 @@ CREATE TABLE `projects` (
 );
 ```
 
-### step2. bakeコマンドでMVC生成
+### step2. MYSQL に projects_users テーブルを用意する
+
+```mysql
+CREATE TABLE `projects_users` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `project_id` INT,
+  `user_id` INT,
+  `role` ENUM('admin','author'),
+  `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+### step3. bakeコマンドでMVC生成
 
 ```console
 $ bin/cake bake all projects
+```
+
+### step3. bakeコマンドでMVC生成
+
+```console
+$ bin/cake bake model projects_users
 ```

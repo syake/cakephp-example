@@ -7,7 +7,7 @@
 ```mysql
 CREATE TABLE `users` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `username` VARCHAR(50),
+    `username` VARCHAR(50) UNIQUE,
     `password` VARCHAR(255),
     `nickname` VARCHAR(255),
     `owner` TINYINT(1),

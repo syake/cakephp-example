@@ -28,7 +28,8 @@ $ bin/cake bake all users
 ```mysql
 CREATE TABLE `projects` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `slug` VARCHAR(50) UNIQUE,
+    `article_id` INT,
+    `uuid` INT UNIQUE,
     `name` VARCHAR(255),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -56,3 +57,23 @@ bakeコマンド
 ```console
 $ bin/cake bake model projects_users
 ```
+
+### articles テーブル
+
+```mysql
+CREATE TABLE `articles` (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `project_id` INT,
+    `title` VARCHAR(255),
+    `description` TEXT,
+    `status` ENUM('publish','future','draft','pending','private'),
+    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+bakeコマンド
+
+```console
+$ bin/cake bake all articles
+```
+

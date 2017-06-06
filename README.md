@@ -29,7 +29,7 @@ $ bin/cake bake all users
 CREATE TABLE `projects` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` INT,
-    `uuid` INT UNIQUE,
+    `uuid` BIGINT UNIQUE,
     `name` VARCHAR(255),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

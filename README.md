@@ -28,7 +28,6 @@ $ bin/cake bake all users
 ```mysql
 CREATE TABLE `projects` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `uuid` INT UNIQUE,
     `slug` VARCHAR(50) UNIQUE,
     `name` VARCHAR(255),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -1,5 +1,5 @@
 <?php
-    $this->assign('title', 'Add User');
+    $this->assign('title', __('Add User'));
 ?>
 <div class="content add-content">
     <h1><?= $this->fetch('title') ?></h1>

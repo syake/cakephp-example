@@ -37,6 +37,14 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('Projects', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'project_id',
+            'joinTable' => 'projects_users',
+            'through' => 'ProjectsUsers'
+        ]);
+/*         $this->hasMany('Projects'); */
     }
 
     /**
@@ -50,12 +58,33 @@ class UsersTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
+        
         $validator
-            ->notEmpty('username', 'A username is required');
+            ->notEmpty('username', 'A username is required')
+            ->add('username', [
+                'alphaNumeric' => [
+                    'rule' => function ($value) {
+                        return (preg_match('/^[0-9a-zA-Z][0-9a-zA-Z-]*$/i', $value) === 1);
+                    },
+                    'message' => __('This name may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.')
+                ],
+                'length' => [
+                    'rule' => ['maxLength', 50],
+                    'message' => __('Please enter no more than 50 characters.')
+                ],
+                'unique' => [
+                    'rule' => 'validateUnique',
+                    'provider' => 'table',
+                    'message' => __('This name is already used.')
+                ]
+            ]);
+        
         $validator
             ->notEmpty('password', 'A password is required');
+        
         $validator
             ->allowEmpty('nickname');
+        
         $validator
             ->notEmpty('role', 'A role is required')
             ->add('role', 'inList', [

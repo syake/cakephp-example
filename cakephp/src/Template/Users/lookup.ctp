@@ -1,9 +1,9 @@
 <?php
-    $this->assign('title', 'List Users' );
+    $this->assign('title', __('List Users') );
     $index = ($this->Paginator->param('page') - 1) * 5 + 1;
 ?>
 <nav class="nav topicpath">
-  <?= $this->Html->link($topicpath_title, $topicpath_link, ['class' => 'nav-link back-link']) ?>
+  <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) ?>
 </nav>
 <div class="content lookup-content">
     <h1><?= $this->fetch('title') ?></h1>

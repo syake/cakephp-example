@@ -6,16 +6,17 @@
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
                     <li class="dropdown-header">Signed in as <?= $user_name ?></li>
                     <li class="dropdown-divider" role="separator"></li>
-                    <li class="dropdown-item"><?= $this->Html->link(__('Edit Profile'), '/users/edit') ?></li>
+                    <li class="dropdown-item"><?= $this->Html->link(__('Edit Profile'), ['controller' => 'Users', 'action' => 'edit']) ?></li>
+                    <li class="dropdown-item"><?= $this->Html->link(__('Add Project'), ['controller' => 'Projects', 'action' => 'add']) ?></li>
                     <li class="dropdown-divider" role="separator"></li>
 <?php if ($user_role == 'admin') : ?>
-                    <li class="dropdown-item"><?= $this->Html->link(__('List Users'), '/users/lookup') ?></li>
+                    <li class="dropdown-item"><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'lookup']) ?></li>
                     <li class="dropdown-divider" role="separator"></li>
 <?php endif; ?>
-                    <li class="dropdown-item"><?= $this->Html->link(__('Sign out'), '/users/logout') ?></li>
+                    <li class="dropdown-item"><?= $this->Html->link(__('Sign out'), ['controller' => 'Users', 'action' => 'logout']) ?></li>
                 </ul>
             </div>
         </div>
-        <?= $this->Html->link(__('Users'), '/users', ['class' => 'navbar-brand']) ?>
+        <?= $this->Html->link(__('Users'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'navbar-brand']) ?>
     </div>
 </nav>

@@ -1,0 +1,259 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* basic
+-------------------------------------------*/
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box
+}
+:after, :before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box
+}
+
+body {
+    background-color: #f9f9f9;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+}
+main {
+    background-color: white;
+}
+strong {
+    font-weight: 500;
+}
+.btn {
+    cursor: pointer;
+}
+
+a.view-link:before,
+a.edit-link:before,
+a.back-link:before,
+a.btn-delete:before {
+    font-family: FontAwesome;
+    padding-right: 0.4rem;
+}
+a.view-link:before {
+    content: '\f08e';
+}
+a.edit-link:before {
+    content: '\f044';
+}
+a.back-link:before {
+    content: '\f104';
+}
+a.btn-delete:before {
+    content: '\f1f8';
+}
+
+.topicpath {
+    margin-left: -0.5em;
+    padding-top: 0.5rem;
+}
+
+p.pagination-doc {
+    color: #9b9b9b;
+    text-align: right;
+}
+
+.content {
+    padding: 20px 0 40px;
+}
+.content h1 {
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+footer {
+    padding: 2rem 0;
+    color: #9b9b9b;
+    text-align: center;
+}
+
+/* form group
+-------------------------------------------*/
+.form-group .required > label {
+    font-weight: 600;
+}
+.form-group .required > label:after {
+    content: ' *';
+    color: #C3232D;
+}
+.form-group .help-block.error-message {
+    color: #a94442
+}
+.form-group .help-block.error-message:before {
+    content: '\f071';
+    font-family: FontAwesome;
+    padding-right: 0.2rem;
+}
+
+/* login
+-------------------------------------------*/
+.login main {
+    padding: 50px 0 30px;
+    background-color: inherit;
+}
+.login .container {
+    width: 340px;
+}
+
+.login-content h1 {
+    text-align: center;
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+.login-content .field-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+}
+.login-content .control-label {
+    font-weight: 600;
+}
+.login-content div.create-account-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* form container
+-------------------------------------------*/
+.form-container {
+    position: relative;
+}
+.form-container a.btn-delete {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+
+/*
+.field-content {
+    margin-bottom: 1.5rem;
+}
+.field-content p.doc {
+    margin-bottom: 1.5rem;
+}
+*/
+
+
+/* index
+-------------------------------------------*/
+.index-content {
+    padding: 40px 0;
+}
+.index-content h1 {
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.index-content table.table .num {
+    width: 4rem;
+    text-align: center;
+    font-weight: 400;
+}
+.index-content table.table .delete {
+    width: 5rem;
+    text-align: center;
+}
+.index-content table.table .active td {
+    font-weight: 700;
+    background-color: #d9edf7;
+    border-color: #bcdff1;
+    color: #31708f
+}
+.index-content table.table .invalid td {
+    color: #9b9b9b;
+}
+.index-content table.table a i {
+    vertical-align: middle;
+    padding-left: 0.2rem;
+}
+
+.index-content a.add-link {
+    display: inline-block;
+    border: 1px dotted #d8dee2;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 1rem;
+}
+.index-content a.add-link:before {
+    content: '\f067';
+    font-family: FontAwesome;
+    padding-right: 0.4rem;
+}
+
+.index-content section.projects h2 {
+    font-weight: 400;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* edit
+-------------------------------------------*/
+.edit-content section.boxed-group,
+.edit-content section.boxed-group h2,
+.edit-content section.boxed-group .boxed-group-inner {
+    border-style: solid;
+    border-color: #d8dee2;
+}
+.edit-content section.boxed-group {
+    border-width: 0 1px 1px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+}
+.edit-content section.boxed-group h2 {
+    font-weight: 500;
+    font-size: 1rem;
+    border-width: 1px 0 0;
+    margin: 0;
+    padding: 8px 10px;
+    background-color: #f6f8fa;
+}
+.edit-content section.boxed-group .boxed-group-inner {
+    padding: 8px 10px 3px;
+    border-width: 1px 0 0;
+    min-height: 60px;
+}
+.edit-content section.boxed-group .boxed-group-inner-table {
+    padding: 30px 20px 20px;
+}
+.edit-content section.boxed-group .boxed-group-inner-table thead th {
+    background-color: #f6f8fa;
+}
+.edit-content section.boxed-group .boxed-group-inner label {
+    font-weight: 500;
+}
+.edit-content section.boxed-group .boxed-group-inner input.form-control {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.edit-content section.boxed-group .boxed-group-inner a.btn-delete {
+    float: right;
+    margin-bottom: 100px;
+}
+.edit-content section.boxed-group .boxed-group-inner p.doc {
+    font-size: 1.0rem;
+}
+
+@media (min-width:576px) {
+    .edit-content section.boxed-group .boxed-group-inner input.form-control {
+        margin-bottom: 0;
+        width: 350px;
+    }
+}
+

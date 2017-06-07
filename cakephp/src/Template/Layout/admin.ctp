@@ -6,7 +6,7 @@
 <title><?= $this->fetch('title') ?> | Users</title>
 <?= $this->Html->css('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css') ?>
 <?= $this->Html->css('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') ?>
-<?= $this->Html->css('users.css') ?>
+<?= $this->Html->css('admin.css') ?>
 <?= $this->fetch('css') ?>
 </head>
 <body class="<?= $style ?>">
@@ -24,7 +24,7 @@
 <?= $this->Html->script('//code.jquery.com/jquery-3.1.1.slim.min.js') ?>
 <?= $this->Html->script('//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js') ?>
 <?= $this->Html->script('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js') ?>
-<?= $this->Html->script('users.js') ?>
+<?= $this->Html->script('admin.js') ?>
 <?= $this->fetch('script') ?>
 </body>
 </html>

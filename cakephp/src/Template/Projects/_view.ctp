@@ -10,6 +10,8 @@
         <li><?= $this->Form->postLink(__('Delete Project'), ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to delete # {0}?', $project->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Projects'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Project'), ['action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Articles'), ['controller' => 'Articles', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Article'), ['controller' => 'Articles', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
     </ul>
@@ -26,8 +28,12 @@
             <td><?= $this->Number->format($project->id) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Uid') ?></th>
-            <td><?= $this->Number->format($project->uid) ?></td>
+            <th scope="row"><?= __('Article Id') ?></th>
+            <td><?= $this->Number->format($project->article_id) ?></td>
+        </tr>
+        <tr>
+            <th scope="row"><?= __('Uuid') ?></th>
+            <td><?= $this->Number->format($project->uuid) ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Created') ?></th>
@@ -38,6 +44,39 @@
             <td><?= h($project->modified) ?></td>
         </tr>
     </table>
+    <div class="related">
+        <h4><?= __('Related Articles') ?></h4>
+        <?php if (!empty($project->articles)): ?>
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <th scope="col"><?= __('Id') ?></th>
+                <th scope="col"><?= __('Project Id') ?></th>
+                <th scope="col"><?= __('Title') ?></th>
+                <th scope="col"><?= __('Description') ?></th>
+                <th scope="col"><?= __('Status') ?></th>
+                <th scope="col"><?= __('Created') ?></th>
+                <th scope="col"><?= __('Modified') ?></th>
+                <th scope="col" class="actions"><?= __('Actions') ?></th>
+            </tr>
+            <?php foreach ($project->articles as $articles): ?>
+            <tr>
+                <td><?= h($articles->id) ?></td>
+                <td><?= h($articles->project_id) ?></td>
+                <td><?= h($articles->title) ?></td>
+                <td><?= h($articles->description) ?></td>
+                <td><?= h($articles->status) ?></td>
+                <td><?= h($articles->created) ?></td>
+                <td><?= h($articles->modified) ?></td>
+                <td class="actions">
+                    <?= $this->Html->link(__('View'), ['controller' => 'Articles', 'action' => 'view', $articles->id]) ?>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Articles', 'action' => 'edit', $articles->id]) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Articles', 'action' => 'delete', $articles->id], ['confirm' => __('Are you sure you want to delete # {0}?', $articles->id)]) ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
+    </div>
     <div class="related">
         <h4><?= __('Related Users') ?></h4>
         <?php if (!empty($project->users)): ?>

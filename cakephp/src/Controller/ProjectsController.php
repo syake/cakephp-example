@@ -14,16 +14,6 @@ class ProjectsController extends AdminController
 {
 
     /**
-     * Display method
-     *
-     * @return \Cake\Http\Response|null
-     */
-    public function display($id = null)
-    {
-        var_dump($id);
-    }
-    
-    /**
      * Index method
      *
      * @return \Cake\Http\Response|null
@@ -43,7 +33,7 @@ class ProjectsController extends AdminController
     public function view($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Articles']
         ]);
 
         $this->set('project', $project);
@@ -154,7 +144,6 @@ class ProjectsController extends AdminController
                 }
             }
         }
-/*         $users = $this->Projects->Users->find('list', ['limit' => 200]); */
         $users = $project->users;
         $this->set(compact('project', 'users'));
         $this->set('_serialize', ['project']);

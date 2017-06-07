@@ -7,11 +7,13 @@ use Cake\ORM\Entity;
  * Project Entity
  *
  * @property int $id
- * @property int $uid
+ * @property int $article_id
+ * @property int $uuid
  * @property string $name
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
+ * @property \App\Model\Entity\Article[] $articles
  * @property \App\Model\Entity\User[] $users
  */
 class Project extends Entity

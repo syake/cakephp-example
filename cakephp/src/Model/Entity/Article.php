@@ -4,17 +4,19 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ProjectsUser Entity
+ * Article Entity
  *
  * @property int $id
  * @property int $project_id
- * @property int $user_id
- * @property string $role
+ * @property string $title
+ * @property string $description
+ * @property string $status
+ * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Project $project
- * @property \App\Model\Entity\User $user
+ * @property \App\Model\Entity\Project[] $projects
  */
-class ProjectsUser extends Entity
+class Article extends Entity
 {
 
     /**

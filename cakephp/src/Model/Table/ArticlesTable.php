@@ -7,20 +7,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ProjectsUsers Model
+ * Articles Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Association\HasMany $Projects
  *
- * @method \App\Model\Entity\ProjectsUser get($primaryKey, $options = [])
- * @method \App\Model\Entity\ProjectsUser newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ProjectsUser[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ProjectsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Article get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Article newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Article[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Article|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Article patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Article[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Article findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class ProjectsUsersTable extends Table
+class ArticlesTable extends Table
 {
 
     /**
@@ -33,15 +35,17 @@ class ProjectsUsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('projects_users');
-        $this->setDisplayField('id');
+        $this->setTable('articles');
+        $this->setDisplayField('title');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id'
         ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+        $this->hasMany('Projects', [
+            'foreignKey' => 'article_id'
         ]);
     }
 
@@ -58,7 +62,13 @@ class ProjectsUsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('role');
+            ->allowEmpty('title');
+
+        $validator
+            ->allowEmpty('description');
+
+        $validator
+            ->allowEmpty('status');
 
         return $validator;
     }
@@ -73,7 +83,6 @@ class ProjectsUsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
     }

@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Projects Model
  *
+ * @property \Cake\ORM\Association\BelongsTo $Articles
+ * @property \Cake\ORM\Association\HasMany $Articles
  * @property \Cake\ORM\Association\BelongsToMany $Users
  *
  * @method \App\Model\Entity\Project get($primaryKey, $options = [])
@@ -40,6 +42,12 @@ class ProjectsTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Articles', [
+            'foreignKey' => 'article_id'
+        ]);
+        $this->hasMany('Articles', [
+            'foreignKey' => 'project_id'
+        ]);
         $this->belongsToMany('Users', [
             'foreignKey' => 'project_id',
             'targetForeignKey' => 'user_id',
@@ -61,17 +69,11 @@ class ProjectsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->integer('uuid')
             ->allowEmpty('uuid')
-            ->add('uuid', [
-                'unique' => [
-                    'rule' => 'validateUnique',
-                    'provider' => 'table'
-                ]
-            ]);
+            ->add('uuid', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->notEmpty('name', 'A name is required');
+            ->allowEmpty('name');
 
         return $validator;
     }
@@ -86,6 +88,7 @@ class ProjectsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['uuid']));
+        $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;
     }

@@ -7,6 +7,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Project'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Articles'), ['controller' => 'Articles', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Article'), ['controller' => 'Articles', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
     </ul>
@@ -17,7 +19,8 @@
         <thead>
             <tr>
                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('uid') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('article_id') ?></th>
+                <th scope="col"><?= $this->Paginator->sort('uuid') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
@@ -28,7 +31,8 @@
             <?php foreach ($projects as $project): ?>
             <tr>
                 <td><?= $this->Number->format($project->id) ?></td>
-                <td><?= $this->Number->format($project->uid) ?></td>
+                <td><?= $this->Number->format($project->article_id) ?></td>
+                <td><?= $this->Number->format($project->uuid) ?></td>
                 <td><?= h($project->name) ?></td>
                 <td><?= h($project->created) ?></td>
                 <td><?= h($project->modified) ?></td>

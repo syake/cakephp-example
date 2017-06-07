@@ -12,6 +12,7 @@
         <p class="doc"><?= __('Create new project') ?></p>
         <?= $this->Flash->render() ?>
         <?= $this->Form->control('name') ?>
+        <?= $this->Form->control('article_id') ?>
     </fieldset>
     <?= $this->Form->button(__('Create new project'), ['class' => 'btn-primary']); ?>
     <?= $this->Form->end() ?>

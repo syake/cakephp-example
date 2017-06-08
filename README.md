@@ -28,9 +28,7 @@ $ bin/cake bake all users
 ```mysql
 CREATE TABLE `posts` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `article_id` INT,
     `uuid` BIGINT UNIQUE,
-    `name` VARCHAR(255),
     `status` ENUM('publish','future','draft','pending','private'),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -65,9 +63,9 @@ $ bin/cake bake model posts_users
 CREATE TABLE `articles` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `post_id` INT,
+    `active` TINYINT(1),
     `title` VARCHAR(255),
-    `description` TEXT,
-    `status` ENUM('publish','future','draft','pending','private'),
+    `content` LONGTEXT,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -84,11 +82,11 @@ $ bin/cake bake all articles
 CREATE TABLE `sections` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` INT,
+    `tag` VARCHAR(20),
+    `order` INT(11),
     `title` VARCHAR(255),
     `description` TEXT,
-    `image_name` VARCHAR(255) UNIQUE,
-    `order` INT(11),
-    `status` ENUM('publish','future','draft','pending','private')
+    `image` VARCHAR(255) UNIQUE
 );
 ```
 bakeコマンド
@@ -96,4 +94,3 @@ bakeコマンド
 ```console
 $ bin/cake bake model sections
 ```
-

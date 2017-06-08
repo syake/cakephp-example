@@ -23,14 +23,15 @@ bakeコマンド
 $ bin/cake bake all users
 ```
 
-### projects テーブル
+### posts テーブル
 
 ```mysql
-CREATE TABLE `projects` (
+CREATE TABLE `posts` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` INT,
     `uuid` BIGINT UNIQUE,
     `name` VARCHAR(255),
+    `status` ENUM('publish','future','draft','pending','private'),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -38,15 +39,15 @@ CREATE TABLE `projects` (
 bakeコマンド
 
 ```console
-$ bin/cake bake all projects
+$ bin/cake bake all posts
 ```
 
-### projects_users テーブル
+### posts_users テーブル
 
 ```mysql
-CREATE TABLE `projects_users` (
+CREATE TABLE `posts_users` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `project_id` INT,
+  `post_id` INT,
   `user_id` INT,
   `role` ENUM('admin','author')
 );
@@ -55,7 +56,7 @@ CREATE TABLE `projects_users` (
 bakeコマンド
 
 ```console
-$ bin/cake bake model projects_users
+$ bin/cake bake model posts_users
 ```
 
 ### articles テーブル
@@ -63,7 +64,7 @@ $ bin/cake bake model projects_users
 ```mysql
 CREATE TABLE `articles` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `project_id` INT,
+    `post_id` INT,
     `title` VARCHAR(255),
     `description` TEXT,
     `status` ENUM('publish','future','draft','pending','private'),
@@ -75,5 +76,24 @@ bakeコマンド
 
 ```console
 $ bin/cake bake all articles
+```
+
+### sections テーブル
+
+```mysql
+CREATE TABLE `sections` (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `article_id` INT,
+    `title` VARCHAR(255),
+    `description` TEXT,
+    `image_name` VARCHAR(255) UNIQUE,
+    `order` INT(11),
+    `status` ENUM('publish','future','draft','pending','private')
+);
+```
+bakeコマンド
+
+```console
+$ bin/cake bake model sections
 ```
 

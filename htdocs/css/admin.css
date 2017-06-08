@@ -225,9 +225,13 @@ footer {
     background-color: #f6f8fa;
 }
 .edit-content section.boxed-group .boxed-group-inner {
-    padding: 8px 10px 3px;
+    padding: 8px 10px 13px;
+/*     padding: 8px 10px 3px; */
     border-width: 1px 0 0;
     min-height: 60px;
+}
+.edit-content section.boxed-group .boxed-group-inner .form-group:last-child {
+    margin-bottom: 0;
 }
 .edit-content section.boxed-group .boxed-group-inner-table {
     padding: 30px 20px 20px;

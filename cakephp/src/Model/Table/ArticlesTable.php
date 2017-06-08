@@ -44,9 +44,11 @@ class ArticlesTable extends Table
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id'
         ]);
+/*
         $this->hasMany('Projects', [
             'foreignKey' => 'article_id'
         ]);
+*/
     }
 
     /**

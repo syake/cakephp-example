@@ -64,6 +64,7 @@ class AdminController extends AppController
         $this->Users = TableRegistry::get('Users');
         $this->Projects = TableRegistry::get('Projects');
         $this->ProjectsUsers = TableRegistry::get('ProjectsUsers');
+        $this->Articles = TableRegistry::get('Articles');
         
         $this->viewBuilder()->layout('admin');
         $this->set('header', 'Admin/header');

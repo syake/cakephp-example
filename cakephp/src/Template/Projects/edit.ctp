@@ -57,6 +57,16 @@
         </div>
     </section>
     <section class="boxed-group">
+        <h2><?= __('Article') ?></h2>
+        <div class="boxed-group-inner">
+            <?= $this->Form->create($article) ?>
+            <?= $this->Form->control('title') ?>
+            <?= $this->Form->control('description', ['type' => 'textarea']) ?>
+            <?= $this->Form->button(__('Update'), ['class' => 'btn-secondary']); ?>
+            <?= $this->Form->end() ?>
+        </div>
+    </section>
+    <section class="boxed-group">
         <h2><?= __('Delete') ?></h2>
         <div class="boxed-group-inner">
             <?= $this->Form->postLink(
@@ -68,25 +78,4 @@
             <p class="doc"><strong><?= __('Delete this project') ?></strong></p>
         </div>
     </section>
-</div>
-
-
-<?php
-/**
-  * @var \App\View\AppView $this
-  */
-?>
-<div class="projects form large-9 medium-8 columns content">
-    <?= $this->Form->create($project) ?>
-    <fieldset>
-        <legend><?= __('Edit Project') ?></legend>
-        <?php
-            echo $this->Form->control('article_id');
-            echo $this->Form->control('uuid');
-            echo $this->Form->control('name');
-            echo $this->Form->control('users._ids', ['options' => $users]);
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
 </div>

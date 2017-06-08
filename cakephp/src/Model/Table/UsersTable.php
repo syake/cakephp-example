@@ -44,7 +44,6 @@ class UsersTable extends Table
             'joinTable' => 'projects_users',
             'through' => 'ProjectsUsers'
         ]);
-/*         $this->hasMany('Projects'); */
     }
 
     /**

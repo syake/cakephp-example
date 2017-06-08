@@ -12,6 +12,13 @@ use App\Controller\AppController;
  */
 class ProjectsController extends AdminController
 {
+/*
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow(['display']);
+    }
+*/
 
     /**
      * Index method
@@ -24,18 +31,21 @@ class ProjectsController extends AdminController
     }
 
     /**
-     * View method
+     * Display method
      *
      * @param string|null $id Project id.
      * @return \Cake\Http\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function display($id = null)
     {
-        $project = $this->Projects->get($id, [
-            'contain' => ['Users', 'Articles']
-        ]);
-
+        $this->viewBuilder()->layout('default');
+        $uuid = $this->request->id;
+        $project = $this->Projects->find('all', [
+            'conditions' => ['uuid' => $uuid],
+            'contain' => ['Articles']
+        ])->first();
+        
         $this->set('project', $project);
         $this->set('_serialize', ['project']);
     }
@@ -49,16 +59,10 @@ class ProjectsController extends AdminController
     {
         $project = $this->Projects->newEntity();
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
             
-            // unique id
-            if (function_exists('random_int')) {
-                $uuid = random_int(1, 999999999);
-            } else {
-                $uuid = mt_rand(1, 999999999);
-            }
-            $uuid += (rand(1, 9) * 1000000000);
-            $data['uuid'] = $uuid;
+            
+            $data = $this->request->getData();
+            $data['uuid'] = $this->createUuid();
             
             // join users
             $user_id = $this->request->getData('users._id');
@@ -72,6 +76,16 @@ class ProjectsController extends AdminController
                     ]
                 ];
             }
+            
+            // article
+/*
+            $article = $this->Articles->newEntity();
+            if ($this->Articles->save($article)) {
+                $data['article_id'] = $article->id;
+            } else {
+                $this->Flash->error(__('The article could not be saved. Please, try again.'));
+            }
+*/
             
             $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users']]);
             if ($this->Projects->save($project)) {
@@ -97,7 +111,7 @@ class ProjectsController extends AdminController
     public function edit($id = null)
     {
         $project = $this->Projects->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users', 'Articles']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -145,7 +159,8 @@ class ProjectsController extends AdminController
             }
         }
         $users = $project->users;
-        $this->set(compact('project', 'users'));
+        $article = $project->articles[0];
+        $this->set(compact('project', 'users', 'article'));
         $this->set('_serialize', ['project']);
     }
 
@@ -167,5 +182,41 @@ class ProjectsController extends AdminController
         }
 
         return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    private function addArticle()
+    {
+        $article = $this->Articles->newEntity();
+        if ($this->request->is('post')) {
+            $article = $this->Articles->patchEntity($article, $this->request->getData());
+            if ($this->Articles->save($article)) {
+                $this->Flash->success(__('The article has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The article could not be saved. Please, try again.'));
+        }
+        $this->set(compact('article'));
+        $this->set('_serialize', ['article']);
+    }
+
+    /**
+     * Create unique id
+     * 
+     * @return int
+     */
+    private function createUuid(){
+        if (function_exists('random_int')) {
+            $uuid = random_int(1, 999999999);
+        } else {
+            $uuid = mt_rand(1, 999999999);
+        }
+        $uuid += (rand(1, 9) * 1000000000);
+        return $uuid;
     }
 }

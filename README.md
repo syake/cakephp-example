@@ -73,7 +73,7 @@ CREATE TABLE `articles` (
 bakeコマンド
 
 ```console
-$ bin/cake bake all articles
+$ bin/cake bake model articles
 ```
 
 ### sections テーブル

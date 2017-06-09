@@ -6,7 +6,7 @@
 
 ```mysql
 CREATE TABLE `users` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(50) UNIQUE,
     `password` VARCHAR(255),
     `nickname` VARCHAR(255),
@@ -27,8 +27,8 @@ $ bin/cake bake all users
 
 ```mysql
 CREATE TABLE `posts` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `uuid` BIGINT UNIQUE,
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `uuid` BIGINT UNSIGNED UNIQUE,
     `status` ENUM('publish','future','draft','pending','private'),
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -44,9 +44,9 @@ $ bin/cake bake all posts
 
 ```mysql
 CREATE TABLE `posts_users` (
-  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `post_id` INT,
-  `user_id` INT,
+  `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `post_id` BIGINT UNSIGNED,
+  `user_id` BIGINT UNSIGNED,
   `role` ENUM('admin','author')
 );
 ```
@@ -61,8 +61,8 @@ $ bin/cake bake model posts_users
 
 ```mysql
 CREATE TABLE `articles` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `post_id` INT,
+    `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `post_id` BIGINT UNSIGNED,
     `active` TINYINT(1),
     `title` VARCHAR(255),
     `content` LONGTEXT,
@@ -80,8 +80,8 @@ $ bin/cake bake model articles
 
 ```mysql
 CREATE TABLE `sections` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `article_id` INT,
+    `section_id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `article_id` BIGINT UNSIGNED,
     `tag` VARCHAR(20),
     `order` INT(11),
     `title` VARCHAR(255),

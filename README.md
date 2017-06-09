@@ -53,7 +53,7 @@ CREATE TABLE `posts_users` (
   `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `post_id` BIGINT(20) UNSIGNED NOT NULL,
   `user_id` BIGINT(20) UNSIGNED NOT NULL,
-  `role` ENUM('admin','author') NOT NULL DEFAULT `author`
+  `role` ENUM('admin','author') NOT NULL DEFAULT author
 );
 ```
 
@@ -73,7 +73,7 @@ CREATE TABLE `articles` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `post_id` BIGINT(20) UNSIGNED NOT NULL,
     `author_id` BIGINT(20) UNSIGNED NOT NULL,
-    `status` ENUM('publish','future','draft','pending') NOT NULL DEFAULT `draft`,
+    `status` ENUM('publish','future','draft','pending') NOT NULL DEFAULT draft,
     `title` VARCHAR(255),
     `content` LONGTEXT,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -59,7 +59,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 /*     $routes->connect('/projects', ['controller' => 'Users', 'action' => 'index']); */
 /*     $routes->connect('/users/projects/:action/*', ['controller' => 'Projects']); */
 /*     $routes->connect('/[0-9]+', ['controller' => 'Projects', 'action' => 'display']); */
-    $routes->connect('/:id', ['controller' => 'Projects', 'action' => 'display'], ['id' => '[0-9]+']);
+    $routes->connect('/:id', ['controller' => 'Posts', 'action' => 'index'], ['id' => '[0-9]+']);
 
     /**
      * Connect catchall routes for all controllers.

@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use \Exception;
 
 /**
  * Users Controller
@@ -26,15 +27,33 @@ class UsersController extends AdminController
         $this->Auth->allow(['add', 'logout']);
     }
 
+    public function isAuthorized($user = null)
+    {
+        $action = $this->request->params['action'];
+        if (in_array($action, ['lookup', 'delete'])) {
+            if (isset($user['role']) && $user['role'] === 'admin') {
+                return true;
+            }
+            return false;
+        }
+        return parent::isAuthorized($user);
+    }
+
     public function index()
     {
         $id = $this->Session->read('Auth.User.id');
-        $posts = $this->Users->get($id, [
-            'contain' => ['Posts', 'Posts.Articles']
-        ])->posts;
+        $user = $this->Users->get($id, [
+            'contain' => ['Projects']
+        ]);
+        $projects = $user->projects;
+        if (count($projects) > 0) {
+            $has_project = true;
+        } else {
+            $has_project = false;
+        }
         
-        $this->set(compact('posts'));
-        $this->set('_serialize', ['posts']);
+        $this->set(compact('projects', 'has_project'));
+        $this->set('_serialize', ['projects']);
     }
 
     /**
@@ -60,9 +79,10 @@ class UsersController extends AdminController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->find('all', ['conditions' => ['owner !=' => '1']])) {
-                $user->set('owner', '1');
-                $user->set('invite', '1');
+            if ($this->Users->find('all', ['conditions' => ['role' => 'admin']])) {
+                $user->set('role', 'invalid');
+            } else {
+                $user->set('role', 'admin');
             }
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));

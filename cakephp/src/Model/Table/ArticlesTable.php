@@ -9,8 +9,9 @@ use Cake\Validation\Validator;
 /**
  * Articles Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\HasMany $Projects
+ * @property \Cake\ORM\Association\BelongsTo $Posts
+ * @property \Cake\ORM\Association\BelongsTo $Authors
+ * @property \Cake\ORM\Association\HasMany $Sections
  *
  * @method \App\Model\Entity\Article get($primaryKey, $options = [])
  * @method \App\Model\Entity\Article newEntity($data = null, array $options = [])
@@ -41,14 +42,17 @@ class ArticlesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Projects', [
-            'foreignKey' => 'project_id'
+        $this->belongsTo('Posts', [
+            'foreignKey' => 'post_id',
+            'joinType' => 'INNER'
         ]);
-/*
-        $this->hasMany('Projects', [
+        $this->belongsTo('Authors', [
+            'foreignKey' => 'author_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Sections', [
             'foreignKey' => 'article_id'
         ]);
-*/
     }
 
     /**
@@ -60,17 +64,17 @@ class ArticlesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
+
+        $validator
+            ->requirePresence('status', 'create')
+            ->notEmpty('status');
 
         $validator
             ->allowEmpty('title');
 
         $validator
-            ->allowEmpty('description');
-
-        $validator
-            ->allowEmpty('status');
+            ->allowEmpty('content');
 
         return $validator;
     }
@@ -84,7 +88,7 @@ class ArticlesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['project_id'], 'Projects'));
+        $rules->add($rules->existsIn(['post_id'], 'Posts'));
 
         return $rules;
     }

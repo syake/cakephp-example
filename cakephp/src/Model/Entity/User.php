@@ -10,10 +10,13 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $username
  * @property string $password
- * @property string $role
  * @property string $nickname
+ * @property bool $owner
+ * @property bool $invite
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ *
+ * @property \App\Model\Entity\Post[] $posts
  */
 class User extends Entity
 {
@@ -40,7 +43,7 @@ class User extends Entity
     protected $_hidden = [
         'password'
     ];
-
+    
     protected function _setPassword($password)
     {
         if (strlen($password) > 0) {

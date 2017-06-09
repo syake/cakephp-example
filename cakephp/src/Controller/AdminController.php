@@ -17,7 +17,17 @@ class AdminController extends AppController
 {
     public $helpers = [
         'Form' => [
-            'className' => 'Bootstrap.Form'
+            'className' => 'Bootstrap.Form',
+            'templates' => [
+/*                 'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>', */
+                
+                
+                'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
+                'radioWrapper' => '{{label}}',
+                'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
+                'checkboxWrapper' => '{{label}}',
+                'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>'
+            ]
         ],
         'Html' => [
            'className' => 'Bootstrap.Html'
@@ -62,8 +72,8 @@ class AdminController extends AppController
         ]);
         
         $this->Users = TableRegistry::get('Users');
-        $this->Projects = TableRegistry::get('Projects');
-        $this->ProjectsUsers = TableRegistry::get('ProjectsUsers');
+        $this->Posts = TableRegistry::get('Posts');
+        $this->PostsUsers = TableRegistry::get('PostsUsers');
         $this->Articles = TableRegistry::get('Articles');
         
         $this->viewBuilder()->layout('admin');
@@ -71,19 +81,17 @@ class AdminController extends AppController
         $this->set('style', 'index');
         
         $user_name = null;
-        $user_role = null;
         $user_id = null;
         $this->Session = $this->request->session();
         if ($this->Session->check('Auth.User')) {
             $user_id = $this->Session->read('Auth.User.id');
             $user = $this->Users->get($user_id);
             $user_name = $user->nickname;
-            $user_role = $user->role;
             if (($user_name == null) || empty($user_name)) {
                 $user_name = $user->username;
             }
         }
-        $this->set(compact('user_name', 'user_role', 'user_id'));
+        $this->set(compact('user_name', 'user_id'));
     }
 
     public function isAuthorized($user = null)

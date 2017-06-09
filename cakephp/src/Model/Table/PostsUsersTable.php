@@ -7,20 +7,20 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ProjectsUsers Model
+ * PostsUsers Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
+ * @property \Cake\ORM\Association\BelongsTo $Posts
  * @property \Cake\ORM\Association\BelongsTo $Users
  *
- * @method \App\Model\Entity\ProjectsUser get($primaryKey, $options = [])
- * @method \App\Model\Entity\ProjectsUser newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ProjectsUser[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ProjectsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ProjectsUser findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\PostsUser get($primaryKey, $options = [])
+ * @method \App\Model\Entity\PostsUser newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\PostsUser[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\PostsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\PostsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\PostsUser[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\PostsUser findOrCreate($search, callable $callback = null, $options = [])
  */
-class ProjectsUsersTable extends Table
+class PostsUsersTable extends Table
 {
 
     /**
@@ -33,15 +33,17 @@ class ProjectsUsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('projects_users');
+        $this->setTable('posts_users');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Projects', [
-            'foreignKey' => 'project_id'
+        $this->belongsTo('Posts', [
+            'foreignKey' => 'post_id',
+            'joinType' => 'INNER'
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -54,11 +56,11 @@ class ProjectsUsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('role');
+            ->requirePresence('role', 'create')
+            ->notEmpty('role');
 
         return $validator;
     }
@@ -72,7 +74,7 @@ class ProjectsUsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['project_id'], 'Projects'));
+        $rules->add($rules->existsIn(['post_id'], 'Posts'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;

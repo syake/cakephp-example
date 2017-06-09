@@ -67,7 +67,7 @@ p.pagination-doc {
 .content h1 {
     font-weight: 400;
     margin-bottom: 1.5rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 footer {
@@ -76,22 +76,25 @@ footer {
     text-align: center;
 }
 
-/* form group
+/* form
 -------------------------------------------*/
-.form-group .required > label {
+form .required > label {
     font-weight: 600;
 }
-.form-group .required > label:after {
+form .required > label:after {
     content: ' *';
     color: #C3232D;
 }
-.form-group .help-block.error-message {
+form .help-block.error-message {
     color: #a94442
 }
-.form-group .help-block.error-message:before {
+form .help-block.error-message:before {
     content: '\f071';
     font-family: FontAwesome;
     padding-right: 0.2rem;
+}
+form .field-content {
+    margin-bottom: 1.5rem;
 }
 
 /* login
@@ -128,8 +131,40 @@ footer {
     text-align: center;
 }
 
+/* add
+-------------------------------------------*/
+.add-content h1 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+}
+.add-content .control-label,
+.add-content .custom-control {
+    font-weight: 500;
+}
+.add-content hr {
+    height: 0;
+    margin: 15px 0;
+    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #dfe2e5
+}
+
+/* edit
+-------------------------------------------*/
+.edit-content .badge {
+    margin-left: 0.8rem;
+    font-size: 0.7rem;
+    vertical-align: middle;
+}
+
+
 /* form container
 -------------------------------------------*/
+/*
 .form-container {
     position: relative;
 }
@@ -138,17 +173,7 @@ footer {
     right: 0;
     bottom: 0;
 }
-
-
-/*
-.field-content {
-    margin-bottom: 1.5rem;
-}
-.field-content p.doc {
-    margin-bottom: 1.5rem;
-}
 */
-
 
 /* index
 -------------------------------------------*/
@@ -159,6 +184,14 @@ footer {
     font-weight: 300;
     font-size: 1.5rem;
     margin-bottom: 2rem;
+}
+
+.index-content section.posts h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
 }
 
 .index-content table.table .num {
@@ -197,26 +230,20 @@ footer {
     padding-right: 0.4rem;
 }
 
-.index-content section.projects h2 {
-    font-weight: 400;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-}
-
-/* edit
+/* boxed-group
 -------------------------------------------*/
-.edit-content section.boxed-group,
-.edit-content section.boxed-group h2,
-.edit-content section.boxed-group .boxed-group-inner {
+.boxed-group,
+.boxed-group h2,
+.boxed-group .boxed-group-inner {
     border-style: solid;
     border-color: #d8dee2;
 }
-.edit-content section.boxed-group {
+.boxed-group {
     border-width: 0 1px 1px;
     border-radius: 3px;
     margin-bottom: 30px;
 }
-.edit-content section.boxed-group h2 {
+.boxed-group h2 {
     font-weight: 500;
     font-size: 1rem;
     border-width: 1px 0 0;
@@ -224,38 +251,39 @@ footer {
     padding: 8px 10px;
     background-color: #f6f8fa;
 }
-.edit-content section.boxed-group .boxed-group-inner {
+.boxed-group .boxed-group-inner {
     padding: 8px 10px 13px;
-/*     padding: 8px 10px 3px; */
     border-width: 1px 0 0;
-    min-height: 60px;
 }
-.edit-content section.boxed-group .boxed-group-inner .form-group:last-child {
+.boxed-group .boxed-group-inner .form-group:last-child {
     margin-bottom: 0;
 }
-.edit-content section.boxed-group .boxed-group-inner-table {
+.boxed-group .boxed-group-inner-table {
     padding: 30px 20px 20px;
 }
-.edit-content section.boxed-group .boxed-group-inner-table thead th {
+.boxed-group .boxed-group-inner-table thead th {
     background-color: #f6f8fa;
 }
-.edit-content section.boxed-group .boxed-group-inner label {
+.boxed-group .boxed-group-inner label {
     font-weight: 500;
 }
-.edit-content section.boxed-group .boxed-group-inner input.form-control {
+.boxed-group .boxed-group-inner input.form-control {
     margin-right: 10px;
     margin-bottom: 10px;
 }
-.edit-content section.boxed-group .boxed-group-inner a.btn-delete {
-    float: right;
-    margin-bottom: 100px;
+
+.boxed-group .boxed-group-row {
+    min-height: 60px;
 }
-.edit-content section.boxed-group .boxed-group-inner p.doc {
+.boxed-group .boxed-group-row .btn {
+    float: right;
+}
+.boxed-group .boxed-group-row p.doc {
     font-size: 1.0rem;
 }
 
 @media (min-width:576px) {
-    .edit-content section.boxed-group .boxed-group-inner input.form-control {
+    .boxed-group .boxed-group-inner input.form-control {
         margin-bottom: 0;
         width: 350px;
     }

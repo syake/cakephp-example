@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsToMany $Posts
+ *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -38,11 +40,10 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsToMany('Projects', [
+        $this->belongsToMany('Posts', [
             'foreignKey' => 'user_id',
-            'targetForeignKey' => 'project_id',
-            'joinTable' => 'projects_users',
-            'through' => 'ProjectsUsers'
+            'targetForeignKey' => 'post_id',
+            'joinTable' => 'posts_users'
         ]);
     }
 
@@ -55,10 +56,10 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
-        
+
         $validator
+            ->requirePresence('username', 'create')
             ->notEmpty('username', 'A username is required')
             ->add('username', [
                 'alphaNumeric' => [
@@ -77,19 +78,23 @@ class UsersTable extends Table
                     'message' => __('This name is already used.')
                 ]
             ]);
-        
+
         $validator
-            ->notEmpty('password', 'A password is required');
-        
+            ->requirePresence('password', 'create')
+            ->notEmpty('password');
+
         $validator
             ->allowEmpty('nickname');
-        
+
         $validator
-            ->notEmpty('role', 'A role is required')
-            ->add('role', 'inList', [
-                'rule' => ['inList', ['admin', 'author', 'invalid']],
-                'message' => 'Please enter a valid role'
-            ]);
+            ->boolean('owner')
+            ->requirePresence('owner', 'create')
+            ->notEmpty('owner');
+
+        $validator
+            ->boolean('invite')
+            ->requirePresence('invite', 'create')
+            ->notEmpty('invite');
 
         return $validator;
     }

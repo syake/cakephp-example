@@ -16,7 +16,8 @@
  * ======================================================================== */
 +(function($){
     $('.js-confirm').on('click', function (e) {
-        if(!window.confirm('Are you sure, you want to delete this user?')){
+        var value = $(this).data('confirm');
+        if(!window.confirm(value)){
             return false;
         }
     });

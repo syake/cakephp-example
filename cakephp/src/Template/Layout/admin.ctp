@@ -3,7 +3,7 @@
 <head>
 <?= $this->Html->charset() ?>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title><?= $this->fetch('title') ?> | Users</title>
+<title><?= $this->fetch('title') ?></title>
 <?= $this->Html->css('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css') ?>
 <?= $this->Html->css('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') ?>
 <?= $this->Html->css('admin.css') ?>

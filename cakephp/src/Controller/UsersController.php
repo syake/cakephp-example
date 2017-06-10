@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+/* use \Exception; */
 
 /**
  * Users Controller
@@ -60,9 +61,9 @@ class UsersController extends AdminController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->find('all', ['conditions' => ['owner !=' => '1']])) {
-                $user->set('owner', '1');
-                $user->set('invite', '1');
+            if ($this->Users->find('all', ['conditions' => ['role !=' => 'owner']])) {
+                $user->set('role', 'owner');
+                $user->set('status', '1');
             }
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
@@ -87,9 +88,19 @@ class UsersController extends AdminController
      */
     public function edit($id = null)
     {
+/*
         if ($this->Session->read('Auth.User.role') == 'admin') {
             $this->setAction('editAdmin', $id);
             return;
+        }
+*/
+        
+        if ($this->request->data('_password')) {
+            $flash_key = 'password';
+        } else if ($this->request->data('_email')) {
+            $flash_key = 'email';
+        } else {
+            $flash_key = 'flash';
         }
         
         $id = $this->Session->read('Auth.User.id');
@@ -99,9 +110,9 @@ class UsersController extends AdminController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success(__('The user has been saved.'), ['key' => $flash_key]);
             } else {
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }
         }
         $this->set(compact('user'));

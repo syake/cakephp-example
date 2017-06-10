@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
-use \Exception;
 
 /**
  * Admin Controller
@@ -19,14 +18,12 @@ class AdminController extends AppController
         'Form' => [
             'className' => 'Bootstrap.Form',
             'templates' => [
-/*                 'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>', */
-                
-                
                 'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
                 'radioWrapper' => '{{label}}',
                 'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
                 'checkboxWrapper' => '{{label}}',
-                'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>'
+                'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
+                'helpBlock' => '<small class="form-text text-muted">{{content}}</small>'
             ]
         ],
         'Html' => [
@@ -73,7 +70,6 @@ class AdminController extends AppController
         
         $this->Users = TableRegistry::get('Users');
         $this->Posts = TableRegistry::get('Posts');
-        $this->PostsUsers = TableRegistry::get('PostsUsers');
         $this->Articles = TableRegistry::get('Articles');
         
         $this->viewBuilder()->layout('admin');

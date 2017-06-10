@@ -11,16 +11,22 @@
 <nav class="nav topicpath">
   <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) ?>
 </nav>
-<div class="content edit-content">
-    <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>
+<div class="content edit-post-content">
+    <div class="title">
+        <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>
+        <div class="nav">
+            <?= $this->Html->link(__('Preview'), ['controller' => 'Posts', 'action' => 'index', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?>
+        </div>
+    </div>
     <?= $this->Flash->render() ?>
     <section class="boxed-group">
         <h2><?= __('Edit Content') ?></h2>
         <div class="boxed-group-inner">
+            <?= $this->Flash->render('article') ?>
             <?= $this->Form->create($article) ?>
             <?= $this->Form->hidden('article', ['value' => 'update']) ?>
             <?= $this->Form->control('title', ['label' => __('Title')]) ?>
-            <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content')]) ?>
+            <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) ?>
             <?= $this->Form->button(__('Update'), ['class' => 'btn-secondary']); ?>
             <?= $this->Form->end() ?>
         </div>
@@ -29,6 +35,7 @@
     <section class="boxed-group">
         <h2><?= __('Users') ?></h2>
         <div class="boxed-group-inner boxed-group-inner-table">
+            <?= $this->Flash->render('users') ?>
             <table class="table table-sm">
                 <thead>
                     <?= $this->Html->tableHeaders([

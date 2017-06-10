@@ -67,10 +67,15 @@ class Post extends Entity
     protected function _getAuthor()
     {
         if ($this->article == null) {
-            return '';
+            return null;
         }
         $this->Users = TableRegistry::get('Users');
-        $user = $this->Users->get($this->article->author_id);
-        return $user->username;
+        $author_id = $this->article->author_id;
+        $username = $this->Users->find('list', [
+            'conditions' => ['id' => $author_id],
+            'valueField' => 'username',
+            'limit' => 1
+        ])->first();
+        return $username;
     }
 }

@@ -59,7 +59,8 @@ class UsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->maxLength('username', 50, __('Please enter no more than 50 characters.'))
+            ->requirePresence('username', 'create')
+            ->notEmpty('username', 'A username is required')
             ->add('username', [
                 'alphaNumeric' => [
                     'rule' => function ($value) {
@@ -67,37 +68,33 @@ class UsersTable extends Table
                     },
                     'message' => __('This name may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.')
                 ],
+                'length' => [
+                    'rule' => ['maxLength', 50],
+                    'message' => __('Please enter no more than 50 characters.')
+                ],
                 'unique' => [
                     'rule' => 'validateUnique',
                     'provider' => 'table',
                     'message' => __('This name is already used.')
                 ]
-            ])
-            ->requirePresence('username', 'create')
-            ->notEmpty('username', __('A username is required'));
+            ]);
 
         $validator
-            ->email('email', false, __('Email is invalid or already taken'))
-            ->ascii('email', __('Email is invalid or already taken'))
-            ->requirePresence('email', 'create')
-            ->notEmpty('email', __('A email is required'));
-
-        $validator
-            ->minLength('password', 4, __('Password is too short (minimum is 4 characters)'))
             ->requirePresence('password', 'create')
-            ->notEmpty('password', __('A password is required'));
+            ->notEmpty('password');
 
         $validator
             ->allowEmpty('nickname');
 
         $validator
-            ->requirePresence('role', 'create')
-            ->notEmpty('role');
+            ->boolean('owner')
+            ->requirePresence('owner', 'create')
+            ->notEmpty('owner');
 
         $validator
-            ->boolean('status')
-            ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->boolean('invite')
+            ->requirePresence('invite', 'create')
+            ->notEmpty('invite');
 
         return $validator;
     }
@@ -112,7 +109,6 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->isUnique(['email']));
 
         return $rules;
     }

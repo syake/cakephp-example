@@ -26,7 +26,7 @@ __status__
 * 0（仮登録）
 * 1（本登録）
 
-#### bakeコマンド
+_bakeコマンド_
 ```console
 $ bin/cake bake all users
 ```
@@ -47,8 +47,7 @@ __status__
 * 0（非公開）
 * 1（公開）
 
-#### bakeコマンド
-
+_bakeコマンド_
 ```console
 $ bin/cake bake all posts
 ```
@@ -68,8 +67,7 @@ __role__
 * admin（管理者）
 * author（投稿者）
 
-#### bakeコマンド
-
+_bakeコマンド_
 ```console
 $ bin/cake bake model posts_users
 ```
@@ -95,8 +93,7 @@ __status__
 * draft（下書き）
 * pending（保留/レビュー待ち）
 
-#### bakeコマンド
-
+_bakeコマンド_
 ```console
 $ bin/cake bake model articles
 ```
@@ -115,8 +112,7 @@ CREATE TABLE `sections` (
 );
 ```
 
-#### bakeコマンド
-
+_bakeコマンド_
 ```console
 $ bin/cake bake model sections
 ```

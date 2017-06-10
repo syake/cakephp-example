@@ -19,8 +19,8 @@ CREATE TABLE `users` (
 ```
 
 * role
-  * owner（最高権限）
-  * author（一般利用者）
+  * owner（最高権限）
+  * author（一般利用者）
 * status
   * 0（仮登録）
   * 1（本登録）
@@ -44,8 +44,8 @@ CREATE TABLE `posts` (
 ```
 
 * status
-  * 0（非公開）
-  * 1（公開）
+  * 0（非公開）
+  * 1（公開）
 
 bakeコマンド
 
@@ -65,8 +65,8 @@ CREATE TABLE `posts_users` (
 ```
 
 * role
-  * admin（管理者）
-  * author（投稿者）
+  * admin（管理者）
+  * author（投稿者）
 
 bakeコマンド
 
@@ -90,10 +90,10 @@ CREATE TABLE `articles` (
 ```
 
 * status
-  * publish（公開）
-  * future（予約投稿）
-  * draft（下書き）
-  * pending（保留/レビュー待ち）
+  * publish（公開）
+  * future（予約投稿）
+  * draft（下書き）
+  * pending（保留/レビュー待ち）
 
 bakeコマンド
 

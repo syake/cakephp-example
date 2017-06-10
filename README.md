@@ -18,6 +18,14 @@ CREATE TABLE `users` (
 );
 ```
 
+#### role
+* owner（最高権限）
+* author（一般利用者）
+
+#### status
+* 0（仮登録）
+* 1（本登録）
+
 * role
   * owner（最高権限）
   * author（一般利用者）

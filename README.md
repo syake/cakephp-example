@@ -8,17 +8,22 @@
 CREATE TABLE `users` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(50) UNIQUE NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(255),
-    `owner` TINYINT(1) NOT NULL DEFAULT 0,
-    `invite` TINYINT(1) NOT NULL DEFAULT 0,
+    `role` ENUM('owner','author') NOT NULL DEFAULT 'author'
+    `status` TINYINT(1) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
-* 最高権限（owner）
-* 認証（invite）
+* role
+  * owner（最高権限）
+  * author（一般利用者）
+* status
+  * 0（仮登録）
+  * 1（本登録）
 
 bakeコマンド
 
@@ -32,13 +37,15 @@ $ bin/cake bake all users
 CREATE TABLE `posts` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `uuid` BIGINT(20) UNSIGNED UNIQUE NOT NULL,
-    `publish` TINYINT(1) NOT NULL DEFAULT 0,
+    `status` TINYINT(1) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
-* 公開（publish）
+* status
+  * 0（非公開）
+  * 1（公開）
 
 bakeコマンド
 
@@ -57,8 +64,9 @@ CREATE TABLE `posts_users` (
 );
 ```
 
-* 管理者（admin）
-* 投稿者（author）
+* role
+  * admin（管理者）
+  * author（投稿者）
 
 bakeコマンド
 
@@ -81,10 +89,11 @@ CREATE TABLE `articles` (
 );
 ```
 
-* 公開（publish）
-* 予約投稿（future）
-* 下書き（draft）
-* 保留（pending/レビュー待ち）
+* status
+  * publish（公開）
+  * future（予約投稿）
+  * draft（下書き）
+  * pending（保留/レビュー待ち）
 
 bakeコマンド
 

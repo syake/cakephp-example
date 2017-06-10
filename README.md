@@ -18,16 +18,15 @@ CREATE TABLE `users` (
 );
 ```
 
-role
+__role__
 * owner（最高権限）
 * author（一般利用者）
 
-status
+__status__
 * 0（仮登録）
 * 1（本登録）
 
 #### bakeコマンド
-
 ```console
 $ bin/cake bake all users
 ```
@@ -44,7 +43,7 @@ CREATE TABLE `posts` (
 );
 ```
 
-status
+__status__
 * 0（非公開）
 * 1（公開）
 
@@ -65,7 +64,7 @@ CREATE TABLE `posts_users` (
 );
 ```
 
-role
+__role__
 * admin（管理者）
 * author（投稿者）
 
@@ -90,7 +89,7 @@ CREATE TABLE `articles` (
 );
 ```
 
-status
+__status__
 * publish（公開）
 * future（予約投稿）
 * draft（下書き）

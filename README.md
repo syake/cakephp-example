@@ -9,7 +9,7 @@ CREATE TABLE `users` (
     `email` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(255),
-    `role` ENUM('owner','author') NOT NULL DEFAULT 'author'
+    `role` ENUM('owner','author') NOT NULL DEFAULT 'author',
     `status` TINYINT(1) NOT NULL DEFAULT 0,
     `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

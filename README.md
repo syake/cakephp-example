@@ -1,8 +1,4 @@
-# cakephp-example
-
-## テーブルの作成
-
-### users テーブル
+## users テーブル
 
 ```mysql
 CREATE TABLE `users` (
@@ -31,7 +27,7 @@ _bakeコマンド_
 $ bin/cake bake all users
 ```
 
-### posts テーブル
+## posts テーブル
 
 ```mysql
 CREATE TABLE `posts` (
@@ -52,7 +48,7 @@ _bakeコマンド_
 $ bin/cake bake all posts
 ```
 
-### posts_users テーブル
+## posts_users テーブル
 
 ```mysql
 CREATE TABLE `posts_users` (
@@ -72,7 +68,7 @@ _bakeコマンド_
 $ bin/cake bake model posts_users
 ```
 
-### articles テーブル
+## articles テーブル
 
 ```mysql
 CREATE TABLE `articles` (
@@ -98,7 +94,7 @@ _bakeコマンド_
 $ bin/cake bake model articles
 ```
 
-### sections テーブル
+## sections テーブル
 
 ```mysql
 CREATE TABLE `sections` (

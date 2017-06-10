@@ -18,22 +18,15 @@ CREATE TABLE `users` (
 );
 ```
 
-#### role
+role
 * owner（最高権限）
 * author（一般利用者）
 
-#### status
+status
 * 0（仮登録）
 * 1（本登録）
 
-* role
-  * owner（最高権限）
-  * author（一般利用者）
-* status
-  * 0（仮登録）
-  * 1（本登録）
-
-bakeコマンド
+#### bakeコマンド
 
 ```console
 $ bin/cake bake all users
@@ -51,11 +44,11 @@ CREATE TABLE `posts` (
 );
 ```
 
-* status
-  * 0（非公開）
-  * 1（公開）
+status
+* 0（非公開）
+* 1（公開）
 
-bakeコマンド
+#### bakeコマンド
 
 ```console
 $ bin/cake bake all posts
@@ -72,11 +65,11 @@ CREATE TABLE `posts_users` (
 );
 ```
 
-* role
-  * admin（管理者）
-  * author（投稿者）
+role
+* admin（管理者）
+* author（投稿者）
 
-bakeコマンド
+#### bakeコマンド
 
 ```console
 $ bin/cake bake model posts_users
@@ -97,13 +90,13 @@ CREATE TABLE `articles` (
 );
 ```
 
-* status
-  * publish（公開）
-  * future（予約投稿）
-  * draft（下書き）
-  * pending（保留/レビュー待ち）
+status
+* publish（公開）
+* future（予約投稿）
+* draft（下書き）
+* pending（保留/レビュー待ち）
 
-bakeコマンド
+#### bakeコマンド
 
 ```console
 $ bin/cake bake model articles
@@ -122,7 +115,8 @@ CREATE TABLE `sections` (
     `image` VARCHAR(255) UNIQUE
 );
 ```
-bakeコマンド
+
+#### bakeコマンド
 
 ```console
 $ bin/cake bake model sections

@@ -20,10 +20,8 @@ class AuthController extends AppController
         'Form' => [
             'className' => 'Bootstrap.Form',
             'templates' => [
-                'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
                 'radioWrapper' => '{{label}}',
                 'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
-                'checkboxWrapper' => '{{label}}',
                 'checkbox' => '<input type="checkbox" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
                 'helpBlock' => '<small class="form-text text-muted">{{content}}</small>'
             ]
@@ -99,6 +97,9 @@ class AuthController extends AppController
                 $user_name = $user['nickname'];
                 if (($user_name == null) || empty($user_name)) {
                     $user_name = $user['username'];
+                }
+                if (isset($user['role']) && ($user['role'] == 'admin')) {
+                    $this->set('header', 'Users/header_admin');
                 }
                 $this->set(compact('user_name', 'user_id'));
                 $this->user_id = $user_id;

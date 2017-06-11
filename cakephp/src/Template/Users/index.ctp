@@ -13,7 +13,7 @@
                     ['#' => ['class' => 'num']],
                     __('Title'),
                     __('Author'),
-                    __('Publish'),
+                    __('Status'),
                     'modified',
                     '',
                     ''
@@ -32,7 +32,7 @@
                     <td class="num"><?= $i ?></td>
                     <td><?= h($post->title) ?></td>
                     <td><?= h($post->author) ?></td>
-                    <td><i class="fa <?= $publish_icon ?>" aria-hidden="true"></i></td>
+                    <td class="status"><i class="fa <?= $publish_icon ?>" aria-hidden="true"></i></td>
                     <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
                     <td><?= $this->Html->link(__('View'), ['controller' => 'Posts', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
                     <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id], ['class' => 'edit-link']) ?></td>

@@ -33,6 +33,7 @@ strong {
 
 a.view-link:after,
 a.edit-link:before,
+a.setup-link:before,
 a.back-link:before,
 a.btn-delete:before {
     font-family: FontAwesome;
@@ -43,6 +44,10 @@ a.view-link:after {
 }
 a.edit-link:before {
     content: '\f044';
+    padding-right: 0.4rem;
+}
+a.setup-link:before {
+    content: '\f013';
     padding-right: 0.4rem;
 }
 a.back-link:before {
@@ -57,11 +62,6 @@ a.btn-delete:before {
 .topicpath {
     margin-left: -0.5em;
     padding-top: 0.5rem;
-}
-
-p.pagination-doc {
-    color: #9b9b9b;
-    text-align: right;
 }
 
 footer {
@@ -113,7 +113,7 @@ form .field-content {
     background-color: #f6f8fa;
 }
 .boxed-group .boxed-group-inner {
-    padding: 8px 10px 13px;
+    padding: 18px 20px 23px;
     border-width: 1px 0 0;
 }
 .boxed-group .boxed-group-inner .form-group:last-child {
@@ -131,6 +131,10 @@ form .field-content {
 .boxed-group .boxed-group-inner input.form-control {
     margin-right: 10px;
     margin-bottom: 10px;
+}
+.boxed-group .boxed-group-inner .radio-group,
+.boxed-group .boxed-group-inner .checkbox {
+    margin-left: 1rem;
 }
 
 .boxed-group .boxed-group-row {
@@ -293,7 +297,6 @@ form .field-content {
     font-size: 1.5rem;
     margin-bottom: 2rem;
 }
-
 .index-content section.posts h2 {
     font-size: 1.5rem;
     font-weight: 400;
@@ -307,22 +310,9 @@ form .field-content {
     text-align: center;
     font-weight: 400;
 }
-.index-content table.table .delete {
-    width: 5rem;
+.index-content table.table .status {
+    width: 4rem;
     text-align: center;
-}
-.index-content table.table .active td {
-    font-weight: 700;
-    background-color: #d9edf7;
-    border-color: #bcdff1;
-    color: #31708f
-}
-.index-content table.table .invalid td {
-    color: #9b9b9b;
-}
-.index-content table.table a i {
-    vertical-align: middle;
-    padding-left: 0.2rem;
 }
 
 .index-content a.add-link {
@@ -338,5 +328,45 @@ form .field-content {
     padding-right: 0.4rem;
 }
 
+/* users
+-------------------------------------------*/
+.users-content {
+    padding: 20px 0 40px;
+}
+.users-content h1 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+}
 
+.users-content table.table thead i.fa {
+    margin-left: 0.5rem;
+}
+.users-content table.table .num {
+    max-width: 4rem;
+    text-align: center;
+    font-weight: 400;
+}
+.users-content table.table .status {
+    max-width: 4rem;
+    text-align: center;
+}
+.users-content table.table .status .custom-control {
+    margin: auto;
+}
 
+.users-content table.table .active td {
+    background-color: #d9edf7;
+    border-color: #bcdff1;
+    color: #31708f;
+}
+.users-content table.table .invalid td {
+    color: #9b9b9b;
+}
+
+.users-content p.pagination-doc {
+    color: #9b9b9b;
+    text-align: right;
+}

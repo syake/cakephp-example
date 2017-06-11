@@ -8,7 +8,7 @@
                     <li class="dropdown-divider" role="separator"></li>
                     <li class="dropdown-item"><?= $this->Html->link(__('Edit Profile'), ['controller' => 'Users', 'action' => 'edit', 'prefix' => false]) ?></li>
                     <li class="dropdown-divider" role="separator"></li>
-                    <li class="dropdown-item"><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
+                    <li class="dropdown-item"><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index', 'prefix' => 'admin']) ?></li>
                     <li class="dropdown-divider" role="separator"></li>
                     <li class="dropdown-item"><?= $this->Html->link(__('Sign out'), ['controller' => 'Users', 'action' => 'logout', 'prefix' => false]) ?></li>
                 </ul>

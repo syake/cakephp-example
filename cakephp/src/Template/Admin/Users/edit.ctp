@@ -15,16 +15,26 @@
             <?= $this->Form->control('email') ?>
             <?= $this->Form->control('nickname') ?>
             <?= $this->Form->control('role', [
-                    'type' => 'radio',
-                    'options' => [
-                        ['value' => 'admin', 'text' => 'Admin'],
-                        ['value' => 'author', 'text' => 'Author']
-                    ],
+                'type' => 'radio',
+                'options' => [
+                    ['value' => 'admin', 'text' => 'Admin'],
+                    ['value' => 'author', 'text' => 'Author']
+                ],
+                'templates' => [
+                    'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
+                    'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>'
+                ]
+            ]) ?>
+            <div class="form-group">
+                <label class="control-label"><?= __('Status') ?></label>
+                <?= $this->Form->control('status', [
+                    'label' => __('Publish'),
+                    'type' => 'checkbox',
                     'templates' => [
-                        'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>'
+                        'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}{{text}}</label>'
                     ]
                 ]) ?>
-                <?= $this->Form->control('status', ['label' => __('Publish')]) ?>
+            </div>
             <?= $this->Form->button(__('Update an account'), ['class' => 'btn-secondary']); ?>
             <?= $this->Form->end() ?>
         </div>

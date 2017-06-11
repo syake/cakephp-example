@@ -130,41 +130,43 @@ class PostsController extends AuthController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             $flash_key = 'flash';
+            $is_duplicate = false;
             
             // join users
-            $has_error = false;
-            if ($this->request->data('users._ids')) {
+            $username = $this->request->data('users._username');
+            if ($username != null) {
                 $flash_key = 'users';
-                $has_error = true;
                 
-                $username = $this->request->data('users._username');
-                if ($username != null) {
-                    $user_id = $this->Users->find('list', [
-                        'conditions' => ['username' => $username]
-                    ])->first();
-                    if ($user_id != null) {
-                        $data['users'] = [];
-                        $request_user_ids = $this->request->data('users._ids');
-                        if ($request_user_ids != null) {
-                            foreach ($request_user_ids as $request_user_id) {
-                                array_push($data['users'], ['id' => $request_user_id]);
-                            }
+                $user_id = $this->Users->find('list', [
+                    'conditions' => ['username' => $username],
+                    'limit' => 1
+                ])->first();
+                if ($user_id != null) {
+                    $data['users'] = [];
+                    
+                    // current join users
+                    $users = $post->users;
+                    foreach($users as $user) {
+                        if ($user_id == $user->id) {
+                            $is_duplicate = true;
                         }
-                        if (!in_array($user_id, $request_user_ids)) {
-                            $user_data = [
-                                'id' => $user_id,
-                                '_joinData' => [
-                                    'role' => 'author'
-                                ]
-                            ];
-                            array_push($data['users'], $user_data);
-                            $has_error = false;
-                        }
+                        array_push($data['users'], ['id' => $user->id]);
+                    }
+                    
+                    // add join user
+                    if ($is_duplicate == false) {
+                        $user_data = [
+                            'id' => $user_id,
+                            '_joinData' => [
+                                'role' => 'author'
+                            ]
+                        ];
+                        array_push($data['users'], $user_data);
                     }
                 }
             }
             
-            if ($has_error == false) {
+            if ($is_duplicate == false) {
                 $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
                 if ($this->Posts->save($post)) {
                     $this->Flash->success(__('The post has been saved.'), ['key' => $flash_key]);
@@ -179,6 +181,38 @@ class PostsController extends AuthController
         $users = $post->users;
         $this->set(compact('post', 'users'));
         $this->set('_serialize', ['post']);
+    }
+    
+    public function unjoin($id, $user_id)
+    {
+        $this->request->allowMethod(['post']);
+        $post = $this->Posts->get($id, [
+            'contain' => ['Users']
+        ]);
+        
+        if ($post->hasAdmin($this->user_id) == false) {
+            return $this->redirect($this->referer(), 303);
+        }
+        
+        $data = $this->request->getData();
+        $data['users'] = [];
+        
+        // current join users
+        $users = $post->users;
+        foreach($users as $user) {
+            if ($user_id == $user->id) {
+                continue;
+            }
+            array_push($data['users'], ['id' => $user->id]);
+        }
+        
+        $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
+        if ($this->Posts->save($post)) {
+            $this->Flash->success(__('The post has been saved.'), ['key' => 'users']);
+        } else {
+            $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => 'users']);
+        }
+        return $this->redirect($this->referer());
     }
 
     /**

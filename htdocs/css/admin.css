@@ -287,6 +287,18 @@ form .field-content {
     height: 20rem;
 }
 
+.edit-post-content table.table .unjoin {
+    width: 4rem;
+    text-align: center;
+}
+.edit-post-content table.table .unjoin a {
+    text-decoration: none;
+    color: black;
+}
+.edit-post-content table.table .unjoin a:hover {
+    color: #747474;
+}
+
 /* index
 -------------------------------------------*/
 .index-content {

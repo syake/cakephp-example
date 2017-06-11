@@ -24,7 +24,8 @@
                 <thead>
                     <?= $this->Html->tableHeaders([
                         __('Username'),
-                        __('Role')
+                        __('Role'),
+                        [__('Unjoin') => ['class' => 'unjoin']]
                     ]) ?>
                 </thead>
                 <tbody>
@@ -32,6 +33,21 @@
                     <tr>
                         <td><?= h($user->username) ?></td>
                         <td><?= h($user->_joinData->role) ?></td>
+                        <td class="unjoin">
+                            <?php if ($user->id != $user_id) : ?>
+                            <?= $this->Form->postLink(
+                                    '<i class="fa fa-times-circle" aria-hidden="true"></i>',
+                                    ['action' => 'unjoin', $post->id, $user->id],
+                                    [
+                                        'role' => 'button',
+                                        'aria-pressed' => 'true',
+                                        'confirm' => __('Are you sure you want to remove "{0}" ?', h($user->username)),
+                                        'escape' => false
+                                    ]
+                                )
+                            ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -39,13 +55,10 @@
         </div>
         <div class="boxed-group-inner">
             <?= $this->Form->create($post) ?>
-            <?php foreach($users as $user): ?>
-            <?= $this->Form->hidden('users._ids[]', ['value' => $user->id]) ?>
-            <?php endforeach; ?>
             <div class="form-group text required">
                 <label class="control-label" for="name"><?= __('User Name') ?></label>
                 <div class="form-inline">
-                    <?= $this->Form->text('users._username') ?>
+                    <?= $this->Form->text('users._username', ['value' => '']) ?>
                     <?= $this->Form->button(__('Add'), ['class' => 'btn-secondary']); ?>
                 </div>
             </div>

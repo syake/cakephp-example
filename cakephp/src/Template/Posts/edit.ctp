@@ -15,7 +15,7 @@
     <div class="title">
         <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>
         <div class="nav">
-            <?= $this->Html->link(__('Preview'), ['controller' => 'Posts', 'action' => 'index', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?>
+            <?= $this->Html->link(__('Preview'), ['controller' => 'Posts', 'action' => 'view', $article->id], ['class' => 'view-link', 'target' => '_blank']) ?>
         </div>
     </div>
     <?= $this->Flash->render() ?>

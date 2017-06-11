@@ -44,6 +44,23 @@ class PostsController extends AuthController
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
     }
+    
+    /**
+     * View method
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function view($id = null)
+    {
+        $this->viewBuilder()->layout('post');
+        $post = $this->Articles->get($id, [
+            'contain' => ['Sections']
+        ]);
+        
+        $this->set(compact('post'));
+        $this->set('_serialize', ['post']);
+        $this->render('index');
+    }
 
     /**
      * Add method

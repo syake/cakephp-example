@@ -2,5 +2,5 @@
     $this->assign('title', $post->title);
 ?>
 <div class="content">
-    <?= $post->content ?>
+    <?= var_dump($post) ?>
 </div>

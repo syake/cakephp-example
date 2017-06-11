@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 
 /**
  * Posts Controller
@@ -12,6 +13,11 @@ use App\Controller\AppController;
  */
 class PostsController extends AuthController
 {
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow(['index']);
+    }
 
     /**
      * Index method
@@ -22,9 +28,17 @@ class PostsController extends AuthController
     {
         $this->viewBuilder()->layout('post');
         $uuid = $this->request->id;
-        $post = $this->Posts->find('all', [
+        $post_id = $this->Posts->find('list', [
             'conditions' => ['uuid' => $uuid],
-            'contain' => ['Articles']
+            'valueField' => 'id',
+            'limit' => 1
+        ])->first();
+        $post = $this->Articles->find('all', [
+            'conditions' => [
+                'post_id' => $post_id,
+                'status' => 'publish'
+            ],
+            'contain' => ['Sections']
         ])->first();
         
         $this->set(compact('post'));

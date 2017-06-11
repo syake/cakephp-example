@@ -16,6 +16,7 @@
                     __('Status'),
                     'modified',
                     '',
+                    '',
                     ''
                 ]) ?>
             </thead>
@@ -36,6 +37,9 @@
                     <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
                     <td><?= $this->Html->link(__('View'), ['controller' => 'Posts', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
                     <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id], ['class' => 'edit-link']) ?></td>
+                    <td><?php if ($post->hasAdmin($user_id)) : ?>
+                        <?= $this->Html->link(__('Setup'), ['controller' => 'Posts', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
+                    <?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>

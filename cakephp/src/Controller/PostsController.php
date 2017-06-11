@@ -110,6 +110,78 @@ class PostsController extends AuthController
     }
 
     /**
+     * Setup method
+     *
+     * @param string|null $id Post id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function setup($id = null)
+    {
+        $post = $this->Posts->get($id, [
+            'contain' => ['Users']
+        ]);
+        
+        $user_id = $this->user_id;
+        if ($post->hasAdmin($user_id) == false) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+        }
+        
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            $flash_key = 'flash';
+            
+            // join users
+            $has_error = false;
+            if ($this->request->data('users._ids')) {
+                $flash_key = 'users';
+                $has_error = true;
+                
+                $username = $this->request->data('users._username');
+                if ($username != null) {
+                    $user_id = $this->Users->find('list', [
+                        'conditions' => ['username' => $username]
+                    ])->first();
+                    if ($user_id != null) {
+                        $data['users'] = [];
+                        $request_user_ids = $this->request->data('users._ids');
+                        if ($request_user_ids != null) {
+                            foreach ($request_user_ids as $request_user_id) {
+                                array_push($data['users'], ['id' => $request_user_id]);
+                            }
+                        }
+                        if (!in_array($user_id, $request_user_ids)) {
+                            $user_data = [
+                                'id' => $user_id,
+                                '_joinData' => [
+                                    'role' => 'author'
+                                ]
+                            ];
+                            array_push($data['users'], $user_data);
+                            $has_error = false;
+                        }
+                    }
+                }
+            }
+            
+            if ($has_error == false) {
+                $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
+                if ($this->Posts->save($post)) {
+                    $this->Flash->success(__('The post has been saved.'), ['key' => $flash_key]);
+                } else {
+                    $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => $flash_key]);
+                }
+            } else {
+                $this->Flash->error(__('You cannot add a post as a member.'), ['key' => $flash_key]);
+            }
+        }
+        
+        $users = $post->users;
+        $this->set(compact('post', 'users'));
+        $this->set('_serialize', ['post']);
+    }
+
+    /**
      * Edit method
      *
      * @param string|null $id Post id.
@@ -127,11 +199,14 @@ class PostsController extends AuthController
                 'status' => 'publish'
             ]
         ])->first();
+        
         if ($this->request->is(['patch', 'post', 'put'])) {
-            if ($this->request->data('article') == 'update') {
-                $article = $this->updateArticle($article);
+            $data = $this->request->getData();
+            $article = $this->Articles->patchEntity($article, $data);
+            if ($this->Articles->save($article)) {
+                $this->Flash->success(__('The post has been saved.'), ['key' => 'article']);
             } else {
-                $post = $this->updatePost($post);
+                $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => 'article']);
             }
         }
         $users = $post->users;
@@ -147,69 +222,6 @@ class PostsController extends AuthController
         
         $this->set(compact('post', 'article', 'users', 'is_admin'));
         $this->set('_serialize', ['post']);
-    }
-
-    private function updatePost($post)
-    {
-        $data = $this->request->getData();
-        $flash_key = 'flash';
-        
-        // join users
-        $has_error = false;
-        if ($this->request->data('users._ids')) {
-            $flash_key = 'users';
-            $has_error = true;
-            
-            $username = $this->request->data('users._username');
-            if ($username != null) {
-                $user_id = $this->Users->find('list', [
-                    'conditions' => ['username' => $username]
-                ])->first();
-                if ($user_id != null) {
-                    $data['users'] = [];
-                    $request_user_ids = $this->request->data('users._ids');
-                    if ($request_user_ids != null) {
-                        foreach ($request_user_ids as $request_user_id) {
-                            array_push($data['users'], ['id' => $request_user_id]);
-                        }
-                    }
-                    if (!in_array($user_id, $request_user_ids)) {
-                        $user_data = [
-                            'id' => $user_id,
-                            '_joinData' => [
-                                'role' => 'author'
-                            ]
-                        ];
-                        array_push($data['users'], $user_data);
-                        $has_error = false;
-                    }
-                }
-            }
-        }
-        
-        if ($has_error == false) {
-            $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
-            if ($this->Posts->save($post)) {
-                $this->Flash->success(__('The post has been saved.'), ['key' => $flash_key]);
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => $flash_key]);
-            }
-        } else {
-            $this->Flash->error(__('You cannot add a post as a member.'), ['key' => $flash_key]);
-        }
-        return $post;
-    }
-
-    private function updateArticle($article)
-    {
-        $data = $this->request->getData();
-        $article = $this->Articles->patchEntity($article, $data);
-        if ($this->Articles->save($article)) {
-            $this->Flash->success(__('The post has been saved.'), ['key' => 'article']);
-        } else {
-            $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => 'article']);
-        }
-        return $article;
     }
 
     /**

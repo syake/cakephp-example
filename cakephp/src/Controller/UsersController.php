@@ -30,7 +30,7 @@ class UsersController extends AuthController
     {
         $id = $this->user_id;
         $posts = $this->Users->get($id, [
-            'contain' => ['Posts', 'Posts.Articles']
+            'contain' => ['Posts', 'Posts.Articles', 'Posts.Users']
         ])->posts;
         
         $this->set(compact('posts'));

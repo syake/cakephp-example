@@ -12,7 +12,7 @@ use Cake\Event\Event;
  *
  * @method \App\Model\Entity\User[] paginate($object = null, array $settings = [])
  */
-class UsersController extends AdminController
+class UsersController extends AuthController
 {
     public $paginate = [
         'limit' => 5,
@@ -29,26 +29,13 @@ class UsersController extends AdminController
 
     public function index()
     {
-        $id = $this->Session->read('Auth.User.id');
+        $id = $this->user_id;
         $posts = $this->Users->get($id, [
             'contain' => ['Posts', 'Posts.Articles']
         ])->posts;
         
         $this->set(compact('posts'));
         $this->set('_serialize', ['posts']);
-    }
-
-    /**
-     * Rookup method
-     *
-     * @return \Cake\Http\Response|null
-     */
-    public function lookup()
-    {
-        $users = $this->paginate($this->Users);
-
-        $this->set(compact('users'));
-        $this->set('_serialize', ['users']);
     }
 
     /**
@@ -61,9 +48,9 @@ class UsersController extends AdminController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->find('all', ['conditions' => ['role !=' => 'owner']])) {
-                $user->set('role', 'owner');
-                $user->set('status', '1');
+            if ($this->Users->find('list', ['conditions' => ['role' => 'admin']])->first() == null) {
+                $user->set('role', 'admin');
+                $user->set('status', 1);
             }
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
@@ -75,7 +62,7 @@ class UsersController extends AdminController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
-        $this->set('header', 'Admin/header_add');
+        $this->set('header', 'Users/header_add');
         $this->set('style', 'add');
     }
 
@@ -88,13 +75,6 @@ class UsersController extends AdminController
      */
     public function edit($id = null)
     {
-/*
-        if ($this->Session->read('Auth.User.role') == 'admin') {
-            $this->setAction('editAdmin', $id);
-            return;
-        }
-*/
-        
         if ($this->request->data('_password')) {
             $flash_key = 'password';
         } else if ($this->request->data('_email')) {
@@ -103,7 +83,7 @@ class UsersController extends AdminController
             $flash_key = 'flash';
         }
         
-        $id = $this->Session->read('Auth.User.id');
+        $id = $this->user_id;
         $user = $this->Users->get($id, [
             'contain' => []
         ]);
@@ -117,66 +97,6 @@ class UsersController extends AdminController
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
-        $this->set('backto_list', false);
-    }
-
-    public function editAdmin($id = null){
-        $user_id = $this->Session->read('Auth.User.id');
-        if (($id == null) || ($id == $user_id)) {
-            $current_id = $user_id;
-            $is_profile = true;
-        } else {
-            $current_id = $id;
-            $is_profile = false;
-        }
-        
-        if ($this->Users->exists(['id' => $current_id]) == false) {
-            return $this->redirect(['action' => 'lookup']);
-        }
-        
-        $user = $this->Users->get($current_id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-            } else {
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
-            }
-        }
-        $this->set(compact('user'));
-        $this->set('_serialize', ['user']);
-        if ($is_profile) {
-            if ($id == null) {
-                $this->set('backto_list', false);
-            } else {
-                $this->set('backto_list', true);
-            }
-            $this->render('edit');
-        } else {
-            $this->render('edit_user');
-        }
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
-        } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
-        }
-
-        return $this->redirect(['action' => 'lookup']);
     }
 
     public function login()
@@ -190,7 +110,7 @@ class UsersController extends AdminController
             $this->Flash->error(__('Invalid username or password, try again'));
         }
         
-        $this->set('header', 'Admin/header_login');
+        $this->set('header', 'Users/header_login');
         $this->set('style', 'login');
     }
 

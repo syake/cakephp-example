@@ -10,7 +10,7 @@ use App\Controller\AppController;
  *
  * @method \App\Model\Entity\Post[] paginate($object = null, array $settings = [])
  */
-class PostsController extends AdminController
+class PostsController extends AuthController
 {
 
     /**
@@ -105,7 +105,7 @@ class PostsController extends AdminController
         }
         $users = $post->users;
         
-        $user_id = $this->Session->read('Auth.User.id');
+        $user_id = $this->user_id;
         $is_admin = false;
         foreach ($users as $user) {
             if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {

@@ -2,11 +2,7 @@
     $this->assign('title', __('Your Profile'));
 ?>
 <nav class="nav topicpath">
-<?php if ($backto_list): ?>
-    <?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'lookup'], ['class' => 'nav-link back-link']) ?>
-<?php else: ?>
     <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) ?>
-<?php endif; ?>
 </nav>
 <div class="content edit-user-content">
     <h1><?= $this->fetch('title') ?></h1>
@@ -48,7 +44,6 @@
             <?= $this->Flash->render('password') ?>
             <?= $this->Form->create($user) ?>
             <?= $this->Form->hidden('_password', ['value' => '1']) ?>
-            <?= $this->Form->control('old_password', ['type' => 'password', 'label' => __('Old password'), 'value' => 'password']) ?>
             <?= $this->Form->control('password', ['type' => 'password', 'label' => __('New password'), 'value' => '']) ?>
             <?= $this->Form->button(__('Update password'), ['class' => 'btn-secondary']); ?>
             <?= $this->Form->end() ?>

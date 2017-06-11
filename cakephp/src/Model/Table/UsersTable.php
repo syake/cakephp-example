@@ -91,13 +91,11 @@ class UsersTable extends Table
             ->allowEmpty('nickname');
 
         $validator
-            ->requirePresence('role', 'create')
-            ->notEmpty('role');
+            ->allowEmpty('role');
 
         $validator
             ->boolean('status')
-            ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->allowEmpty('status');
 
         return $validator;
     }

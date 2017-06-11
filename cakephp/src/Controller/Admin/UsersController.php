@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Owner;
+namespace App\Controller\Admin;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
@@ -11,14 +11,23 @@ use Cake\Event\Event;
  *
  * @method \App\Model\Entity\User[] paginate($object = null, array $settings = [])
  */
-class UsersController extends AdminController
+class UsersController extends \App\Controller\AuthController
 {
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+        
+        $this->set('header', 'Users/header_admin');
+    }
+
     public function isAuthorized($user = null)
     {
-        if (isset($user['owner']) && $user['owner'] === 1) {
-            return true;
+        if ($user != null) {
+            if (isset($user['role']) && ($user['role'] == 'admin')) {
+                return parent::isAuthorized($user);
+            }
         }
-        return parent::isAuthorized($user);
+        return false;
     }
 
     /**
@@ -82,6 +91,28 @@ class UsersController extends AdminController
      */
     public function edit($id = null)
     {
+        if ($this->request->data('_password')) {
+            $flash_key = 'password';
+        } else {
+            $flash_key = 'flash';
+        }
+        
+        $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The user has been saved.'), ['key' => $flash_key]);
+            } else {
+                $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
+            }
+        }
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+        
+/*
+        
         $user = $this->Users->get($id, [
             'contain' => ['Posts']
         ]);
@@ -97,6 +128,7 @@ class UsersController extends AdminController
         $posts = $this->Users->Posts->find('list', ['limit' => 200]);
         $this->set(compact('user', 'posts'));
         $this->set('_serialize', ['user']);
+*/
     }
 
     /**

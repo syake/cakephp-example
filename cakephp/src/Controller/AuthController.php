@@ -12,8 +12,10 @@ use Cake\Event\Event;
  *
  * @method \App\Model\Entity\User[] paginate($object = null, array $settings = [])
  */
-class AdminController extends AppController
+class AuthController extends AppController
 {
+    protected $user_id = null;
+    
     public $helpers = [
         'Form' => [
             'className' => 'Bootstrap.Form',
@@ -61,37 +63,48 @@ class AdminController extends AppController
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login',
+                'prefix' => false
             ],
             'loginRedirect' => [
                 'controller' => 'Users',
-                'action' => 'index'
+                'action' => 'index',
+                'prefix' => false
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Users',
+                'action' => 'login',
+                'prefix' => false
             ]
         ]);
         
         $this->Users = TableRegistry::get('Users');
         $this->Posts = TableRegistry::get('Posts');
         $this->Articles = TableRegistry::get('Articles');
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
         
         $this->viewBuilder()->layout('admin');
-        $this->set('header', 'Admin/header');
+        $this->set('header', 'Users/header');
         $this->set('style', 'index');
-        
-        $user_name = null;
-        $user_id = null;
-        $this->Session = $this->request->session();
-        if ($this->Session->check('Auth.User')) {
-            $user_id = $this->Session->read('Auth.User.id');
-            $user = $this->Users->get($user_id);
-            $user_name = $user->nickname;
-            if (($user_name == null) || empty($user_name)) {
-                $user_name = $user->username;
-            }
-        }
-        $this->set(compact('user_name', 'user_id'));
     }
 
     public function isAuthorized($user = null)
     {
-        return true;
+        if ($user != null) {
+            $user_id = $user['id'];
+            if ($this->Users->exists(['id' => $user_id])) {
+                $user_name = $user['nickname'];
+                if (($user_name == null) || empty($user_name)) {
+                    $user_name = $user['username'];
+                }
+                $this->set(compact('user_name', 'user_id'));
+                $this->user_id = $user_id;
+                return true;
+            }
+        }
+        return false;
     }
 }

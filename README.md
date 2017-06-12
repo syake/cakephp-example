@@ -9,10 +9,10 @@ CREATE TABLE `users` (
     `email` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(255),
-    `role` ENUM('owner','author') NOT NULL DEFAULT 'author',
-    `status` TINYINT(1) NOT NULL DEFAULT 0,
-    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `role` ENUM('admin','author') DEFAULT 'author',
+    `status` TINYINT(1) DEFAULT 0,
+    `created` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -29,15 +29,15 @@ _bakeコマンド_
 $ bin/cake bake all users
 ```
 
-## posts テーブル
+## projects テーブル
 
 ```mysql
-CREATE TABLE `posts` (
+CREATE TABLE `projects` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `uuid` BIGINT(20) UNSIGNED UNIQUE NOT NULL,
-    `status` TINYINT(1) NOT NULL DEFAULT 0,
-    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `status` TINYINT(1) DEFAULT 0,
+    `created` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -50,14 +50,14 @@ _bakeコマンド_
 $ bin/cake bake all posts
 ```
 
-## posts_users テーブル
+## projects_users テーブル
 
 ```mysql
-CREATE TABLE `posts_users` (
+CREATE TABLE `projects_users` (
   `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `post_id` BIGINT(20) UNSIGNED NOT NULL,
+  `project_id` BIGINT(20) UNSIGNED NOT NULL,
   `user_id` BIGINT(20) UNSIGNED NOT NULL,
-  `role` ENUM('admin','author') NOT NULL DEFAULT 'author'
+  `role` ENUM('admin','author') DEFAULT 'author'
 );
 ```
 
@@ -67,7 +67,7 @@ __role__
 
 _bakeコマンド_
 ```console
-$ bin/cake bake model posts_users
+$ bin/cake bake model projects_users
 ```
 
 ## articles テーブル
@@ -75,13 +75,14 @@ $ bin/cake bake model posts_users
 ```mysql
 CREATE TABLE `articles` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `post_id` BIGINT(20) UNSIGNED NOT NULL,
+    `project_id` BIGINT(20) UNSIGNED NOT NULL,
     `author_id` BIGINT(20) UNSIGNED NOT NULL,
     `status` ENUM('publish','future','draft','pending') NOT NULL DEFAULT 'draft',
     `title` VARCHAR(255),
     `content` LONGTEXT,
-    `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `modified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    `header_image` VARCHAR(255),
+    `created` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 ```
 
@@ -103,7 +104,7 @@ CREATE TABLE `sections` (
     `section_id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` BIGINT(20) UNSIGNED NOT NULL,
     `tag` VARCHAR(20) NOT NULL,
-    `order` INT(11) NOT NULL DEFAULT 0,
+    `order` INT(11) DEFAULT 0,
     `title` VARCHAR(255),
     `description` TEXT,
     `image` VARCHAR(255) UNIQUE

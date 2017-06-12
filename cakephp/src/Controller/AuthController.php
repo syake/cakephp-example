@@ -15,6 +15,7 @@ use Cake\Event\Event;
 class AuthController extends AppController
 {
     protected $user_id = null;
+    protected $user_role = null;
     
     public $helpers = [
         'Form' => [
@@ -87,25 +88,31 @@ class AuthController extends AppController
         $this->viewBuilder()->layout('admin');
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
+        
+        $user_id = $this->request->session()->read('Auth.User.id');
+        $user_name = null;
+        if (($user_id != null) && $this->Users->exists(['id' => $user_id])) {
+            $user = $this->Users->get($user_id);
+            $user_name = $user->nickname;
+            $user_role = $user->role;
+            if (($user_name == null) || empty($user_name)) {
+                $user_name = $user->username;
+            }
+            if ($user_role == 'admin') {
+                $this->set('header', 'Users/header_admin');
+            }
+            $this->user_id = $user_id;
+            $this->user_role = $user_role;
+        }
+        $this->set(compact('user_name', 'user_id'));
     }
 
     public function isAuthorized($user = null)
     {
-        if ($user != null) {
-            $user_id = $user['id'];
-            if ($this->Users->exists(['id' => $user_id])) {
-                $user_name = $user['nickname'];
-                if (($user_name == null) || empty($user_name)) {
-                    $user_name = $user['username'];
-                }
-                if (isset($user['role']) && ($user['role'] == 'admin')) {
-                    $this->set('header', 'Users/header_admin');
-                }
-                $this->set(compact('user_name', 'user_id'));
-                $this->user_id = $user_id;
-                return true;
-            }
+        if ($this->user_id != null) {
+            return true;
         }
+        $this->redirect(['controller' => 'Users', 'action' => 'logout']);
         return false;
     }
 }

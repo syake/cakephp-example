@@ -36,7 +36,7 @@ class PostsController extends AuthController
         $post = $this->Articles->find('all', [
             'conditions' => [
                 'post_id' => $post_id,
-                'status' => 'publish'
+                'status' => 'status'
             ],
             'contain' => ['Sections']
         ])->first();

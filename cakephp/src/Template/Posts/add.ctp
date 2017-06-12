@@ -25,7 +25,7 @@
                 <h2><?= __('Create') ?></h2>
                 <div class="boxed-group-inner">
                     <div class="boxed-group-section">
-                        <?= $this->Form->control('publish', [
+                        <?= $this->Form->control('status', [
                             'label' => __('Publish'),
                             'type' => 'checkbox',
                             'checked',

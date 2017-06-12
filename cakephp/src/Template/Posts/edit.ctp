@@ -1,6 +1,6 @@
 <?php
     $this->assign('title', __('Edit Post'));
-    if ($post->publish) {
+    if ($post->status) {
         $status = __('Publish');
         $badge_label = __('Publish');
         $badge_style = 'badge-success';

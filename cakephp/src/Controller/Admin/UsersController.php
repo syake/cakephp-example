@@ -22,12 +22,10 @@ class UsersController extends \App\Controller\AuthController
 
     public function isAuthorized($user = null)
     {
-        if ($user != null) {
-            if (isset($user['role']) && ($user['role'] == 'admin')) {
-                return parent::isAuthorized($user);
-            }
+        if ($this->user_role == 'admin') {
+            return true;
         }
-        return false;
+        return parent::isAuthorized($user);
     }
 
     /**

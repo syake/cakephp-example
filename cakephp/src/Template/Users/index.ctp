@@ -23,10 +23,10 @@
             <tbody>
                 <?php foreach($posts as $i => $post): ?>
                 <?php
-                  if ($post->publish) {
-                      $publish_icon = 'fa-check-circle';
+                  if ($post->status) {
+                      $status_icon = 'fa-check-circle';
                   }  else {
-                      $publish_icon = 'fa-ban';
+                      $status_icon = 'fa-ban';
                   }
                   $articles = $post->articles;
                   foreach($articles as $j => $article):
@@ -35,7 +35,7 @@
                     <td class="num"><?= $i ?></td>
                     <td><?= h($article->title) ?></td>
                     <td><?= h($article->author) ?></td>
-                    <td class="status"><i class="fa <?= $publish_icon ?>" aria-hidden="true"></i></td>
+                    <td class="status"><i class="fa <?= $status_icon ?>" aria-hidden="true"></i></td>
                     <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
                     <td><?= $this->Html->link(__('View'), ['controller' => 'Posts', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
                     <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $article->id], ['class' => 'edit-link']) ?></td>

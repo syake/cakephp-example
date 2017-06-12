@@ -1,6 +1,6 @@
 <?php
     $this->assign('title', __('Setup Post'));
-    if ($post->publish) {
+    if ($post->status) {
         $badge_label = __('Publish');
         $badge_style = 'badge-success';
     } else {
@@ -69,11 +69,11 @@
         <h2><?= __('Settings') ?></h2>
         <div class="boxed-group-inner boxed-group-row">
             <?= $this->Form->create($post) ?>
-            <?php if ($post->publish) : ?>
-                <?= $this->Form->button(__('Make private'), ['class' => 'btn-secondary js-confirm', 'data-confirm' => __('Are you sure you want to private?'), 'name' => 'publish', 'value' => '0']); ?>
+            <?php if ($post->status) : ?>
+                <?= $this->Form->button(__('Make private'), ['class' => 'btn-secondary js-confirm', 'data-confirm' => __('Are you sure you want to private?'), 'name' => 'status', 'value' => '0']); ?>
                 <p class="doc"><strong><?= __('Make this post private') ?></strong></p>
             <?php else: ?>
-                <?= $this->Form->button(__('Make publish'), ['class' => 'btn-secondary js-confirm', 'data-confirm' => __('Are you sure you want to publish?'), 'name' => 'publish', 'value' => '1']); ?>
+                <?= $this->Form->button(__('Make publish'), ['class' => 'btn-secondary js-confirm', 'data-confirm' => __('Are you sure you want to publish?'), 'name' => 'status', 'value' => '1']); ?>
                 <p class="doc"><strong><?= __('Make this post publish') ?></strong></p>
             <?php endif; ?>
             <?= $this->Form->end() ?>

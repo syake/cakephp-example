@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Articles Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Posts
+ * @property \Cake\ORM\Association\BelongsTo $Projects
  * @property \Cake\ORM\Association\BelongsTo $Authors
  * @property \Cake\ORM\Association\HasMany $Sections
  *
@@ -42,11 +42,11 @@ class ArticlesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Posts', [
-            'foreignKey' => 'post_id',
+        $this->belongsTo('Projects', [
+            'foreignKey' => 'project_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Authors', [
+        $this->belongsTo('Users', [
             'foreignKey' => 'author_id',
             'joinType' => 'INNER'
         ]);
@@ -76,6 +76,9 @@ class ArticlesTable extends Table
         $validator
             ->allowEmpty('content');
 
+        $validator
+            ->allowEmpty('header_image');
+
         return $validator;
     }
 
@@ -88,7 +91,8 @@ class ArticlesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['post_id'], 'Posts'));
+        $rules->add($rules->existsIn(['project_id'], 'Projects'));
+        $rules->add($rules->existsIn(['author_id'], 'Users'));
 
         return $rules;
     }

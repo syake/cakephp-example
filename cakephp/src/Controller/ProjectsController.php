@@ -5,13 +5,13 @@ use App\Controller\AppController;
 use Cake\Event\Event;
 
 /**
- * Posts Controller
+ * Projects Controller
  *
- * @property \App\Model\Table\PostsTable $Posts
+ * @property \App\Model\Table\ProjectsTable $Projects
  *
  * @method \App\Model\Entity\Post[] paginate($object = null, array $settings = [])
  */
-class PostsController extends AuthController
+class ProjectsController extends AuthController
 {
     public function beforeFilter(Event $event)
     {
@@ -28,7 +28,7 @@ class PostsController extends AuthController
     {
         $this->viewBuilder()->layout('post');
         $uuid = $this->request->id;
-        $post_id = $this->Posts->find('list', [
+        $post_id = $this->Projects->find('list', [
             'conditions' => ['uuid' => $uuid],
             'valueField' => 'id',
             'limit' => 1
@@ -69,43 +69,86 @@ class PostsController extends AuthController
      */
     public function add()
     {
-        $post = $this->Posts->newEntity();
+        $project = $this->Projects->newEntity();
         if ($this->request->is('post')) {
             $user_id = $this->user_id;
-            $data = $this->request->getData();
-            $data['uuid'] = $this->createUuid();
-            
-            // join users
-            $data['users'] = [
-                [
-                    'id' => $user_id,
-                    '_joinData' => [
-                        'role' => 'admin'
+            $data = [
+                'uuid' => $this->createUuid(),
+                'users' => [
+                    [
+                        'id' => $user_id,
+                        '_joinData' => [
+                            'role' => 'admin'
+                        ]
                     ]
                 ]
             ];
             
             // articles  marge
-            $data['articles'] = [
-                [
-                  'title' => $data['title'],
-                  'content' => $data['content'],
-                  'author_id' => $user_id,
-                  'status' => 'publish',
-                ]
-            ];
+            $article = $this->request->getData();
+            $article = array_merge($article, [
+                'author_id' => $user_id,
+                'status' => 'publish',
+            ]);
+            $data['articles'] = [$article];
             
-            $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users', 'Articles']]);
-            if ($this->Posts->save($post)) {
+            // status
+            if ($article['publish'] == 1) {
+                $data['status'] = 1;
+                unset($article['publish']);
+            }
+            
+            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles']]);
+            if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The post has been saved.'));
 
-                return $this->redirect(['controller' => 'users', 'action' => 'index']);
+                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
             } else {
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
-        $users = $this->Posts->Users->find('list', ['limit' => 200]);
-        $this->set(compact('post', 'users'));
+        
+        $post = $this->Articles->newEntity();
+        $this->set(compact('post'));
+        $this->set('_serialize', ['post']);
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Post id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $post = $this->Articles->get($id, [
+            'contain' => ['Sections', 'Projects', 'Projects.Users']
+        ]);
+        
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            $post = $this->Articles->patchEntity($post, $data);
+            if ($this->Articles->save($post)) {
+                $this->Flash->success(__('The post has been saved.'));
+            } else {
+                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+            }
+        }
+        
+        $project = $post->project;
+        $users = $project->users;
+        
+        $is_admin = false;
+        $user_id = $this->user_id;
+        foreach ($users as $user) {
+            if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
+                $is_admin = true;
+                break;
+            }
+        }
+        
+        $this->set(compact('post', 'project', 'is_admin'));
         $this->set('_serialize', ['post']);
     }
 
@@ -118,23 +161,24 @@ class PostsController extends AuthController
      */
     public function setup($id = null)
     {
-        $post = $this->Posts->get($id, [
+        $project = $this->Projects->get($id, [
             'contain' => ['Users']
         ]);
         
         $user_id = $this->user_id;
-        if ($post->hasAdmin($user_id) == false) {
+        if ($project->hasAdmin($user_id) == false) {
             return $this->redirect(['controller' => 'Users', 'action' => 'index']);
         }
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $is_error = false;
             $flash_key = 'flash';
-            $is_duplicate = false;
             
             // join users
             $username = $this->request->data('users._username');
             if ($username != null) {
+                $is_error = true;
                 $flash_key = 'users';
                 
                 $user_id = $this->Users->find('list', [
@@ -142,15 +186,16 @@ class PostsController extends AuthController
                     'limit' => 1
                 ])->first();
                 if ($user_id != null) {
-                    $data['users'] = [];
+                    $user_datas = [];
                     
                     // current join users
-                    $users = $post->users;
+                    $is_duplicate = false;
+                    $users = $project->users;
                     foreach($users as $user) {
                         if ($user_id == $user->id) {
                             $is_duplicate = true;
                         }
-                        array_push($data['users'], ['id' => $user->id]);
+                        array_push($user_datas, ['id' => $user->id]);
                     }
                     
                     // add join user
@@ -161,32 +206,34 @@ class PostsController extends AuthController
                                 'role' => 'author'
                             ]
                         ];
-                        array_push($data['users'], $user_data);
+                        array_push($user_datas, $user_data);
+                        $data['users'] = $user_datas;
+                        $is_error = false;
                     }
                 }
             }
             
-            if ($is_duplicate == false) {
-                $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
-                if ($this->Posts->save($post)) {
-                    $this->Flash->success(__('The post has been saved.'), ['key' => $flash_key]);
+            if ($is_error == false) {
+                $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users']]);
+                if ($this->Projects->save($project)) {
+                    $this->Flash->success(__('The project has been saved.'), ['key' => $flash_key]);
                 } else {
-                    $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => $flash_key]);
+                    $this->Flash->error(__('The project could not be saved. Please, try again.'), ['key' => $flash_key]);
                 }
             } else {
-                $this->Flash->error(__('You cannot add a post as a member.'), ['key' => $flash_key]);
+                $this->Flash->error(__('You cannot add a project as a member.'), ['key' => $flash_key]);
             }
         }
         
-        $users = $post->users;
-        $this->set(compact('post', 'users'));
-        $this->set('_serialize', ['post']);
+        $users = $project->users;
+        $this->set(compact('project', 'users'));
+        $this->set('_serialize', ['project']);
     }
     
     public function unjoin($id, $user_id)
     {
         $this->request->allowMethod(['post']);
-        $post = $this->Posts->get($id, [
+        $post = $this->Projects->get($id, [
             'contain' => ['Users']
         ]);
         
@@ -206,52 +253,13 @@ class PostsController extends AuthController
             array_push($data['users'], ['id' => $user->id]);
         }
         
-        $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users']]);
-        if ($this->Posts->save($post)) {
+        $post = $this->Projects->patchEntity($post, $data, ['associated' => ['Users']]);
+        if ($this->Projects->save($post)) {
             $this->Flash->success(__('The post has been saved.'), ['key' => 'users']);
         } else {
             $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => 'users']);
         }
         return $this->redirect($this->referer());
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Post id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $article = $this->Articles->get($id, [
-            'contain' => ['Sections', 'Posts', 'Posts.Users']
-        ]);
-        
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $data = $this->request->getData();
-            $article = $this->Articles->patchEntity($article, $data);
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The post has been saved.'));
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
-            }
-        }
-        
-        $post = $article->post;
-        $users = $post->users;
-        
-        $is_admin = false;
-        $user_id = $this->user_id;
-        foreach ($users as $user) {
-            if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
-                $is_admin = true;
-                break;
-            }
-        }
-        
-        $this->set(compact('post', 'article', 'is_admin'));
-        $this->set('_serialize', ['post']);
     }
 
     /**
@@ -264,8 +272,8 @@ class PostsController extends AuthController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $post = $this->Posts->get($id);
-        if ($this->Posts->delete($post)) {
+        $post = $this->Projects->get($id);
+        if ($this->Projects->delete($post)) {
             $this->Flash->success(__('The post has been deleted.'));
         } else {
             $this->Flash->error(__('The post could not be deleted. Please, try again.'));

@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \Cake\ORM\Association\BelongsToMany $Posts
+ * @property \Cake\ORM\Association\BelongsToMany $Projects
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -40,10 +40,10 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsToMany('Posts', [
+        $this->belongsToMany('Projects', [
             'foreignKey' => 'user_id',
-            'targetForeignKey' => 'post_id',
-            'joinTable' => 'posts_users'
+            'targetForeignKey' => 'project_id',
+            'joinTable' => 'projects_users'
         ]);
     }
 

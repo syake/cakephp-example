@@ -6,7 +6,7 @@
     <?= $this->Flash->render() ?>
     <?php if (count($posts) > 0) : ?>
     <section class="posts">
-        <h2><?= __('List Posts') ?></h2>
+        <h2><?= __('List Projects') ?></h2>
         <table class="table table-striped table-bordered">
             <thead>
                 <?= $this->Html->tableHeaders([
@@ -37,10 +37,10 @@
                     <td><?= h($article->author) ?></td>
                     <td class="status"><i class="fa <?= $status_icon ?>" aria-hidden="true"></i></td>
                     <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
-                    <td><?= $this->Html->link(__('View'), ['controller' => 'Posts', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
-                    <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $article->id], ['class' => 'edit-link']) ?></td>
+                    <td><?= $this->Html->link(__('View'), ['controller' => 'Projects', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
+                    <td><?= $this->Html->link(__('Edit'), ['controller' => 'Projects', 'action' => 'edit', $article->id], ['class' => 'edit-link']) ?></td>
                     <td><?php if ($post->hasAdmin($user_id)) : ?>
-                        <?= $this->Html->link(__('Setup'), ['controller' => 'Posts', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
+                        <?= $this->Html->link(__('Setup'), ['controller' => 'Projects', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
                     <?php endif; ?></td>
                 </tr>
                 <?php endforeach; ?>
@@ -49,5 +49,5 @@
         </table>
     </section>
     <?php endif; ?>
-    <?= $this->Html->link('Create new post', ['controller' => 'Posts', 'action' => 'add'], ['class' => 'add-link']) ?>
+    <?= $this->Html->link('Create new post', ['controller' => 'Projects', 'action' => 'add'], ['class' => 'add-link']) ?>
 </div>

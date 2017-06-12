@@ -30,8 +30,8 @@ class UsersController extends AuthController
     {
         $id = $this->user_id;
         $posts = $this->Users->get($id, [
-            'contain' => ['Posts', 'Posts.Articles', 'Posts.Users']
-        ])->posts;
+            'contain' => ['Projects', 'Projects.Articles', 'Projects.Users']
+        ])->projects;
         
         $this->set(compact('posts'));
         $this->set('_serialize', ['posts']);

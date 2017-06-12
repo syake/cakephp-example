@@ -17,7 +17,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Post[] $posts
+ * @property \App\Model\Entity\Project[] $projects
  */
 class User extends Entity
 {

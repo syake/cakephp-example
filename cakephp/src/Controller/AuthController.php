@@ -77,7 +77,7 @@ class AuthController extends AppController
         ]);
         
         $this->Users = TableRegistry::get('Users');
-        $this->Posts = TableRegistry::get('Posts');
+        $this->Projects = TableRegistry::get('Projects');
         $this->Articles = TableRegistry::get('Articles');
     }
 

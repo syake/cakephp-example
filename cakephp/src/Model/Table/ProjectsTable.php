@@ -7,22 +7,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Posts Model
+ * Projects Model
  *
  * @property \Cake\ORM\Association\HasMany $Articles
  * @property \Cake\ORM\Association\BelongsToMany $Users
  *
- * @method \App\Model\Entity\Post get($primaryKey, $options = [])
- * @method \App\Model\Entity\Post newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Post[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Post|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Post patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Post[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Post findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Project get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Project newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Project[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Project|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Project patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Project[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Project findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class PostsTable extends Table
+class ProjectsTable extends Table
 {
 
     /**
@@ -35,21 +35,20 @@ class PostsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('posts');
+        $this->setTable('projects');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
         $this->hasMany('Articles', [
-            'foreignKey' => 'post_id',
-            'dependent' => true
+            'foreignKey' => 'project_id'
         ]);
         $this->belongsToMany('Users', [
-            'foreignKey' => 'post_id',
+            'foreignKey' => 'project_id',
             'targetForeignKey' => 'user_id',
-            'joinTable' => 'posts_users',
-            'through' => 'PostsUsers'
+            'joinTable' => 'projects_users',
+            'through' => 'ProjectsUsers'
         ]);
     }
 
@@ -70,9 +69,8 @@ class PostsTable extends Table
             ->add('uuid', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->boolean('publish')
-            ->requirePresence('publish', 'create')
-            ->notEmpty('publish');
+            ->boolean('status')
+            ->allowEmpty('status');
 
         return $validator;
     }

@@ -14,6 +14,7 @@ use Cake\ORM\Entity;
  * @property string $description
  * @property string $image
  *
+ * @property \App\Model\Entity\Section $section
  * @property \App\Model\Entity\Article $article
  */
 class Section extends Entity

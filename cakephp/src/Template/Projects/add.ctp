@@ -12,20 +12,14 @@
     <?= $this->Form->create($post) ?>
     <div class="row">
         <div class="col-md-9">
-            <section class="boxed-group">
-                <h2><?= __('New Content') ?></h2>
-                <div class="boxed-group-inner">
-                    <?= $this->Form->control('title', ['label' => __('Title')]) ?>
-                    <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) ?>
-                </div>
-            </section>
+            <?= $this->element('Projects/form') ?>
         </div>
         <div class="col-md-3">
             <section class="boxed-group">
                 <h2><?= __('Create') ?></h2>
                 <div class="boxed-group-inner">
                     <div class="boxed-group-section">
-                        <?= $this->Form->control('status', [
+                        <?= $this->Form->control('publish', [
                             'label' => __('Publish'),
                             'type' => 'checkbox',
                             'checked',

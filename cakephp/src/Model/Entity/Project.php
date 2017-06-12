@@ -5,18 +5,18 @@ use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
 /**
- * Post Entity
+ * Project Entity
  *
  * @property int $id
  * @property int $uuid
- * @property bool $publish
+ * @property bool $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Article[] $articles
  * @property \App\Model\Entity\User[] $users
  */
-class Post extends Entity
+class Project extends Entity
 {
 
     /**

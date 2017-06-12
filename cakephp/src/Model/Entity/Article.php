@@ -8,16 +8,17 @@ use Cake\ORM\TableRegistry;
  * Article Entity
  *
  * @property int $id
- * @property int $post_id
+ * @property int $project_id
  * @property int $author_id
  * @property string $status
  * @property string $title
  * @property string $content
+ * @property string $header_image
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Post $post
- * @property \App\Model\Entity\Project[] $projects
+ * @property \App\Model\Entity\Project $project
+ * @property \App\Model\Entity\Author $author
  * @property \App\Model\Entity\Section[] $sections
  */
 class Article extends Entity
@@ -36,7 +37,7 @@ class Article extends Entity
         '*' => true,
         'id' => false
     ];
-    
+
     protected function _getAuthor()
     {
         $this->Users = TableRegistry::get('Users');

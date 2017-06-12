@@ -4,17 +4,17 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * PostsUser Entity
+ * ProjectsUser Entity
  *
  * @property int $id
- * @property int $post_id
+ * @property int $project_id
  * @property int $user_id
  * @property string $role
  *
- * @property \App\Model\Entity\Post $post
+ * @property \App\Model\Entity\Project $project
  * @property \App\Model\Entity\User $user
  */
-class PostsUser extends Entity
+class ProjectsUser extends Entity
 {
 
     /**

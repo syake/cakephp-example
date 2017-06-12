@@ -61,8 +61,7 @@ class SectionsTable extends Table
 
         $validator
             ->integer('order')
-            ->requirePresence('order', 'create')
-            ->notEmpty('order');
+            ->allowEmpty('order');
 
         $validator
             ->allowEmpty('title');

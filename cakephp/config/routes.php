@@ -55,7 +55,12 @@ Router::scope('/', function (RouteBuilder $routes) {
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
+    
+    /**
+     * post page
+     */
+    $routes->connect('/:id', ['controller' => 'Posts', 'action' => 'index'], ['id' => '[0-9]+']);
+    
     /**
      * Connect catchall routes for all controllers.
      *
@@ -72,6 +77,12 @@ Router::scope('/', function (RouteBuilder $routes) {
      * You can remove these routes once you've connected the
      * routes you want in your application.
      */
+    $routes->fallbacks(DashedRoute::class);
+});
+
+Router::prefix('admin', function ($routes) {
+    $routes->connect('/*', ['controller' => 'Users', 'action' => 'index']);
+    $routes->connect('/:action/*', ['controller' => 'Users']);
     $routes->fallbacks(DashedRoute::class);
 });
 

@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
+ * @property \Cake\ORM\Association\BelongsToMany $Projects
+ *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
@@ -37,6 +39,12 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('Projects', [
+            'foreignKey' => 'user_id',
+            'targetForeignKey' => 'project_id',
+            'joinTable' => 'projects_users'
+        ]);
     }
 
     /**
@@ -48,20 +56,46 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->integer('id')
             ->allowEmpty('id', 'create');
+
         $validator
-            ->notEmpty('username', 'A username is required');
+            ->maxLength('username', 50, __('Please enter no more than 50 characters.'))
+            ->add('username', [
+                'alphaNumeric' => [
+                    'rule' => function ($value) {
+                        return (preg_match('/^[0-9a-zA-Z][0-9a-zA-Z-]*$/i', $value) === 1);
+                    },
+                    'message' => __('This name may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen.')
+                ],
+                'unique' => [
+                    'rule' => 'validateUnique',
+                    'provider' => 'table',
+                    'message' => __('This name is already used.')
+                ]
+            ])
+            ->requirePresence('username', 'create')
+            ->notEmpty('username', __('A username is required'));
+
         $validator
-            ->notEmpty('password', 'A password is required');
+            ->email('email', false, __('Email is invalid or already taken'))
+            ->ascii('email', __('Email is invalid or already taken'))
+            ->requirePresence('email', 'create')
+            ->notEmpty('email', __('A email is required'));
+
+        $validator
+            ->minLength('password', 4, __('Password is too short (minimum is 4 characters)'))
+            ->requirePresence('password', 'create')
+            ->notEmpty('password', __('A password is required'));
+
         $validator
             ->allowEmpty('nickname');
+
         $validator
-            ->notEmpty('role', 'A role is required')
-            ->add('role', 'inList', [
-                'rule' => ['inList', ['admin', 'author', 'invalid']],
-                'message' => 'Please enter a valid role'
-            ]);
+            ->allowEmpty('role');
+
+        $validator
+            ->boolean('status')
+            ->allowEmpty('status');
 
         return $validator;
     }
@@ -76,6 +110,7 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->isUnique(['email']));
 
         return $rules;
     }

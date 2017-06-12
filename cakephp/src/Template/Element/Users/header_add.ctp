@@ -1,10 +1,10 @@
 <nav class="navbar navbar-inverse bg-inverse">
     <div class="container">
         <div class="navbar-nav navbar-toggler-right">
-            <?= $this->Html->link(__('Sign in'), '/users/login', ['class' => 'nav-link']) ?>
+            <?= $this->Html->link(__('Sign in'), ['controller' => 'Users', 'action' => 'login'], ['class' => 'nav-link']) ?>
         </div>
         <div class="navbar-brand">
-            <?= __('Users') ?>
+            <?= $this->fetch('title') ?>
         </div>
     </div>
 </nav>

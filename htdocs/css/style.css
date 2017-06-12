@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* basic
+-------------------------------------------*/
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box
+}
+:after, :before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box
+}
+
+body {
+    background-color: #f9f9f9;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+}
+main {
+    background-color: white;
+}
+strong {
+    font-weight: 500;
+}
+.btn {
+    cursor: pointer;
+}
+
+a.view-link:before,
+a.edit-link:before,
+a.back-link:before,
+a.btn-delete:before {
+    font-family: FontAwesome;
+    padding-right: 0.4rem;
+}
+a.view-link:before {
+    content: '\f08e';
+}
+a.edit-link:before {
+    content: '\f044';
+}
+a.back-link:before {
+    content: '\f104';
+}
+a.btn-delete:before {
+    content: '\f1f8';
+}
+
+.topicpath {
+    margin-left: -0.5em;
+    padding-top: 0.5rem;
+}
+
+p.pagination-doc {
+    color: #9b9b9b;
+    text-align: right;
+}
+
+.content {
+    padding: 20px 0 40px;
+}
+.content h1 {
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+footer {
+    padding: 2rem 0;
+    color: #9b9b9b;
+    text-align: center;
+}

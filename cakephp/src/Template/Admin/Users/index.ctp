@@ -1,11 +1,11 @@
 <?php
-    $this->assign('title', 'List Users' );
+    $this->assign('title', __('List Users') );
     $index = ($this->Paginator->param('page') - 1) * 5 + 1;
 ?>
 <nav class="nav topicpath">
-  <?= $this->Html->link($topicpath_title, $topicpath_link, ['class' => 'nav-link back-link']) ?>
+  <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index', 'prefix' => false], ['class' => 'nav-link back-link']) ?>
 </nav>
-<div class="content lookup-content">
+<div class="content users-content">
     <h1><?= $this->fetch('title') ?></h1>
     <?= $this->Flash->render() ?>
     <table class="table table-striped table-bordered">
@@ -17,6 +17,7 @@
                 $this->Paginator->sort('role'),
                 'created',
                 'modified',
+                [$this->Paginator->sort('status', 'ST') => ['class' => 'status']],
                 ''
             ]) ?>
         </thead>
@@ -25,7 +26,7 @@
             <?php
                 if ($user_id == $user->id) {
                     $col_style = 'active';
-                } else if ($user->role == 'invalid') {
+                } else if (!$user->status) {
                     $col_style = 'invalid';
                 } else {
                     $col_style = '';
@@ -36,9 +37,16 @@
                 <td><?= h($user->username) ?></td>
                 <td><?= h($user->nickname) ?></td>
                 <td><?= h($user->role) ?></td>
-                <td><?= $this->Time->format($user->created, 'yyyy/MM/dd HH:mm:ss') ?></td>
-                <td><?= $this->Time->format($user->modified, 'yyyy/MM/dd HH:mm:ss') ?></td>
-                <td><?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id], ['class' => 'edit-link']) ?></td>
+                <td><?= $this->Time->format($user->created, 'yyyy/MM/dd HH:mm') ?></td>
+                <td><?= $this->Time->format($user->modified, 'yyyy/MM/dd HH:mm') ?></td>
+                <td class="status"><?= $this->Form->control('status' . $user->id, [
+                    'checked' => $user->status,
+                    'type' => 'checkbox',
+                    'templates' => [
+                        'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}</label>'
+                    ]
+                ]) ?></td>
+                <td><?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id], ['class' => 'setup-link']) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

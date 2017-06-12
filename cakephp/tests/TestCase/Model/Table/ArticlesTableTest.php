@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\UsersTable;
+use App\Model\Table\ArticlesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\UsersTable Test Case
+ * App\Model\Table\ArticlesTable Test Case
  */
-class UsersTableTest extends TestCase
+class ArticlesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\UsersTable
+     * @var \App\Model\Table\ArticlesTable
      */
-    public $Users;
+    public $Articles;
 
     /**
      * Fixtures
@@ -24,13 +24,12 @@ class UsersTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.users',
-        'app.projects',
         'app.articles',
-        'app.posts',
+        'app.projects',
+        'app.users',
+        'app.projects_users',
         'app.authors',
-        'app.sections',
-        'app.projects_users'
+        'app.sections'
     ];
 
     /**
@@ -41,8 +40,8 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'App\Model\Table\UsersTable'];
-        $this->Users = TableRegistry::get('Users', $config);
+        $config = TableRegistry::exists('Articles') ? [] : ['className' => 'App\Model\Table\ArticlesTable'];
+        $this->Articles = TableRegistry::get('Articles', $config);
     }
 
     /**
@@ -52,7 +51,7 @@ class UsersTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Users);
+        unset($this->Articles);
 
         parent::tearDown();
     }

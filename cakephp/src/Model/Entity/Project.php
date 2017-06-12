@@ -1,25 +1,22 @@
 <?php
 namespace App\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
- * User Entity
+ * Project Entity
  *
  * @property int $id
- * @property string $username
- * @property string $email
- * @property string $password
- * @property string $nickname
- * @property string $role
+ * @property int $uuid
  * @property bool $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Project[] $projects
+ * @property \App\Model\Entity\Article[] $articles
+ * @property \App\Model\Entity\User[] $users
  */
-class User extends Entity
+class Project extends Entity
 {
 
     /**
@@ -36,19 +33,17 @@ class User extends Entity
         'id' => false
     ];
 
-    /**
-     * Fields that are excluded from JSON versions of the entity.
-     *
-     * @var array
-     */
-    protected $_hidden = [
-        'password'
-    ];
-
-    protected function _setPassword($password)
+    public function hasAdmin($user_id)
     {
-        if (strlen($password) > 0) {
-            return (new DefaultPasswordHasher)->hash($password);
+        $users = $this->users;
+        if ($users == null) {
+            return false;
         }
+        foreach ($users as $user) {
+            if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
+                return true;
+            }
+        }
+        return false;
     }
 }

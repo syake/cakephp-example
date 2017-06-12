@@ -95,7 +95,8 @@ form .field-content {
 -------------------------------------------*/
 .boxed-group,
 .boxed-group h2,
-.boxed-group .boxed-group-inner {
+.boxed-group .boxed-group-inner,
+.boxed-group .boxed-group-footer {
     border-style: solid;
     border-color: #d8dee2;
 }
@@ -113,7 +114,7 @@ form .field-content {
     background-color: #f6f8fa;
 }
 .boxed-group .boxed-group-inner {
-    padding: 18px 20px 23px;
+    padding: 20px;
     border-width: 1px 0 0;
 }
 .boxed-group .boxed-group-inner .form-group:last-child {
@@ -132,9 +133,34 @@ form .field-content {
     margin-right: 10px;
     margin-bottom: 10px;
 }
-.boxed-group .boxed-group-inner .radio-group,
-.boxed-group .boxed-group-inner .checkbox {
+.boxed-group .boxed-group-inner .form-group .radio-group,
+.boxed-group .boxed-group-inner .form-group .checkbox {
     margin-left: 1rem;
+}
+
+.boxed-group .boxed-group-inner dl.status-list {
+    margin: 0;
+}
+.boxed-group .boxed-group-inner dl.status-list dt {
+    font-weight: 300;
+}
+.boxed-group .boxed-group-inner dl.status-list dd {
+    font-weight: 500;
+    margin-left: 1rem;
+    margin-bottom: 0;
+}
+
+.boxed-group .boxed-group-inner .boxed-group-section {
+    margin-bottom: 10px;
+}
+.boxed-group .boxed-group-inner .boxed-group-section:last-child {
+    margin-bottom: 0;
+}
+
+.boxed-group .boxed-group-footer {
+    border-width: 1px 0 0;
+    padding: 8px 10px;
+    text-align: right;
 }
 
 .boxed-group .boxed-group-row {
@@ -150,7 +176,6 @@ form .field-content {
 @media (min-width:576px) {
     .boxed-group .boxed-group-inner input.form-control {
         margin-bottom: 0;
-        width: 400px;
     }
 }
 

@@ -71,29 +71,29 @@ class PostsController extends AuthController
     {
         $post = $this->Posts->newEntity();
         if ($this->request->is('post')) {
+            $user_id = $this->user_id;
             $data = $this->request->getData();
             $data['uuid'] = $this->createUuid();
             
-            $user_id = $this->request->getData('users._id');
-            if ($user_id != null) {
-                // join users
-                $data['users'] = [
-                    [
-                        'id' => $user_id,
-                        '_joinData' => [
-                            'role' => 'admin'
-                        ]
+            // join users
+            $data['users'] = [
+                [
+                    'id' => $user_id,
+                    '_joinData' => [
+                        'role' => 'admin'
                     ]
-                ];
-                
-                // articles  marge
-                if (isset($data['articles']) && (count($data['articles']) > 0)) {
-                    $article_data = $data['articles'][0];
-                    $article_data['author_id'] = $user_id;
-                    $article_data['status'] = 'publish';
-                    $data['articles'][0] = $article_data;
-                }
-            }
+                ]
+            ];
+            
+            // articles  marge
+            $data['articles'] = [
+                [
+                  'title' => $data['title'],
+                  'content' => $data['content'],
+                  'author_id' => $user_id,
+                  'status' => 'publish',
+                ]
+            ];
             
             $post = $this->Posts->patchEntity($post, $data, ['associated' => ['Users', 'Articles']]);
             if ($this->Posts->save($post)) {
@@ -224,29 +224,25 @@ class PostsController extends AuthController
      */
     public function edit($id = null)
     {
-        $post = $this->Posts->get($id, [
-            'contain' => ['Users', 'Articles']
+        $article = $this->Articles->get($id, [
+            'contain' => ['Sections', 'Posts', 'Posts.Users']
         ]);
-        $article = $this->Posts->Articles->find('all', [
-            'conditions' => [
-                'post_id' => $post->id,
-                'status' => 'publish'
-            ]
-        ])->first();
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             $article = $this->Articles->patchEntity($article, $data);
             if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The post has been saved.'), ['key' => 'article']);
+                $this->Flash->success(__('The post has been saved.'));
             } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'), ['key' => 'article']);
+                $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
+        
+        $post = $article->post;
         $users = $post->users;
         
-        $user_id = $this->user_id;
         $is_admin = false;
+        $user_id = $this->user_id;
         foreach ($users as $user) {
             if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
                 $is_admin = true;
@@ -254,7 +250,7 @@ class PostsController extends AuthController
             }
         }
         
-        $this->set(compact('post', 'article', 'users', 'is_admin'));
+        $this->set(compact('post', 'article', 'is_admin'));
         $this->set('_serialize', ['post']);
     }
 

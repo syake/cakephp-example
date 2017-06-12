@@ -28,19 +28,22 @@
                   }  else {
                       $publish_icon = 'fa-ban';
                   }
+                  $articles = $post->articles;
+                  foreach($articles as $j => $article):
                 ?>
                 <tr>
                     <td class="num"><?= $i ?></td>
-                    <td><?= h($post->title) ?></td>
-                    <td><?= h($post->author) ?></td>
+                    <td><?= h($article->title) ?></td>
+                    <td><?= h($article->author) ?></td>
                     <td class="status"><i class="fa <?= $publish_icon ?>" aria-hidden="true"></i></td>
                     <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
                     <td><?= $this->Html->link(__('View'), ['controller' => 'Posts', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
-                    <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id], ['class' => 'edit-link']) ?></td>
+                    <td><?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $article->id], ['class' => 'edit-link']) ?></td>
                     <td><?php if ($post->hasAdmin($user_id)) : ?>
                         <?= $this->Html->link(__('Setup'), ['controller' => 'Posts', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
                     <?php endif; ?></td>
                 </tr>
+                <?php endforeach; ?>
                 <?php endforeach; ?>
             </tbody>
         </table>

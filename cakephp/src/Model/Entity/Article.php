@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Article Entity
@@ -35,4 +36,15 @@ class Article extends Entity
         '*' => true,
         'id' => false
     ];
+    
+    protected function _getAuthor()
+    {
+        $this->Users = TableRegistry::get('Users');
+        $username = $this->Users->find('list', [
+            'conditions' => ['id' => $this->author_id],
+            'valueField' => 'username',
+            'limit' => 1
+        ])->first();
+        return $username;
+    }
 }

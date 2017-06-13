@@ -30,6 +30,8 @@
                     </div>
                     <div class="boxed-group-section">
                         <dl class="status-list">
+                            <dt><?= __('Project ID:') ?></dt>
+                            <dd><?= $project->uuid ?></dd>
                             <dt><?= __('Date Modified:') ?></dt>
                             <dd><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></dd>
                         </dl>

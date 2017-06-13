@@ -20,7 +20,7 @@
         var $this = $(this);
         var $empty = $this.children();
         var $input = $this.find('input[type=file]');
-        var $input_delete = $this.find('input[type=hidden].delete');
+        var $temp = $this.find('input[type=hidden].temp');
         var $image = $('<img>');
         var $holder = $('<div>');
         
@@ -32,7 +32,7 @@
             $image.attr('src',img);
             $this.append($image);
             $empty.hide();
-            $input_delete.val(0);
+            $temp.val(1);
         }
         
         $input.on('change',function(e){
@@ -48,7 +48,8 @@
         $this.on('delete',function(e){
             $holder.append($image);
             $empty.show();
-            $input_delete.val(1);
+            $input.replaceWith($input.clone());
+            $temp.val(0);
         });
         
         var default_image = $this.data('default');

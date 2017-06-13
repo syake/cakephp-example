@@ -101,17 +101,6 @@ class ProjectsController extends AuthController
             $article = $this->request->getData();
             
             // upload
-            $image_keys = ['header_image'];
-            if (isset($article['_delete'])) {
-                $deleta_data = $article['_delete'];
-                foreach ($image_keys as $key) {
-                    if (isset($deleta_data[$key]) && ($deleta_data[$key] == 1)) {
-                        unset($article[$key]);
-                        unset($article[$key]);
-                    }
-                }
-                unset($data['_delete']);
-            }
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
             $article = $this->upload($article, $folder_path);
             
@@ -156,27 +145,14 @@ class ProjectsController extends AuthController
             'contain' => ['Sections', 'Projects', 'Projects.Users']
         ]);
         $project = $post->project;
-        $users = $project->users;
         $folder_url = self::$assets_path . DS . $project->uuid;
-        $folder_path = WWW_ROOT . $folder_url;
-        $image_path = DS . $folder_url . DS;
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $folder_path = WWW_ROOT . $folder_url;
             
-            $image_keys = ['header_image'];
-            if (isset($data['_delete'])) {
-                $deleta_data = $data['_delete'];
-                foreach ($image_keys as $key) {
-                    if (isset($deleta_data[$key]) && ($deleta_data[$key] == 1)) {
-                        $data[$key] = null;
-                        $file_path = $folder_path . DS . $post->{$key};
-                        $file = new File($file_path, false);
-                        $file->delete();
-                    }
-                }
-            }
-            $data = $this->upload($data, $folder_path);
+            // upload files
+            $data = $this->upload($data, $folder_path, $id);
             
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
@@ -186,7 +162,12 @@ class ProjectsController extends AuthController
             }
         }
         
+        // image absolute path
+        $image_path = DS . $folder_url . DS;
+        
+        // user admin
         $is_admin = false;
+        $users = $project->users;
         $user_id = $this->user_id;
         foreach ($users as $user) {
             if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
@@ -199,16 +180,35 @@ class ProjectsController extends AuthController
         $this->set('_serialize', ['post']);
     }
 
-    private function upload($data, $folder_path)
+    /**
+     * Upload method
+     *
+     * @param array $data getData
+     * @param string $folder_path folder path for image
+     * @param string|null $id Project id.
+     * @return $data
+     */
+    private function upload($data, $folder_path, $id = null)
     {
         $image_keys = ['header_image'];
         foreach ($image_keys as $key) {
+            // delete files
+            $temp_key = $key . '_temp';
+            if (isset($data[$temp_key]) && ($data[$temp_key] == 0)) {
+                $data[$key] = null;
+            }
+            unset($data[$temp_key]);
+            
+            // upload files
             if (isset($data[$key]) && ($data[$key] != null)) {
                 if (!empty($data[$key]['name'])) {
                     $base_filename = $data[$key]['name'];
                     $ext = substr($base_filename, strrpos($base_filename, '.') + 1);
-                    $filename = $key . '.' . $ext;
-/*                     $filename = $key . '-' . $id . '.' . $ext; */
+                    if ($id != null) {
+                        $filename = $key . '-' . $id . '.' . $ext;
+                    } else {
+                        $filename = $key . '.' . $ext;
+                    }
                     try {
                         $success = $this->uploadFile($folder_path, $data[$key], ['name' => $filename]);
                         if ($success) {

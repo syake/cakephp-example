@@ -19,7 +19,7 @@
                         <div class="upload-empty">
                             <div class="upload-empty-container">
                                 <div class="upload-empty-inner">
-                                    <?= $this->Form->hidden('_delete.header_image', ['value' => 0, 'class' => 'delete']) ?>
+                                    <?= $this->Form->hidden('header_image_temp', ['class' => 'temp', 'value' => 0]) ?>
                                     <?= $this->Form->file('header_image') ?>
                                 </div>
                             </div>

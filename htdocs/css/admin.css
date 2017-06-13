@@ -170,11 +170,20 @@ form a.js-upload-delete {
     margin-left: 1rem;
 }
 
+.boxed-group .boxed-group-inner a.view-link {
+    display: block;
+    border-bottom: 1px dotted #d8dee2;
+    padding-bottom: 0.5rem;
+}
 .boxed-group .boxed-group-inner dl.status-list {
     margin: 0;
 }
 .boxed-group .boxed-group-inner dl.status-list dt {
     font-weight: 300;
+    margin-top: 0.5rem;
+}
+.boxed-group .boxed-group-inner dl.status-list dt:first-child {
+    margin-top: 0;
 }
 .boxed-group .boxed-group-inner dl.status-list dd {
     font-weight: 500;

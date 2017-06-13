@@ -20,12 +20,24 @@ class UsersController extends AuthController
         ]
     ];
 
+    /**
+     * Called before the controller action. You can use this method to configure and customize components
+     * or perform logic that needs to happen before each controller action.
+     *
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->Auth->allow(['add', 'logout']);
     }
 
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|null
+     */
     public function index()
     {
         $id = $this->user_id;

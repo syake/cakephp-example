@@ -49,7 +49,8 @@ define('CONFIG', ROOT . DS . 'config' . DS);
 /**
  * File path to the webroot directory.
  */
-define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
+/* define('WWW_ROOT', ROOT . DS . 'webroot' . DS); */
+define('WWW_ROOT', realpath(dirname(__FILE__) . DS . '..' . DS . '..') . DS . 'htdocs' . DS);
 
 /**
  * Path to the tests directory.

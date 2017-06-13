@@ -42,7 +42,8 @@ class ProjectsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->hasMany('Articles', [
-            'foreignKey' => 'project_id'
+            'foreignKey' => 'project_id',
+            'dependent' => true
         ]);
         $this->belongsToMany('Users', [
             'foreignKey' => 'project_id',

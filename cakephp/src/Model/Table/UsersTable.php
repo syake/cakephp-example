@@ -43,7 +43,8 @@ class UsersTable extends Table
         $this->belongsToMany('Projects', [
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'project_id',
-            'joinTable' => 'projects_users'
+            'joinTable' => 'projects_users',
+            'dependent' => true
         ]);
     }
 

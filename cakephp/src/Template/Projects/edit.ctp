@@ -16,7 +16,7 @@
         <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>
     </div>
     <?= $this->Flash->render() ?>
-    <?= $this->Form->create($post) ?>
+    <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) ?>
     <div class="row">
         <div class="col-md-9">
             <?= $this->element('Projects/form') ?>
@@ -30,6 +30,8 @@
                     </div>
                     <div class="boxed-group-section">
                         <dl class="status-list">
+                            <dt><?= __('Project ID:') ?></dt>
+                            <dd><?= $project->uuid ?></dd>
                             <dt><?= __('Date Modified:') ?></dt>
                             <dd><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></dd>
                         </dl>

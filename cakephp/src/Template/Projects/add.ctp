@@ -9,7 +9,7 @@
         <h1><?= $this->fetch('title') ?></h1>
     </div>
     <?= $this->Flash->render() ?>
-    <?= $this->Form->create($post) ?>
+    <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) ?>
     <div class="row">
         <div class="col-md-9">
             <?= $this->element('Projects/form') ?>

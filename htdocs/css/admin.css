@@ -91,6 +91,38 @@ form .field-content {
     margin-bottom: 1.5rem;
 }
 
+form .upload {
+    width: 100%;
+    background-color: #f6f8fa;
+}
+form .upload .upload-empty {
+    padding: 10px;
+}
+form .upload .upload-empty-container {
+    display: table;
+    border: 2px dashed #d8dee2;
+    padding: 10px;
+    width: 100%;
+    height: 200px;
+}
+form .upload .upload-empty-inner {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+form .upload img {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+form p.upload-doc {
+    font-weight: 300;
+     margin: 0.5rem 0;
+}
+form a.js-upload-delete {
+    display: inline-block;
+}
+
 /* boxed-group
 -------------------------------------------*/
 .boxed-group,
@@ -138,11 +170,20 @@ form .field-content {
     margin-left: 1rem;
 }
 
+.boxed-group .boxed-group-inner a.view-link {
+    display: block;
+    border-bottom: 1px dotted #d8dee2;
+    padding-bottom: 0.5rem;
+}
 .boxed-group .boxed-group-inner dl.status-list {
     margin: 0;
 }
 .boxed-group .boxed-group-inner dl.status-list dt {
     font-weight: 300;
+    margin-top: 0.5rem;
+}
+.boxed-group .boxed-group-inner dl.status-list dt:first-child {
+    margin-top: 0;
 }
 .boxed-group .boxed-group-inner dl.status-list dd {
     font-weight: 500;

@@ -3,6 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
+use RuntimeException;
 
 /**
  * Projects Controller
@@ -13,6 +16,15 @@ use Cake\Event\Event;
  */
 class ProjectsController extends AuthController
 {
+    private static $assets_path = 'assets';
+    
+    /**
+     * Called before the controller action. You can use this method to configure and customize components
+     * or perform logic that needs to happen before each controller action.
+     *
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -72,8 +84,9 @@ class ProjectsController extends AuthController
         $project = $this->Projects->newEntity();
         if ($this->request->is('post')) {
             $user_id = $this->user_id;
+            $uuid = $this->createUuid();
             $data = [
-                'uuid' => $this->createUuid(),
+                'uuid' => $uuid,
                 'users' => [
                     [
                         'id' => $user_id,
@@ -84,8 +97,14 @@ class ProjectsController extends AuthController
                 ]
             ];
             
-            // articles  marge
+            // articles
             $article = $this->request->getData();
+            
+            // upload
+            $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
+            $article = $this->upload($article, $folder_path);
+            
+            // articles  marge
             $article = array_merge($article, [
                 'author_id' => $user_id,
                 'status' => 'publish',
@@ -116,7 +135,7 @@ class ProjectsController extends AuthController
     /**
      * Edit method
      *
-     * @param string|null $id Post id.
+     * @param string|null $id Project id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -125,9 +144,16 @@ class ProjectsController extends AuthController
         $post = $this->Articles->get($id, [
             'contain' => ['Sections', 'Projects', 'Projects.Users']
         ]);
+        $project = $post->project;
+        $folder_url = self::$assets_path . DS . $project->uuid;
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $folder_path = WWW_ROOT . $folder_url;
+            
+            // upload files
+            $data = $this->upload($data, $folder_path, $id);
+            
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
@@ -136,10 +162,12 @@ class ProjectsController extends AuthController
             }
         }
         
-        $project = $post->project;
-        $users = $project->users;
+        // image absolute path
+        $image_path = DS . $folder_url . DS;
         
+        // user admin
         $is_admin = false;
+        $users = $project->users;
         $user_id = $this->user_id;
         foreach ($users as $user) {
             if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
@@ -148,14 +176,60 @@ class ProjectsController extends AuthController
             }
         }
         
-        $this->set(compact('post', 'project', 'is_admin'));
+        $this->set(compact('post', 'project', 'image_path', 'is_admin'));
         $this->set('_serialize', ['post']);
+    }
+
+    /**
+     * Upload method
+     *
+     * @param array $data getData
+     * @param string $folder_path folder path for image
+     * @param string|null $id Project id.
+     * @return $data
+     */
+    private function upload($data, $folder_path, $id = null)
+    {
+        $image_keys = ['header_image'];
+        foreach ($image_keys as $key) {
+            // delete files
+            $temp_key = $key . '_temp';
+            if (isset($data[$temp_key]) && ($data[$temp_key] == 0)) {
+                $data[$key] = null;
+            }
+            unset($data[$temp_key]);
+            
+            // upload files
+            if (isset($data[$key]) && ($data[$key] != null)) {
+                if (!empty($data[$key]['name'])) {
+                    $base_filename = $data[$key]['name'];
+                    $ext = substr($base_filename, strrpos($base_filename, '.') + 1);
+                    if ($id != null) {
+                        $filename = $key . '-' . $id . '.' . $ext;
+                    } else {
+                        $filename = $key . '.' . $ext;
+                    }
+                    try {
+                        $success = $this->uploadFile($folder_path, $data[$key], ['name' => $filename]);
+                        if ($success) {
+                            $data[$key] = $filename;
+                        }
+                    } catch (RuntimeException $e) {
+                        $post->setError($key, $e->getMessage());
+                        unset($data[$key]);
+                    }
+                } else {
+                    unset($data[$key]);
+                }
+            }
+        }
+        return $data;
     }
 
     /**
      * Setup method
      *
-     * @param string|null $id Post id.
+     * @param string|null $id Project id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -230,6 +304,14 @@ class ProjectsController extends AuthController
         $this->set('_serialize', ['project']);
     }
     
+    /**
+     * Unjoin method
+     *
+     * @param string|null $id Project id.
+     * @param string|null $user_id User id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
     public function unjoin($id, $user_id)
     {
         $this->request->allowMethod(['post']);
@@ -265,15 +347,21 @@ class ProjectsController extends AuthController
     /**
      * Delete method
      *
-     * @param string|null $id Post id.
+     * @param string|null $id Project id.
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $post = $this->Projects->get($id);
-        if ($this->Projects->delete($post)) {
+        $project = $this->Projects->get($id);
+        
+        // assets folder delete
+        $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
+        $folder = new Folder($folder_path);
+        $folder->delete();
+        
+        if ($this->Projects->delete($project)) {
             $this->Flash->success(__('The post has been deleted.'));
         } else {
             $this->Flash->error(__('The post could not be deleted. Please, try again.'));

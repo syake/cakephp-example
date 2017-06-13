@@ -54,6 +54,15 @@ class AuthController extends AppController
         ]
     ];
 
+    /**
+     * Initialization hook method.
+     *
+     * Use this method to add common initialization code like loading components.
+     *
+     * e.g. `$this->loadComponent('Security');`
+     *
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
@@ -81,6 +90,13 @@ class AuthController extends AppController
         $this->Articles = TableRegistry::get('Articles');
     }
 
+    /**
+     * Called before the controller action. You can use this method to configure and customize components
+     * or perform logic that needs to happen before each controller action.
+     *
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);

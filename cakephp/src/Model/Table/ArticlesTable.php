@@ -51,7 +51,8 @@ class ArticlesTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->hasMany('Sections', [
-            'foreignKey' => 'article_id'
+            'foreignKey' => 'article_id',
+            'dependent' => true
         ]);
     }
 

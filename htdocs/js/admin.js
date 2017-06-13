@@ -52,6 +52,20 @@
             $temp.val(0);
         });
         
+        $this.on('dragover',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        $this.on('drop',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            
+            var files = e.originalEvent.dataTransfer.files;
+            if (files) {
+                $input.prop('files',files);
+            }
+        });
+        
         var default_image = $this.data('default');
         if ((default_image != null) && (default_image != '')) {
             imgload(default_image);
@@ -65,9 +79,3 @@
     });
     
 })(jQuery);
-
-
-
-
-
-

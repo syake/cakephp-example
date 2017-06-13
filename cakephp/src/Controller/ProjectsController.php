@@ -201,8 +201,13 @@ class ProjectsController extends AuthController
             
             // upload files
             if (isset($data[$key]) && ($data[$key] != null)) {
-                if (!empty($data[$key]['name'])) {
-                    $base_filename = $data[$key]['name'];
+                if (is_array($data[$key])) {
+                    $file = $data[$key][0];
+                } else {
+                    $file = $data[$key];
+                }
+                if (isset($file['name']) && !empty($file['name'])) {
+                    $base_filename = $file['name'];
                     $ext = substr($base_filename, strrpos($base_filename, '.') + 1);
                     if ($id != null) {
                         $filename = $key . '-' . $id . '.' . $ext;
@@ -210,7 +215,7 @@ class ProjectsController extends AuthController
                         $filename = $key . '.' . $ext;
                     }
                     try {
-                        $success = $this->uploadFile($folder_path, $data[$key], ['name' => $filename]);
+                        $success = $this->uploadFile($folder_path, $file, ['name' => $filename]);
                         if ($success) {
                             $data[$key] = $filename;
                         }

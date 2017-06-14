@@ -77,7 +77,7 @@ CREATE TABLE `articles` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `project_id` BIGINT(20) UNSIGNED NOT NULL,
     `author_id` BIGINT(20) UNSIGNED NOT NULL,
-    `status` ENUM('publish','future','draft','pending') NOT NULL DEFAULT 'draft',
+    `status` ENUM('publish','future','draft','pending') DEFAULT 'draft',
     `title` VARCHAR(255),
     `content` LONGTEXT,
     `header_image` VARCHAR(255),
@@ -107,7 +107,7 @@ CREATE TABLE `sections` (
     `order` INT(11) DEFAULT 0,
     `title` VARCHAR(255),
     `description` TEXT,
-    `image` VARCHAR(255) UNIQUE
+    `image` VARCHAR(255)
 );
 ```
 

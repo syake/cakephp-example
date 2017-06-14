@@ -78,7 +78,7 @@ class AppController extends Controller
      * @return array  will return an array with the success of each file upload
      * @throws \RuntimeException
      */
-    protected function uploadFile(String $folder_path, Array $file, Array $options = [])
+    protected function uploadFile($folder_path, $file, $options = [])
     {
         $options = array_merge([
             'limit' => 1024 * 1024,

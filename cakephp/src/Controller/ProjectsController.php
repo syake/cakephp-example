@@ -47,6 +47,7 @@ class ProjectsController extends AuthController
                 'uuid' => $uuid,
                 'status' => 1
             ],
+            'valueField' => 'id',
             'limit' => 1
         ]);
         
@@ -118,6 +119,12 @@ class ProjectsController extends AuthController
             // articles
             $article = $this->request->getData();
             
+            // status
+            if (isset($article['status']) && ($article['status'] == 1)) {
+                $data['status'] = 1;
+                unset($article['status']);
+            }
+            
             // upload
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
             $article = $this->upload($article, $folder_path);
@@ -137,6 +144,9 @@ class ProjectsController extends AuthController
             ]);
             $data['articles'] = [$article];
             
+<<<<<<< HEAD
+            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles']]);
+=======
             // status
             if ($article['publish'] == 1) {
                 $data['status'] = 1;
@@ -144,6 +154,7 @@ class ProjectsController extends AuthController
             }
             
             $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles', 'Articles.Sections']]);
+>>>>>>> develop
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The post has been saved.'));
 

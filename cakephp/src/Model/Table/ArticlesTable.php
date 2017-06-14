@@ -69,7 +69,7 @@ class ArticlesTable extends Table
 
         $validator
             ->requirePresence('status', 'create')
-            ->notEmpty('status');
+            ->allowEmpty('status');
 
         $validator
             ->allowEmpty('title');

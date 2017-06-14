@@ -50,7 +50,8 @@
             $empty.show();
             $temp.val(0);
             $input.off('change');
-            $clone = $input.clone();
+            var $clone = $input.clone();
+            $clone.val('');
             $input.replaceWith($clone);
             $input = $clone;
             $input.on('change',change);

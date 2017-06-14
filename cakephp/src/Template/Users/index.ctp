@@ -4,8 +4,8 @@
 <div class="content index-content">
     <h1><?= $this->fetch('title') ?></h1>
     <?= $this->Flash->render() ?>
-<?php if (count($posts) > 0) : ?>
-    <section class="posts">
+<?php if (count($projects) > 0) : ?>
+    <section class="projects">
         <h2><?= __('List Projects') ?></h2>
         <table class="table table-striped table-bordered">
             <thead>
@@ -22,13 +22,13 @@
             </thead>
             <tbody>
 <?php
-    foreach($posts as $i => $post):
-        if ($post->status) {
+    foreach($projects as $i => $project):
+        if ($project->status) {
             $status_icon = 'fa-check-circle';
         }  else {
             $status_icon = 'fa-ban';
         }
-        $articles = $post->articles;
+        $articles = $project->articles;
         foreach($articles as $j => $article):
 ?>
                 <tr>
@@ -36,11 +36,11 @@
                     <td><?= h($article->title) ?></td>
                     <td><?= h($article->author) ?></td>
                     <td class="status"><i class="fa <?= $status_icon ?>" aria-hidden="true"></i></td>
-                    <td><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></td>
-                    <td><?= $this->Html->link(__('View'), ['controller' => 'Projects', 'id' => $post->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
+                    <td><?= $this->Time->format($project->modified, 'yyyy/MM/dd HH:mm') ?></td>
+                    <td><?= $this->Html->link(__('View'), ['controller' => 'Projects', 'id' => $project->uuid], ['class' => 'view-link', 'target' => '_blank']) ?></td>
                     <td><?= $this->Html->link(__('Edit'), ['controller' => 'Projects', 'action' => 'edit', $article->id], ['class' => 'edit-link']) ?></td>
-                    <td><?php if ($post->hasAdmin($user_id)) : ?>
-                        <?= $this->Html->link(__('Setup'), ['controller' => 'Projects', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
+                    <td><?php if ($project->hasAdmin($user_id)) : ?>
+                        <?= $this->Html->link(__('Setup'), ['controller' => 'Projects', 'action' => 'setup', $project->id], ['class' => 'setup-link']) ?>
                     <?php endif; ?></td>
                 </tr>
 <?php

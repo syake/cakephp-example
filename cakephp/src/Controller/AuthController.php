@@ -101,7 +101,7 @@ class AuthController extends AppController
     {
         parent::beforeFilter($event);
         
-        $this->viewBuilder()->layout('admin');
+        $this->viewBuilder()->setLayout('admin');
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
         

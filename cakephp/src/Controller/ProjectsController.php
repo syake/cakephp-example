@@ -38,20 +38,32 @@ class ProjectsController extends AuthController
      */
     public function index()
     {
-        $this->viewBuilder()->layout('post');
+        $this->viewBuilder()->setLayout('post');
         $uuid = $this->request->id;
-        $post_id = $this->Projects->find('list', [
-            'conditions' => ['uuid' => $uuid],
-            'valueField' => 'id',
-            'limit' => 1
-        ])->first();
-        $post = $this->Articles->find('all', [
+        $project_id = $this->Projects->find('list', [
             'conditions' => [
-                'post_id' => $post_id,
-                'status' => 'status'
+                'uuid' => $uuid,
+                'status' => 1
             ],
-            'contain' => ['Sections']
-        ])->first();
+            'limit' => 1
+        ]);
+        
+        if ($project_id != null) {
+            $post = $this->Articles->find('all', [
+                'conditions' => [
+                    'project_id' => $project_id,
+                    'status' => 'publish'
+                ],
+                'limit' => 1,
+                'contain' => ['Sections']
+            ])->first();
+        } else {
+            $post = null;
+        }
+        
+        if ($post == null) {
+            return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
+        }
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -68,6 +80,10 @@ class ProjectsController extends AuthController
         $post = $this->Articles->get($id, [
             'contain' => ['Sections']
         ]);
+        
+        if ($post == null) {
+            // error
+        }
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);

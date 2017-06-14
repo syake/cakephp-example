@@ -4,7 +4,7 @@
 <div class="content index-content">
     <h1><?= $this->fetch('title') ?></h1>
     <?= $this->Flash->render() ?>
-    <?php if (count($posts) > 0) : ?>
+<?php if (count($posts) > 0) : ?>
     <section class="posts">
         <h2><?= __('List Projects') ?></h2>
         <table class="table table-striped table-bordered">
@@ -21,16 +21,16 @@
                 ]) ?>
             </thead>
             <tbody>
-                <?php foreach($posts as $i => $post): ?>
-                <?php
-                  if ($post->status) {
-                      $status_icon = 'fa-check-circle';
-                  }  else {
-                      $status_icon = 'fa-ban';
-                  }
-                  $articles = $post->articles;
-                  foreach($articles as $j => $article):
-                ?>
+<?php
+    foreach($posts as $i => $post):
+        if ($post->status) {
+            $status_icon = 'fa-check-circle';
+        }  else {
+            $status_icon = 'fa-ban';
+        }
+        $articles = $post->articles;
+        foreach($articles as $j => $article):
+?>
                 <tr>
                     <td class="num"><?= $i ?></td>
                     <td><?= h($article->title) ?></td>
@@ -43,11 +43,13 @@
                         <?= $this->Html->link(__('Setup'), ['controller' => 'Projects', 'action' => 'setup', $post->id], ['class' => 'setup-link']) ?>
                     <?php endif; ?></td>
                 </tr>
-                <?php endforeach; ?>
-                <?php endforeach; ?>
+<?php
+        endforeach;
+    endforeach;
+?>
             </tbody>
         </table>
     </section>
-    <?php endif; ?>
-    <?= $this->Html->link('Create new post', ['controller' => 'Projects', 'action' => 'add'], ['class' => 'add-link']) ?>
+<?php endif; ?>
+    <?= $this->Html->link('Create new post', ['controller' => 'Projects', 'action' => 'add'], ['class' => 'add-link']) . PHP_EOL ?>
 </div>

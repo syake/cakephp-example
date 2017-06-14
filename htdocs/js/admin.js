@@ -24,10 +24,6 @@
         var $image = $('<img>');
         var $holder = $('<div>');
         
-        $image.on('click',function(e){
-            $input.trigger('click');
-        });
-        
         var imgload = function(img){
             $image.attr('src',img);
             $this.append($image);
@@ -35,7 +31,7 @@
             $temp.val(1);
         }
         
-        $input.on('change',function(e){
+        var change = function(e){
             $targetEmpty = $empty;
             var file = e.target.files[0];
             fileReader.onload = function(event) {
@@ -43,15 +39,22 @@
                 imgload(loadedImageUri);
             }
             fileReader.readAsDataURL(file);
-        });
+        };
         
+        $image.on('click',function(e){
+            $input.trigger('click');
+        });
+        $input.on('change',change);
         $this.on('delete',function(e){
             $holder.append($image);
             $empty.show();
-            $input.replaceWith($input.clone());
             $temp.val(0);
+            $input.off('change');
+            $clone = $input.clone();
+            $input.replaceWith($clone);
+            $input = $clone;
+            $input.on('change',change);
         });
-        
         $this.on('dragover',function(e){
             e.stopPropagation();
             e.preventDefault();
@@ -59,13 +62,13 @@
         $this.on('drop',function(e){
             e.stopPropagation();
             e.preventDefault();
-            
             var files = e.originalEvent.dataTransfer.files;
             if (files) {
                 $input.prop('files',files);
             }
         });
         
+        // init
         var default_image = $this.data('default');
         if ((default_image != null) && (default_image != '')) {
             imgload(default_image);

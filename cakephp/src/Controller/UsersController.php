@@ -41,12 +41,12 @@ class UsersController extends AuthController
     public function index()
     {
         $id = $this->user_id;
-        $posts = $this->Users->get($id, [
+        $projects = $this->Users->get($id, [
             'contain' => ['Projects', 'Projects.Articles', 'Projects.Users']
         ])->projects;
         
-        $this->set(compact('posts'));
-        $this->set('_serialize', ['posts']);
+        $this->set(compact('projects'));
+        $this->set('_serialize', ['projects']);
     }
 
     /**

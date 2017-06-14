@@ -117,6 +117,12 @@ class ProjectsController extends AuthController
             // articles
             $article = $this->request->getData();
             
+            // status
+            if (isset($article['status']) && ($article['status'] == 1)) {
+                $data['status'] = 1;
+                unset($article['status']);
+            }
+            
             // upload
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
             $article = $this->upload($article, $folder_path);
@@ -127,12 +133,6 @@ class ProjectsController extends AuthController
                 'status' => 'publish',
             ]);
             $data['articles'] = [$article];
-            
-            // status
-            if ($article['publish'] == 1) {
-                $data['status'] = 1;
-                unset($article['publish']);
-            }
             
             $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles']]);
             if ($this->Projects->save($project)) {

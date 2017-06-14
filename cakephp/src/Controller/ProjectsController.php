@@ -45,6 +45,7 @@ class ProjectsController extends AuthController
                 'uuid' => $uuid,
                 'status' => 1
             ],
+            'valueField' => 'id',
             'limit' => 1
         ]);
         

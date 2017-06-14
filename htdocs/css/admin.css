@@ -110,12 +110,15 @@ form .upload .upload-empty-inner {
     text-align: center;
     vertical-align: middle;
 }
+form .upload .upload-empty input.file {
+    width: 100%;
+}
 form .upload img {
     width: 100%;
     height: auto;
     cursor: pointer;
 }
-form p.upload-doc {
+form p.upload-help {
     font-weight: 300;
      margin: 0.5rem 0;
 }
@@ -216,6 +219,21 @@ form a.js-upload-delete {
 
 @media (min-width:576px) {
     .boxed-group .boxed-group-inner input.form-control {
+        margin-bottom: 0;
+    }
+}
+
+/* section-box
+-------------------------------------------*/
+.section-box .col-lg-6 {
+    margin-bottom: 20px;
+}
+.section-box .col-lg-6:last-child {
+    margin-bottom: 0;
+}
+
+@media (min-width:992px) {
+    .section-box .col-lg-6 {
         margin-bottom: 0;
     }
 }

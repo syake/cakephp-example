@@ -18,6 +18,8 @@ class ProjectsController extends AuthController
 {
     private static $assets_path = 'assets';
     
+    public $helpers = ['Custom'];
+    
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -119,6 +121,14 @@ class ProjectsController extends AuthController
             // upload
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
             $article = $this->upload($article, $folder_path);
+            if (isset($article['sections'])) {
+                $sections = [];
+                foreach ($article['sections'] as $i => $section) {
+                    $after_key = sprintf("%03d", ($i + 1));
+                    $sections[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
+                }
+                $article['sections'] = $sections;
+            }
             
             // articles  marge
             $article = array_merge($article, [
@@ -133,7 +143,7 @@ class ProjectsController extends AuthController
                 unset($article['publish']);
             }
             
-            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles']]);
+            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles', 'Articles.Sections']]);
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The post has been saved.'));
 
@@ -143,7 +153,14 @@ class ProjectsController extends AuthController
             }
         }
         
-        $post = $this->Articles->newEntity();
+        $post = $this->Articles->newEntity([
+            'sections' => [
+                ['tag' => 'point', 'item_order' => 0],
+                ['tag' => 'point', 'item_order' => 1],
+                ['tag' => 'point', 'item_order' => 2]
+            ]
+        ], ['associated' => ['Sections']]);
+        
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
     }
@@ -161,14 +178,21 @@ class ProjectsController extends AuthController
             'contain' => ['Sections', 'Projects', 'Projects.Users']
         ]);
         $project = $post->project;
-        $folder_url = self::$assets_path . DS . $project->uuid;
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
-            $folder_path = WWW_ROOT . $folder_url;
             
             // upload files
-            $data = $this->upload($data, $folder_path, $id);
+            $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
+            $data = $this->upload($data, $folder_path, ['after' => $id]);
+            if (isset($data['sections'])) {
+                $sections = [];
+                foreach ($data['sections'] as $i => $section) {
+                    $after_key = sprintf("%03d", ($i + 1));
+                    $sections[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
+                }
+                $data['sections'] = $sections;
+            }
             
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
@@ -177,9 +201,6 @@ class ProjectsController extends AuthController
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
-        
-        // image absolute path
-        $image_path = DS . $folder_url . DS;
         
         // user admin
         $is_admin = false;
@@ -192,7 +213,14 @@ class ProjectsController extends AuthController
             }
         }
         
-        $this->set(compact('post', 'project', 'image_path', 'is_admin'));
+        // filepath
+        $filepath = DS . self::$assets_path . DS . $project->uuid . DS;
+        $post->filepath = $filepath;
+        foreach ($post->sections as $section) {
+            $section->filepath = $filepath;
+        }
+        
+        $this->set(compact('post', 'project', 'is_admin'));
         $this->set('_serialize', ['post']);
     }
 
@@ -201,35 +229,53 @@ class ProjectsController extends AuthController
      *
      * @param array $data getData
      * @param string $folder_path folder path for image
-     * @param string|null $id Project id.
+     * @param array|null $options
      * @return $data
      */
-    private function upload($data, $folder_path, $id = null)
+    private function upload($data, $folder_path, $options = [])
     {
-        $image_keys = ['header_image'];
-        foreach ($image_keys as $key) {
-            // delete files
-            $temp_key = $key . '_temp';
-            if (isset($data[$temp_key]) && ($data[$temp_key] == 0)) {
-                $data[$key] = null;
+        $options = array_merge([
+            'before' => null,
+            'after' => null,
+            'has_name' => true
+        ], $options);
+        
+        foreach ($data as $key => $obj) {
+            // check one for array
+            if (is_array($obj)) {
+                $file = $obj[0];
+            } else {
+                $file = $obj;
             }
-            unset($data[$temp_key]);
             
-            // upload files
-            if (isset($data[$key]) && ($data[$key] != null)) {
-                if (is_array($data[$key])) {
-                    $file = $data[$key][0];
-                } else {
-                    $file = $data[$key];
-                }
-                if (isset($file['name']) && !empty($file['name'])) {
+            // check file type
+            if (isset($file['name'])) {
+                // temp key
+                $temp_key = $key . '_temp';
+                
+                if (isset($data[$temp_key]) && ($data[$temp_key] == 0)) {
+                    // delete files
+                    $data[$key] = null;
+                } else if (!empty($file['name'])) {
+                    // upload files
                     $base_filename = $file['name'];
                     $ext = substr($base_filename, strrpos($base_filename, '.') + 1);
-                    if ($id != null) {
-                        $filename = $key . '-' . $id . '.' . $ext;
-                    } else {
-                        $filename = $key . '.' . $ext;
+                    $filenames = [];
+                    if ($options['before'] != null) {
+                        $filenames[] = $options['before'];
                     }
+                    if ($options['has_name']) {
+                        $filenames[] = $key;
+                    }
+                    if ($options['after'] != null) {
+                        $filenames[] = $options['after'];
+                    }
+                    if (count($filenames) > 0) {
+                        $filename = implode('-', $filenames) . '.' . $ext;
+                    } else {
+                        $filename = $base_filename;
+                    }
+                    
                     try {
                         $success = $this->uploadFile($folder_path, $file, ['name' => $filename]);
                         if ($success) {
@@ -237,11 +283,13 @@ class ProjectsController extends AuthController
                         }
                     } catch (RuntimeException $e) {
                         $post->setError($key, $e->getMessage());
-                        unset($data[$key]);
                     }
-                } else {
+                }
+                
+                if (is_array($data[$key])) {
                     unset($data[$key]);
                 }
+                unset($data[$temp_key]);
             }
         }
         return $data;

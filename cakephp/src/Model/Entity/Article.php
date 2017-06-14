@@ -23,6 +23,7 @@ use Cake\ORM\TableRegistry;
  */
 class Article extends Entity
 {
+    protected $_virtual = ['filepath'];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -47,5 +48,17 @@ class Article extends Entity
             'limit' => 1
         ])->first();
         return $username;
+    }
+    
+    protected function _getHeaderImagePath()
+    {
+        $image = $this->header_image;
+        if (empty($image)) {
+            return '';
+        }
+        if ($this->filepath == null) {
+            return $image;
+        }
+        return $this->filepath . $image;
     }
 }

@@ -52,14 +52,22 @@ class ProjectsController extends AuthController
         ]);
         
         if ($project_id != null) {
-            $post = $this->Articles->find('all', [
-                'conditions' => [
+            $post = $this->Articles->find()
+                ->where([
                     'project_id' => $project_id,
                     'status' => 'publish'
-                ],
-                'limit' => 1,
-                'contain' => ['Sections']
-            ])->first();
+                ])
+                ->limit(1)
+                ->contain(['Points' => function($q){
+                        return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
+                    }
+                ])
+                ->contain(['Items' => function($q){
+                        return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
+                    }
+                ])
+                ->first();
+            
         } else {
             $post = null;
         }
@@ -67,6 +75,7 @@ class ProjectsController extends AuthController
         if ($post == null) {
             return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
         }
+        $post->init($uuid);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -80,13 +89,23 @@ class ProjectsController extends AuthController
     public function view($id = null)
     {
         $this->viewBuilder()->layout('post');
+        
         $post = $this->Articles->get($id, [
-            'contain' => ['Sections']
+            'contain' => [
+                'Projects',
+                'Points' => function($q){
+                    return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
+                },
+                'Items' => function($q){
+                    return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
+                }
+            ]
         ]);
         
         if ($post == null) {
             // error
         }
+        $post->init($post->project->uuid);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -119,23 +138,16 @@ class ProjectsController extends AuthController
             // articles
             $article = $this->request->getData();
             
-            // status
-            if (isset($article['status']) && ($article['status'] == 1)) {
+            // publish
+            if (isset($article['publish']) && ($article['publish'] == 1)) {
                 $data['status'] = 1;
-                unset($article['status']);
+                unset($article['publish']);
             }
             
             // upload
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
             $article = $this->upload($article, $folder_path);
-            if (isset($article['sections'])) {
-                $sections = [];
-                foreach ($article['sections'] as $i => $section) {
-                    $after_key = sprintf("%03d", ($i + 1));
-                    $sections[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
-                }
-                $article['sections'] = $sections;
-            }
+            $article = $this->uploadSections($article, $folder_path);
             
             // articles  marge
             $article = array_merge($article, [
@@ -144,17 +156,7 @@ class ProjectsController extends AuthController
             ]);
             $data['articles'] = [$article];
             
-<<<<<<< HEAD
-            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles']]);
-=======
-            // status
-            if ($article['publish'] == 1) {
-                $data['status'] = 1;
-                unset($article['publish']);
-            }
-            
-            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles', 'Articles.Sections']]);
->>>>>>> develop
+            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles', 'Articles.Points', 'Articles.Items']]);
             if ($this->Projects->save($project)) {
                 $this->Flash->success(__('The post has been saved.'));
 
@@ -165,12 +167,17 @@ class ProjectsController extends AuthController
         }
         
         $post = $this->Articles->newEntity([
-            'sections' => [
+            'points' => [
                 ['tag' => 'point', 'item_order' => 0],
                 ['tag' => 'point', 'item_order' => 1],
                 ['tag' => 'point', 'item_order' => 2]
+            ],
+            'items' => [
+                ['tag' => 'item', 'item_order' => 0],
+                ['tag' => 'item', 'item_order' => 1],
+                ['tag' => 'item', 'item_order' => 2]
             ]
-        ], ['associated' => ['Sections']]);
+        ], ['associated' => ['Points', 'Items']]);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -186,9 +193,19 @@ class ProjectsController extends AuthController
     public function edit($id = null)
     {
         $post = $this->Articles->get($id, [
-            'contain' => ['Sections', 'Projects', 'Projects.Users']
+            'contain' => [
+                'Projects',
+                'Projects.Users',
+                'Points' => function($q){
+                    return $q->limit(6);
+                },
+                'Items' => function($q){
+                    return $q->limit(6);
+                }
+            ]
         ]);
         $project = $post->project;
+        $post->init($project->uuid);
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -196,14 +213,7 @@ class ProjectsController extends AuthController
             // upload files
             $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
             $data = $this->upload($data, $folder_path, ['after' => $id]);
-            if (isset($data['sections'])) {
-                $sections = [];
-                foreach ($data['sections'] as $i => $section) {
-                    $after_key = sprintf("%03d", ($i + 1));
-                    $sections[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
-                }
-                $data['sections'] = $sections;
-            }
+            $data = $this->uploadSections($data, $folder_path);
             
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
@@ -224,15 +234,35 @@ class ProjectsController extends AuthController
             }
         }
         
-        // filepath
-        $filepath = DS . self::$assets_path . DS . $project->uuid . DS;
-        $post->filepath = $filepath;
-        foreach ($post->sections as $section) {
-            $section->filepath = $filepath;
-        }
-        
         $this->set(compact('post', 'project', 'is_admin'));
         $this->set('_serialize', ['post']);
+    }
+    
+    /**
+     * Upload method
+     *
+     * @param array $data getData
+     * @param string $folder_path folder path for image
+     * @return $data
+     */
+    private function uploadSections($data, $folder_path)
+    {
+        $sections_data = [];
+        if (isset($data['points'])) {
+            $sections_data['points'] = $data['points'];
+        }
+        if (isset($data['items'])) {
+            $sections_data['items'] = $data['items'];
+        }
+        foreach ($sections_data as $key => $sections) {
+            $sections_temp = [];
+            foreach ($sections as $i => $section) {
+                $after_key = sprintf("%03d", ($i + 1));
+                $sections_temp[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
+            }
+            $data[$key] = $sections_temp;
+        }
+        return $data;
     }
 
     /**

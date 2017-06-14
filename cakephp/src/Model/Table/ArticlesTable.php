@@ -54,6 +54,20 @@ class ArticlesTable extends Table
             'foreignKey' => 'article_id',
             'dependent' => true
         ]);
+        $this->hasMany('Points', [
+            'foreignKey' => 'article_id',
+            'className' => 'Sections',
+            'conditions' => ['tag' => 'point'],
+            'sort' => ['item_order' => 'ASC'],
+            'dependent' => true
+        ]);
+        $this->hasMany('Items', [
+            'foreignKey' => 'article_id',
+            'className' => 'Sections',
+            'conditions' => ['tag' => 'item'],
+            'sort' => ['item_order' => 'ASC'],
+            'dependent' => true
+        ]);
     }
 
     /**

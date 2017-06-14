@@ -23,6 +23,7 @@ use Cake\ORM\TableRegistry;
  */
 class Article extends Entity
 {
+    private static $assets_path = 'assets';
     protected $_virtual = ['filepath'];
 
     /**
@@ -60,5 +61,22 @@ class Article extends Entity
             return $image;
         }
         return $this->filepath . $image;
+    }
+
+    public function init($uuid)
+    {
+        $filepath = DS . self::$assets_path . DS . $uuid . DS;
+        $this->filepath = $filepath;
+        $table_datas = [$this->sections, $this->points, $this->items];
+        foreach ($table_datas as $table) {
+            if ($table == null) {
+                continue;
+            }
+            foreach ($table as $entity) {
+                if ($entity != null) {
+                    $entity->filepath = $filepath;
+                }
+            }
+        }
     }
 }

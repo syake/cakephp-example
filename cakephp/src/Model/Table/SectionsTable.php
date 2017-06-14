@@ -35,12 +35,8 @@ class SectionsTable extends Table
 
         $this->setTable('sections');
         $this->setDisplayField('title');
-        $this->setPrimaryKey('id');
-
-        $this->belongsTo('Sections', [
-            'foreignKey' => 'section_id',
-            'joinType' => 'INNER'
-        ]);
+        $this->setPrimaryKey('section_id');
+        
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
@@ -60,8 +56,8 @@ class SectionsTable extends Table
             ->notEmpty('tag');
 
         $validator
-            ->integer('order')
-            ->allowEmpty('order');
+            ->integer('item_order')
+            ->allowEmpty('item_order');
 
         $validator
             ->allowEmpty('title');
@@ -70,8 +66,7 @@ class SectionsTable extends Table
             ->allowEmpty('description');
 
         $validator
-            ->allowEmpty('image')
-            ->add('image', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmpty('image');
 
         return $validator;
     }
@@ -85,8 +80,6 @@ class SectionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['image']));
-        $rules->add($rules->existsIn(['section_id'], 'Sections'));
         $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;

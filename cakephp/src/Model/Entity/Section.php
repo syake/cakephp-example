@@ -19,6 +19,7 @@ use Cake\ORM\Entity;
  */
 class Section extends Entity
 {
+    protected $_virtual = ['filepath'];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -33,4 +34,16 @@ class Section extends Entity
         '*' => true,
         'id' => false
     ];
+
+    protected function _getImagePath()
+    {
+        $image = $this->image;
+        if (empty($image)) {
+            return '';
+        }
+        if ($this->filepath == null) {
+            return $image;
+        }
+        return $this->filepath . $image;
+    }
 }

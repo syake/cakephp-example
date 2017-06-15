@@ -75,7 +75,8 @@ class ProjectsController extends AuthController
         if ($post == null) {
             return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
         }
-        $post->init($uuid);
+        $filepath = DS . self::$assets_path . DS . $uuid . DS;
+        $post->setFilepath($filepath);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -105,7 +106,8 @@ class ProjectsController extends AuthController
         if ($post == null) {
             // error
         }
-        $post->init($post->project->uuid);
+        $filepath = DS . self::$assets_path . DS . $post->project->uuid . DS;
+        $post->setFilepath($filepath);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -205,7 +207,8 @@ class ProjectsController extends AuthController
             ]
         ]);
         $project = $post->project;
-        $post->init($project->uuid);
+        $filepath = DS . self::$assets_path . DS . $project->uuid . DS;
+        $post->setFilepath($filepath);
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();

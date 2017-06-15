@@ -21,7 +21,7 @@
                     <div class="boxed-group-inner">
                         <div class="row section-box">
                             <div class="col-lg-6">
-                                <?= $this->Form->hidden("points.{$i}.section_id") . PHP_EOL ?>
+                                <?= $this->Form->hidden("points.{$i}.id") . PHP_EOL ?>
                                 <?= $this->Form->hidden("points.{$i}.item_order") . PHP_EOL ?>
                                 <?= $this->Form->hidden("points.{$i}.tag") . PHP_EOL ?>
                                 <?= $this->Form->control("points.{$i}.title", ['label' => __('Title')]) . PHP_EOL ?>
@@ -47,7 +47,7 @@
                     <div class="boxed-group-inner">
                         <div class="row section-box">
                             <div class="col-lg-6">
-                                <?= $this->Form->hidden("items.{$i}.section_id") . PHP_EOL ?>
+                                <?= $this->Form->hidden("items.{$i}.id") . PHP_EOL ?>
                                 <?= $this->Form->hidden("items.{$i}.item_order") . PHP_EOL ?>
                                 <?= $this->Form->hidden("items.{$i}.tag") . PHP_EOL ?>
                                 <?= $this->Form->control("items.{$i}.title", ['label' => __('Title')]) . PHP_EOL ?>

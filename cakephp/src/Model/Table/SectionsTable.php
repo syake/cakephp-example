@@ -35,7 +35,7 @@ class SectionsTable extends Table
 
         $this->setTable('sections');
         $this->setDisplayField('title');
-        $this->setPrimaryKey('section_id');
+        $this->setPrimaryKey('id');
         
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',

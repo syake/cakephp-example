@@ -122,6 +122,19 @@ class ProjectsController extends AuthController
     public function add()
     {
         $project = $this->Projects->newEntity();
+        $post = $this->Articles->newEntity([
+            'points' => [
+                ['tag' => 'point', 'item_order' => 0],
+                ['tag' => 'point', 'item_order' => 1],
+                ['tag' => 'point', 'item_order' => 2]
+            ],
+            'items' => [
+                ['tag' => 'item', 'item_order' => 0],
+                ['tag' => 'item', 'item_order' => 1],
+                ['tag' => 'item', 'item_order' => 2]
+            ]
+        ], ['associated' => ['Points', 'Items']]);
+        
         if ($this->request->is('post')) {
             $user_id = $this->user_id;
             $uuid = $this->createUuid();
@@ -148,8 +161,8 @@ class ProjectsController extends AuthController
             
             // upload
             $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
-            $article = $this->upload($article, $folder_path);
-            $article = $this->uploadSections($article, $folder_path);
+            $article = $this->upload($article, $folder_path, $post);
+            $article = $this->uploadSections($article, $folder_path, $post);
             
             // articles  marge
             $article = array_merge($article, [
@@ -167,19 +180,6 @@ class ProjectsController extends AuthController
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
-        
-        $post = $this->Articles->newEntity([
-            'points' => [
-                ['tag' => 'point', 'item_order' => 0],
-                ['tag' => 'point', 'item_order' => 1],
-                ['tag' => 'point', 'item_order' => 2]
-            ],
-            'items' => [
-                ['tag' => 'item', 'item_order' => 0],
-                ['tag' => 'item', 'item_order' => 1],
-                ['tag' => 'item', 'item_order' => 2]
-            ]
-        ], ['associated' => ['Points', 'Items']]);
         
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
@@ -215,8 +215,8 @@ class ProjectsController extends AuthController
             
             // upload files
             $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
-            $data = $this->upload($data, $folder_path, ['after' => $id]);
-            $data = $this->uploadSections($data, $folder_path);
+            $data = $this->upload($data, $folder_path, $post, ['after' => $id]);
+            $data = $this->uploadSections($data, $folder_path, $post);
             
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
@@ -246,9 +246,10 @@ class ProjectsController extends AuthController
      *
      * @param array $data getData
      * @param string $folder_path folder path for image
+     * @param Model\Entity\Article $post
      * @return $data
      */
-    private function uploadSections($data, $folder_path)
+    private function uploadSections($data, $folder_path, $post)
     {
         $sections_data = [];
         if (isset($data['points'])) {
@@ -261,7 +262,7 @@ class ProjectsController extends AuthController
             $sections_temp = [];
             foreach ($sections as $i => $section) {
                 $after_key = sprintf("%03d", ($i + 1));
-                $sections_temp[] = $this->upload($section, $folder_path, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
+                $sections_temp[] = $this->upload($section, $folder_path, $post, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
             }
             $data[$key] = $sections_temp;
         }
@@ -273,10 +274,11 @@ class ProjectsController extends AuthController
      *
      * @param array $data getData
      * @param string $folder_path folder path for image
+     * @param Model\Entity\Article $post
      * @param array|null $options
      * @return $data
      */
-    private function upload($data, $folder_path, $options = [])
+    private function upload($data, $folder_path, $post, $options = [])
     {
         $options = array_merge([
             'before' => null,
@@ -287,7 +289,11 @@ class ProjectsController extends AuthController
         foreach ($data as $key => $obj) {
             // check one for array
             if (is_array($obj)) {
-                $file = $obj[0];
+                if (isset($obj[0])) {
+                    $file = $obj[0];
+                } else {
+                    continue;
+                }
             } else {
                 $file = $obj;
             }
@@ -319,6 +325,7 @@ class ProjectsController extends AuthController
                     } else {
                         $filename = $base_filename;
                     }
+                    $filename = mb_strtolower($filename);
                     
                     try {
                         $success = $this->uploadFile($folder_path, $file, ['name' => $filename]);

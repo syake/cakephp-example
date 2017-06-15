@@ -101,7 +101,7 @@ $ bin/cake bake model articles
 
 ```mysql
 CREATE TABLE `sections` (
-    `section_id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` BIGINT(20) UNSIGNED NOT NULL,
     `tag` VARCHAR(20) NOT NULL,
     `order` INT(11) DEFAULT 0,

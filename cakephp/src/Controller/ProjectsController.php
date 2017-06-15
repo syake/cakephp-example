@@ -32,7 +32,7 @@ class ProjectsController extends AuthController
         parent::beforeFilter($event);
         $this->Auth->allow(['index']);
     }
-
+    
     /**
      * Index method
      *
@@ -199,10 +199,10 @@ class ProjectsController extends AuthController
                 'Projects',
                 'Projects.Users',
                 'Points' => function($q){
-                    return $q->limit(6);
+                    return $q->order(['item_order' => 'ASC'])->limit(6);
                 },
                 'Items' => function($q){
-                    return $q->limit(6);
+                    return $q->order(['item_order' => 'ASC'])->limit(6);
                 }
             ]
         ]);

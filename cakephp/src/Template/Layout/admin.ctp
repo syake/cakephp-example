@@ -23,9 +23,10 @@
         <p class="copyright">&copy; 2017</p>
     </div>
 </footer>
-<?= $this->Html->script('//code.jquery.com/jquery-3.1.1.slim.min.js') . PHP_EOL ?>
-<?= $this->Html->script('//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js') . PHP_EOL ?>
-<?= $this->Html->script('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js') . PHP_EOL ?>
+<?= $this->Html->script('//code.jquery.com/jquery-3.2.1.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=']) . PHP_EOL ?>
+<?= $this->Html->script('//code.jquery.com/ui/1.12.1/jquery-ui.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=']) . PHP_EOL ?>
+<?= $this->Html->script('//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb']) . PHP_EOL ?>
+<?= $this->Html->script('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn']) . PHP_EOL ?>
 <?= $this->Html->script('admin.js') . PHP_EOL ?>
 <?= $this->fetch('script') ?>
 </body>

@@ -59,6 +59,7 @@ class ArticlesTable extends Table
             'className' => 'Sections',
             'conditions' => ['tag' => 'point'],
             'sort' => ['item_order' => 'ASC'],
+            'where' => ['title !=' => '', 'image !=' => 'NULL'],
             'dependent' => true
         ]);
         $this->hasMany('Items', [

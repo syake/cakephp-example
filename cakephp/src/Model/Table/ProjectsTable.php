@@ -43,7 +43,8 @@ class ProjectsTable extends Table
 
         $this->hasMany('Articles', [
             'foreignKey' => 'project_id',
-            'dependent' => true
+            'dependent' => true,
+            'cascadeCallbacks' => true
         ]);
         $this->belongsToMany('Users', [
             'foreignKey' => 'project_id',

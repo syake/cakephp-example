@@ -57,9 +57,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
     
     /**
-     * post page
+     * custom role
      */
-    $routes->connect('/:id', ['controller' => 'Projects', 'action' => 'index'], ['id' => '[0-9]+']);
+    $routes->connect('/users', ['controller' => 'Projects', 'action' => 'index']);
+    $routes->connect('/:id', ['controller' => 'Posts', 'action' => 'display'], ['id' => '[0-9]+']);
     
     /**
      * Connect catchall routes for all controllers.

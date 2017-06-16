@@ -74,7 +74,7 @@ class AuthController extends AppController
                 'prefix' => false
             ],
             'loginRedirect' => [
-                'controller' => 'Users',
+                'controller' => 'Projects',
                 'action' => 'index',
                 'prefix' => false
             ],

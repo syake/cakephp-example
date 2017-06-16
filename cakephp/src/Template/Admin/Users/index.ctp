@@ -3,7 +3,7 @@
     $index = ($this->Paginator->param('page') - 1) * 5 + 1;
 ?>
 <nav class="nav topicpath">
-  <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index', 'prefix' => false], ['class' => 'nav-link back-link']) ?>
+  <?= $this->Html->link(__('Home'), ['controller' => 'Projects', 'action' => 'index', 'prefix' => false], ['class' => 'nav-link back-link']) ?>
 </nav>
 <div class="content users-content">
     <h1><?= $this->fetch('title') ?></h1>

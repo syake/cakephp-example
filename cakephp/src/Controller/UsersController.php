@@ -13,13 +13,6 @@ use Cake\Event\Event;
  */
 class UsersController extends AuthController
 {
-    public $paginate = [
-        'limit' => 5,
-        'order' => [
-            'id' => 'DESC'
-        ]
-    ];
-
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -31,22 +24,6 @@ class UsersController extends AuthController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(['add', 'logout']);
-    }
-
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null
-     */
-    public function index()
-    {
-        $id = $this->user_id;
-        $projects = $this->Users->get($id, [
-            'contain' => ['Projects', 'Projects.Articles', 'Projects.Users']
-        ])->projects;
-        
-        $this->set(compact('projects'));
-        $this->set('_serialize', ['projects']);
     }
 
     /**

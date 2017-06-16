@@ -90,4 +90,21 @@ class ProjectsTable extends Table
 
         return $rules;
     }
+
+    /**
+     * Create unique id
+     * 
+     * @return int
+     */
+    public static function uuid($d = 6)
+    {
+        $max = 10 ** $d;
+        if (function_exists('random_int')) {
+            $uuid = random_int(1, ($max - 1));
+        } else {
+            $uuid = mt_rand(1, ($max - 1));
+        }
+        $uuid += (rand(1, 9) * $max);
+        return $uuid;
+    }
 }

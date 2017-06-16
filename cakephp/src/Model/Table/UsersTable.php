@@ -46,6 +46,10 @@ class UsersTable extends Table
             'joinTable' => 'projects_users',
             'dependent' => true
         ]);
+        $this->hasMany('Articles', [
+            'foreignKey' => 'author_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

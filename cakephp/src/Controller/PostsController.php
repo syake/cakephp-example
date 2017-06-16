@@ -3,8 +3,6 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
-use Cake\Filesystem\Folder;
-use Cake\Filesystem\File;
 use RuntimeException;
 
 /**
@@ -95,7 +93,6 @@ class PostsController extends AuthController
      */
     public function add()
     {
-        $project = $this->Projects->newEntity();
         $post = $this->Articles->newEntity([
             'points' => [
                 ['tag' => 'point', 'item_order' => 0],
@@ -107,46 +104,53 @@ class PostsController extends AuthController
                 ['tag' => 'item', 'item_order' => 1],
                 ['tag' => 'item', 'item_order' => 2]
             ]
-        ], ['associated' => ['Points', 'Items']]);
+        ]);
         
         if ($this->request->is('post')) {
+            $data = $this->request->getData();
             $user_id = $this->user_id;
-            $uuid = $this->createUuid();
-            $data = [
-                'uuid' => $uuid,
-                'users' => [
+            
+            if (isset($data['project_id']) != null) {
+                $uuid = $this->Projects->find('list', [
+                        'conditions' => [
+                            'Projects.id' => $data['project_id']
+                        ],
+                        'valueField' => 'uuid',
+                    ])
+                    ->limit(1)
+                    ->first();
+            } else {
+                // new projects
+                $uuid = $this->Projects::uuid();
+                $project = ['uuid' => $uuid];
+                // publish
+                if (isset($data['publish']) && ($data['publish'] == 1)) {
+                    $project['status'] = 1;
+                }
+                // users join
+                $project['users'] = [
                     [
                         'id' => $user_id,
                         '_joinData' => [
                             'role' => 'admin'
                         ]
                     ]
-                ]
-            ];
-            
-            // articles
-            $article = $this->request->getData();
-            
-            // publish
-            if (isset($article['publish']) && ($article['publish'] == 1)) {
-                $data['status'] = 1;
-                unset($article['publish']);
+                ];
+                $data['project'] = $project;
             }
+            
+            // default
+            $data['author_id'] = $user_id;
+            $data['status'] = 'publish';
+            unset($data['publish']);
             
             // upload
             $folder_path = WWW_ROOT . ASSETS_PATH . DS . $uuid;
-            $article = $this->upload($article, $folder_path, $post);
-            $article = $this->uploadSections($article, $folder_path, $post);
+            $data = $this->upload($data, $folder_path, $post);
+            $data = $this->uploadSections($data, $folder_path, $post);
             
-            // articles  marge
-            $article = array_merge($article, [
-                'author_id' => $user_id,
-                'status' => 'publish',
-            ]);
-            $data['articles'] = [$article];
-            
-            $project = $this->Projects->patchEntity($project, $data, ['associated' => ['Users', 'Articles', 'Articles.Points', 'Articles.Items']]);
-            if ($this->Projects->save($project)) {
+            $post = $this->Articles->patchEntity($post, $data, ['associated' => ['Projects.Users', 'Points', 'Items']]);
+            if ($this->Articles->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
 
                 return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
@@ -338,21 +342,5 @@ class PostsController extends AuthController
         }
 
         return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
-    }
-
-    /**
-     * Create unique id
-     * 
-     * @return int
-     */
-    private function createUuid(){
-        $max = 10 ** 6;
-        if (function_exists('random_int')) {
-            $uuid = random_int(1, ($max - 1));
-        } else {
-            $uuid = mt_rand(1, ($max - 1));
-        }
-        $uuid += (rand(1, 9) * $max);
-        return $uuid;
     }
 }

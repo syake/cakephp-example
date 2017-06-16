@@ -50,22 +50,7 @@ class ProjectsController extends AuthController
         ]);
         
         if ($project_id != null) {
-            $post = $this->Articles->find()
-                ->where([
-                    'project_id' => $project_id,
-                    'status' => 'publish'
-                ])
-                ->limit(1)
-                ->contain(['Points' => function($q){
-                        return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
-                    }
-                ])
-                ->contain(['Items' => function($q){
-                        return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
-                    }
-                ])
-                ->first();
-            
+            $post = $this->Articles->find('view', ['Articles.project_id' => $project_id]);
         } else {
             $post = null;
         }
@@ -89,18 +74,7 @@ class ProjectsController extends AuthController
     {
         $this->viewBuilder()->layout('post');
         
-        $post = $this->Articles->get($id, [
-            'contain' => [
-                'Projects',
-                'Points' => function($q){
-                    return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
-                },
-                'Items' => function($q){
-                    return $q->where(['title !=' => '', 'image !=' => 'NULL'])->limit(6);
-                }
-            ]
-        ]);
-        
+        $post = $this->Articles->find('view', ['Articles.id' => $id]);
         if ($post == null) {
             // error
         }

@@ -58,16 +58,13 @@ class ArticlesTable extends Table
             'foreignKey' => 'article_id',
             'className' => 'Sections',
             'conditions' => ['tag' => 'point'],
-            'sort' => ['item_order' => 'ASC'],
-            'where' => ['title !=' => '', 'image !=' => 'NULL'],
-            'dependent' => true
+            'sort' => ['item_order' => 'ASC']
         ]);
         $this->hasMany('Items', [
             'foreignKey' => 'article_id',
             'className' => 'Sections',
             'conditions' => ['tag' => 'item'],
-            'sort' => ['item_order' => 'ASC'],
-            'dependent' => true
+            'sort' => ['item_order' => 'ASC']
         ]);
     }
 
@@ -111,5 +108,27 @@ class ArticlesTable extends Table
         $rules->add($rules->existsIn(['author_id'], 'Users'));
 
         return $rules;
+    }
+
+    public function findView(Query $query, array $options)
+    {
+        return $query->where($options)
+            ->limit(1)
+            ->contain('Projects')
+            ->contain(['Points' => function($q){
+                    return $q
+                        ->where(['title !=' => '', 'image !=' => 'NULL'])
+                        ->order(['item_order' => 'ASC'])
+                        ->limit(6);
+                }
+            ])
+            ->contain(['Items' => function($q){
+                    return $q
+                        ->where(['image !=' => 'NULL'])
+                        ->order(['item_order' => 'ASC'])
+                        ->limit(6);
+                }
+            ])
+            ->first();
     }
 }

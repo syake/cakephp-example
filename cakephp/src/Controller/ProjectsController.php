@@ -16,8 +16,6 @@ use RuntimeException;
  */
 class ProjectsController extends AuthController
 {
-    private static $assets_path = 'assets';
-    
     public $helpers = ['Custom'];
     
     /**
@@ -75,7 +73,7 @@ class ProjectsController extends AuthController
         if ($post == null) {
             return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
         }
-        $filepath = DS . self::$assets_path . DS . $uuid . DS;
+        $filepath = DS . ASSETS_PATH . DS . $uuid . DS;
         $post->setFilepath($filepath);
         
         $this->set(compact('post'));
@@ -106,7 +104,7 @@ class ProjectsController extends AuthController
         if ($post == null) {
             // error
         }
-        $filepath = DS . self::$assets_path . DS . $post->project->uuid . DS;
+        $filepath = DS . ASSETS_PATH . DS . $post->project->uuid . DS;
         $post->setFilepath($filepath);
         
         $this->set(compact('post'));
@@ -160,7 +158,7 @@ class ProjectsController extends AuthController
             }
             
             // upload
-            $folder_path = WWW_ROOT . self::$assets_path . DS . $uuid;
+            $folder_path = WWW_ROOT . ASSETS_PATH . DS . $uuid;
             $article = $this->upload($article, $folder_path, $post);
             $article = $this->uploadSections($article, $folder_path, $post);
             
@@ -207,14 +205,14 @@ class ProjectsController extends AuthController
             ]
         ]);
         $project = $post->project;
-        $filepath = DS . self::$assets_path . DS . $project->uuid . DS;
+        $filepath = DS . ASSETS_PATH . DS . $project->uuid . DS;
         $post->setFilepath($filepath);
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             
             // upload files
-            $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
+            $folder_path = WWW_ROOT . ASSETS_PATH . DS . $project->uuid;
             $data = $this->upload($data, $folder_path, $post, ['after' => $id]);
             $data = $this->uploadSections($data, $folder_path, $post);
             
@@ -477,7 +475,7 @@ class ProjectsController extends AuthController
         $project = $this->Projects->get($id);
         
         // assets folder delete
-        $folder_path = WWW_ROOT . self::$assets_path . DS . $project->uuid;
+        $folder_path = WWW_ROOT . ASSETS_PATH . DS . $project->uuid;
         $folder = new Folder($folder_path);
         $folder->delete();
         

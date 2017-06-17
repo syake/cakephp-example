@@ -52,7 +52,7 @@ class UsersController extends \App\Controller\AuthController
     public function edit($id = null)
     {
         if ($id == $this->user_id) {
-            return $this->redirect(['controller' => 'Users', 'action' => 'edit', 'prefix' => false], 303);
+            return $this->redirect(['controller' => 'Users', 'action' => 'edit', 'prefix' => false, $id], 303);
         }
         
         if ($this->request->data('_password')) {
@@ -72,6 +72,8 @@ class UsersController extends \App\Controller\AuthController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }
         }
+        
+        $this->set('referer', 'users');
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
     }

@@ -1,9 +1,7 @@
 <?php
     $this->assign('title', __('Your Profile'));
 ?>
-<nav class="nav topicpath">
-    <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) . PHP_EOL ?>
-</nav>
+<?= $this->element('Users/breadcrumb') ?>
 <div class="content edit-user-content">
     <h1><?= $this->fetch('title') ?></h1>
     <section class="boxed-group">

@@ -8,9 +8,7 @@
         $badge_style = 'badge-default';
     }
 ?>
-<nav class="nav topicpath">
-    <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) . PHP_EOL ?>
-</nav>
+<?= $this->element('Users/breadcrumb') ?>
 <div class="content edit-post-content">
     <div class="title">
         <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>

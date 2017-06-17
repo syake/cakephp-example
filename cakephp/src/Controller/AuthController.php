@@ -103,6 +103,7 @@ class AuthController extends AppController
         $this->viewBuilder()->setLayout('admin');
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
+        $this->set('referer', null);
     }
 
     /**

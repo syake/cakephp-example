@@ -1,9 +1,7 @@
 <?php
     $this->assign('title', __('Create a new post'));
 ?>
-<nav class="nav topicpath">
-    <?= $this->Html->link(__('Home'), ['controller' => 'Users', 'action' => 'index'], ['class' => 'nav-link back-link']) . PHP_EOL ?>
-</nav>
+<?= $this->element('Users/breadcrumb') ?>
 <div class="content add-post-content">
     <div class="title">
         <h1><?= $this->fetch('title') ?></h1>

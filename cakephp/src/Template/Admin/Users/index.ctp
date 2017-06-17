@@ -2,9 +2,7 @@
     $this->assign('title', __('List Users') );
     $index = ($this->Paginator->param('page') - 1) * 5 + 1;
 ?>
-<nav class="nav topicpath">
-  <?= $this->Html->link(__('Home'), ['controller' => 'Projects', 'action' => 'index', 'prefix' => false], ['class' => 'nav-link back-link']) ?>
-</nav>
+<?= $this->element('Users/breadcrumb') ?>
 <div class="content users-content">
     <h1><?= $this->fetch('title') ?></h1>
     <?= $this->Flash->render() ?>

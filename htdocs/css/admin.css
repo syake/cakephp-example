@@ -59,15 +59,18 @@ a.btn-delete:before {
     padding-right: 0.4rem;
 }
 
-.topicpath {
-    margin-left: -0.5em;
-    padding-top: 0.5rem;
-}
-
 footer {
     padding: 2rem 0;
     color: #9b9b9b;
     text-align: center;
+}
+
+/* breadcrumb
+-------------------------------------------*/
+.breadcrumb {
+    background-color: inherit;
+    padding: 1rem 0.5rem 0.5rem;
+    margin-bottom: 0;
 }
 
 /* form

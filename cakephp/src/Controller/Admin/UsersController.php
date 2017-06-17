@@ -43,8 +43,9 @@ class UsersController extends \App\Controller\AuthController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
-
+        $query = $this->Users->find()->contain(['Projects']);
+        $users = $this->paginate($query);
+        
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
     }
@@ -83,6 +84,48 @@ class UsersController extends \App\Controller\AuthController
         $this->set('referer', 'users');
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
+    }
+
+    /**
+     * Activate method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function activate($id = null)
+    {
+        $this->request->allowMethod(['post']);
+        $user = $this->Users->get($id);
+        $user->set('status',1);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('The user has been changed.'));
+        } else {
+            $this->Flash->error(__('The user could not be changed. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Deactivate method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function deactivate($id = null)
+    {
+        $this->request->allowMethod(['post']);
+        $user = $this->Users->get($id);
+        $user->set('status',0);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('The user has been changed.'));
+        } else {
+            $this->Flash->error(__('The user could not be changed. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     /**

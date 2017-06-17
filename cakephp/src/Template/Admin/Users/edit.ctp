@@ -9,31 +9,31 @@
         <div class="boxed-group-inner">
             <?= $this->Flash->render() ?>
             <?= $this->Form->create($user) ?>
-            <?= $this->Form->control('username') ?>
-            <?= $this->Form->control('email') ?>
-            <?= $this->Form->control('nickname') ?>
-            <?= $this->Form->control('role', [
-                'type' => 'radio',
-                'options' => [
-                    ['value' => 'admin', 'text' => 'Admin'],
-                    ['value' => 'author', 'text' => 'Author']
-                ],
-                'templates' => [
-                    'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
-                    'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>'
-                ]
-            ]) ?>
-            <div class="form-group">
-                <label class="control-label"><?= __('Status') ?></label>
-                <?= $this->Form->control('status', [
-                    'label' => __('Publish'),
-                    'type' => 'checkbox',
+                <?= $this->Form->control('username') ?>
+                <?= $this->Form->control('email') ?>
+                <?= $this->Form->control('nickname') ?>
+                <?= $this->Form->control('role', [
+                    'type' => 'radio',
+                    'options' => [
+                        ['value' => 'admin', 'text' => 'Admin'],
+                        ['value' => 'author', 'text' => 'Author']
+                    ],
                     'templates' => [
-                        'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}{{text}}</label>'
+                        'nestingLabel' => '{{hidden}}<label class="custom-control custom-radio"{{attrs}}>{{input}}{{text}}</label>',
+                        'formGroup' => '{{label}}<div class="radio-group">{{input}}</div>'
                     ]
                 ]) ?>
-            </div>
-            <?= $this->Form->button(__('Update an account'), ['class' => 'btn-secondary']); ?>
+                <div class="form-group">
+                    <label class="control-label"><?= __('Status') ?></label>
+                    <?= $this->Form->control('status', [
+                        'label' => __('Activate'),
+                        'type' => 'checkbox',
+                        'templates' => [
+                            'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}{{text}}</label>'
+                        ]
+                    ]) ?>
+                </div>
+                <?= $this->Form->button(__('Update an account'), ['class' => 'btn-secondary']); ?>
             <?= $this->Form->end() ?>
         </div>
     </section>

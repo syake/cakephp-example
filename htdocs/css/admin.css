@@ -497,31 +497,30 @@ form a.js-upload-delete {
     margin-bottom: 2.5rem;
 }
 
+.users-content .table-wrapper {
+    border: 0.2rem solid #f7f7f9;
+    padding: 1.5rem;
+}
 .users-content table.table {
     margin-bottom: 0.5rem;
 }
 .users-content table.table thead i.fa {
     margin-left: 0.5rem;
 }
-.users-content table.table .num {
-    max-width: 4rem;
-    text-align: center;
-    font-weight: 400;
+.users-content table.table tbody td {
+    padding-left: 1.0rem;
 }
-.users-content table.table .status {
-    max-width: 4rem;
-    text-align: center;
+.users-content table.table .active td.username:after {
+    content: '\f00c';
+    font-family: FontAwesome;
+    padding-left: 0.4rem;
+    color: #5cb85c;
 }
-.users-content table.table .status .custom-control {
-    margin: auto;
+.users-content table.table .status_deactive td {
+    color: #9b9b9b;
 }
-
-.users-content table.table .active td {
-    background-color: #d9edf7;
-    border-color: #bcdff1;
-    color: #31708f;
-}
-.users-content table.table .invalid td {
+.users-content table.table td.postlink {
+    font-size: 0.8rem;
     color: #9b9b9b;
 }
 
@@ -529,7 +528,7 @@ form a.js-upload-delete {
     color: #9b9b9b;
     text-align: right;
     padding-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 .users-content p.pagination-help .pages {
     margin-left: 1rem;

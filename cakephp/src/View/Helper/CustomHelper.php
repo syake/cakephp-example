@@ -11,7 +11,8 @@ class CustomHelper extends Helper
      */
     public $helpers = ['Form','Html'];
     
-    public function upload($name, $options = array()) {
+    public function upload($name, $options = array())
+    {
         $options = array_merge([
             'indent' => 0,
             't' => '',

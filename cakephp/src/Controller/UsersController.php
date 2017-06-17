@@ -57,11 +57,10 @@ class UsersController extends AuthController
     /**
      * Edit method
      *
-     * @param string|null $id User id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit()
     {
         if ($this->request->data('_password')) {
             $flash_key = 'password';
@@ -79,6 +78,7 @@ class UsersController extends AuthController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'), ['key' => $flash_key]);
+                $this->Auth->setUser($user);
             } else {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }

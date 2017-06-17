@@ -16,16 +16,17 @@ class UsersController extends \App\Controller\AuthController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        
         $this->set('header', 'Users/header_admin');
     }
 
     public function isAuthorized($user = null)
     {
-        if ($this->user_role == 'admin') {
-            return true;
+        if ($user != null) {
+            if ($user['role'] == 'admin') {
+                return parent::isAuthorized($user);
+            }
         }
-        return parent::isAuthorized($user);
+        return false;
     }
 
     /**
@@ -50,6 +51,10 @@ class UsersController extends \App\Controller\AuthController
      */
     public function edit($id = null)
     {
+        if ($id == $this->user_id) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'edit', 'prefix' => false], 303);
+        }
+        
         if ($this->request->data('_password')) {
             $flash_key = 'password';
         } else {

@@ -16,7 +16,7 @@ class ProjectsController extends AuthController
 {
     public $helpers = ['Custom'];
     public $paginate = [
-        'limit' => 5,
+        'limit' => 10,
         'order' => [
             'id' => 'DESC'
         ]
@@ -29,10 +29,15 @@ class ProjectsController extends AuthController
      */
     public function index()
     {
-        $id = $this->user_id;
-        $projects = $this->Users->get($id, [
-            'contain' => ['Projects', 'Projects.Articles', 'Projects.Users']
-        ])->projects;
+        $user_id = $this->user_id;
+        $query = $this->Projects->find()
+            ->matching('Users', function($q) use ($user_id) {
+                return $q->where([
+                    'Users.id' => $user_id
+                ]);
+            })
+            ->contain(['Articles']);
+        $projects = $this->paginate($query);
         
         $this->set(compact('projects'));
         $this->set('_serialize', ['projects']);
@@ -52,6 +57,7 @@ class ProjectsController extends AuthController
         ]);
         
         $user_id = $this->user_id;
+        
         if ($project->hasAdmin($user_id) == false) {
             return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
         }

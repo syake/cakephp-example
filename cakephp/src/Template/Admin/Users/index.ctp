@@ -56,6 +56,5 @@
             <?= $this->Paginator->numbers(['modulus' => 4]); ?>
             <?= $this->Paginator->last() ?>
         </ul>
-        
     </nav>
 </div>

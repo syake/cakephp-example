@@ -13,6 +13,13 @@ use Cake\Event\Event;
  */
 class UsersController extends \App\Controller\AuthController
 {
+    public $paginate = [
+        'limit' => 10,
+        'order' => [
+            'id' => 'DESC'
+        ]
+    ];
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);

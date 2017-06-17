@@ -50,11 +50,12 @@
         </tbody>
     </table>
     <nav aria-label="Page navigation">
+        <p class="pagination-help"><?= $this->Paginator->counter(['format' => __('{{count}} items') . '<span class="pages">{{page}} / {{pages}}</span>']) ?></p>
         <ul class="pagination justify-content-center">
             <?= $this->Paginator->first() ?>
             <?= $this->Paginator->numbers(['modulus' => 4]); ?>
             <?= $this->Paginator->last() ?>
         </ul>
-        <p class="pagination-doc"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+        
     </nav>
 </div>

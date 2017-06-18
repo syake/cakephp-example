@@ -104,7 +104,7 @@ CREATE TABLE `sections` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` BIGINT(20) UNSIGNED NOT NULL,
     `tag` VARCHAR(20) NOT NULL,
-    `order` INT(11) DEFAULT 0,
+    `item_order` INT(11) DEFAULT 0,
     `enable` TINYINT(1) DEFAULT 0,
     `title` VARCHAR(255),
     `description` TEXT,

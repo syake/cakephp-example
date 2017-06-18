@@ -105,7 +105,7 @@ CREATE TABLE `sections` (
     `article_id` BIGINT(20) UNSIGNED NOT NULL,
     `tag` VARCHAR(20) NOT NULL,
     `item_order` INT(11) DEFAULT 0,
-    `enable` TINYINT(1) DEFAULT 0,
+    `visible` TINYINT(1) DEFAULT 0,
     `title` VARCHAR(255),
     `description` TEXT,
     `image` VARCHAR(255)

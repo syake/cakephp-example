@@ -22,6 +22,19 @@ class ProjectsController extends AuthController
         ]
     ];
 
+    public function isAuthorized($user = null)
+    {
+        if ($user['status'] == 1) {
+            return true;
+        }
+        $param = $this->request->param('action');
+        if ($param == 'index') {
+            $this->setAction('error403');
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Index method
      *
@@ -29,11 +42,11 @@ class ProjectsController extends AuthController
      */
     public function index()
     {
-        $user_id = $this->user_id;
+        $login_user_id = $this->Auth->user('id');
         $query = $this->Projects->find()
-            ->matching('Users', function($q) use ($user_id) {
+            ->matching('Users', function($q) use ($login_user_id) {
                 return $q->where([
-                    'Users.id' => $user_id
+                    'Users.id' => $login_user_id
                 ]);
             })
             ->contain(['Articles']);
@@ -41,6 +54,16 @@ class ProjectsController extends AuthController
         
         $this->set(compact('projects'));
         $this->set('_serialize', ['projects']);
+    }
+
+    /**
+     * Error 403 method
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function error403()
+    {
+        // empty
     }
 
     /**
@@ -56,9 +79,8 @@ class ProjectsController extends AuthController
             'contain' => ['Users']
         ]);
         
-        $user_id = $this->user_id;
-        
-        if ($project->hasAdmin($user_id) == false) {
+        $login_user_id = $this->Auth->user('id');
+        if ($project->hasAdmin($login_user_id) == false) {
             return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
         }
         

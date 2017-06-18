@@ -71,8 +71,8 @@ class UsersController extends AuthController
             $flash_key = 'flash';
         }
         
-        $user_id = $this->user_id;
-        $user = $this->Users->get($user_id, [
+        $login_user_id = $this->Auth->user('id');
+        $user = $this->Users->get($login_user_id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {

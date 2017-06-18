@@ -28,10 +28,8 @@ class UsersController extends \App\Controller\AuthController
 
     public function isAuthorized($user = null)
     {
-        if ($user != null) {
-            if ($user['role'] == 'admin') {
-                return parent::isAuthorized($user);
-            }
+        if ($user['role'] == 'admin') {
+            return true;
         }
         return false;
     }

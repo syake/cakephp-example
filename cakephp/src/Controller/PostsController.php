@@ -28,7 +28,15 @@ class PostsController extends AuthController
         parent::beforeFilter($event);
         $this->Auth->allow(['index']);
     }
-    
+
+    public function isAuthorized($user = null)
+    {
+        if ($user['status'] == 1) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Display method
      *
@@ -108,7 +116,7 @@ class PostsController extends AuthController
         
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $user_id = $this->user_id;
+            $login_user_id = $this->Auth->user('id');
             
             if (isset($data['project_id']) != null) {
                 $uuid = $this->Projects->find('list', [
@@ -130,7 +138,7 @@ class PostsController extends AuthController
                 // users join
                 $project['users'] = [
                     [
-                        'id' => $user_id,
+                        'id' => $login_user_id,
                         '_joinData' => [
                             'role' => 'admin'
                         ]
@@ -140,7 +148,7 @@ class PostsController extends AuthController
             }
             
             // default
-            $data['author_id'] = $user_id;
+            $data['author_id'] = $login_user_id;
             $data['status'] = 'publish';
             unset($data['publish']);
             
@@ -207,9 +215,9 @@ class PostsController extends AuthController
         // user admin
         $is_admin = false;
         $users = $project->users;
-        $user_id = $this->user_id;
+        $login_user_id = $this->Auth->user('id');
         foreach ($users as $user) {
-            if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
+            if (($user->id == $login_user_id) && ($user->_joinData->role == 'admin')) {
                 $is_admin = true;
                 break;
             }

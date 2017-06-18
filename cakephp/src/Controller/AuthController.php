@@ -14,8 +14,6 @@ use Cake\Event\Event;
  */
 class AuthController extends AppController
 {
-    protected $user_id = null;
-    
     public $helpers = [
         'Form' => [
             'className' => 'Bootstrap.Form',
@@ -104,6 +102,20 @@ class AuthController extends AppController
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
         $this->set('referer', null);
+        
+        $user_id = $this->Auth->user('id');
+        if ($user_id != null) {
+            $user = $this->Users->get($user_id);
+            $this->Auth->setUser($user);
+            if ($user->role == 'admin') {
+                $this->set('header', 'Users/header_admin');
+            }
+        }
+    }
+
+    public function isAuthorized($user = null)
+    {
+        return true;
     }
 
     /**
@@ -122,24 +134,6 @@ class AuthController extends AppController
         if (($user_name == null) || empty($user_name)) {
             $user_name = $this->Auth->user('username');
         }
-        $this->set(compact('user_name', 'user_id'));
-    }
-
-    public function isAuthorized($user = null)
-    {
-        if ($user != null) {
-            if (isset($user['id'])) {
-                $user_id = $user['id'];
-                $entity = $this->Users->get($user_id);
-                $user_role = $entity->role;
-                if ($user_role == 'admin') {
-                    $this->set('header', 'Users/header_admin');
-                }
-                $this->user_id = $user_id;
-                return true;
-            }
-        }
-        $this->redirect(['controller' => 'Users', 'action' => 'logout']);
-        return false;
+        $this->set(compact('user_id', 'user_name'));
     }
 }

@@ -533,3 +533,27 @@ form a.js-upload-delete {
 .users-content p.pagination-help .pages {
     margin-left: 1rem;
 }
+
+/* error
+-------------------------------------------*/
+.error-content {
+    color: #666666;
+    text-align: center;
+    padding: 8rem 0;
+}
+.error-content h1 {
+    font-weight: 700;
+    font-size: 6rem;
+    margin-bottom: 1rem;
+}
+.error-content h1 small {
+    font-weight: 400;
+    font-size: 2rem;
+    color: #9b9b9b;
+    padding-left: 1rem;
+    vertical-align: baseline;
+}
+.error-content p {
+    font-weight: 500;
+    font-size: 1.5rem;
+}

@@ -38,7 +38,7 @@ class UsersController extends AuthController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->find('list', ['conditions' => ['role' => 'admin']])->first() == null) {
                 $user->set('role', 'admin');
-                $user->set('status', 1);
+                $user->set('enable', 1);
             }
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));

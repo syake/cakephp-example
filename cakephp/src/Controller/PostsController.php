@@ -31,7 +31,7 @@ class PostsController extends AuthController
 
     public function isAuthorized($user = null)
     {
-        if ($user['status'] == 1) {
+        if ($user['enable'] == 1) {
             return true;
         }
         return false;

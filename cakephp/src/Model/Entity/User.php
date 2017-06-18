@@ -13,7 +13,7 @@ use Cake\ORM\Entity;
  * @property string $password
  * @property string $nickname
  * @property string $role
- * @property bool $status
+ * @property bool $enable
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *

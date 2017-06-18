@@ -85,17 +85,17 @@ class UsersController extends \App\Controller\AuthController
     }
 
     /**
-     * Activate method
+     * Enable method
      *
      * @param string|null $id User id.
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function activate($id = null)
+    public function enable($id = null)
     {
         $this->request->allowMethod(['post']);
         $user = $this->Users->get($id);
-        $user->set('status',1);
+        $user->set('enable',1);
         if ($this->Users->save($user)) {
             $this->Flash->success(__('The user has been changed.'));
         } else {
@@ -106,17 +106,17 @@ class UsersController extends \App\Controller\AuthController
     }
 
     /**
-     * Deactivate method
+     * Disable method
      *
      * @param string|null $id User id.
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function deactivate($id = null)
+    public function disable($id = null)
     {
         $this->request->allowMethod(['post']);
         $user = $this->Users->get($id);
-        $user->set('status',0);
+        $user->set('enable',0);
         if ($this->Users->save($user)) {
             $this->Flash->success(__('The user has been changed.'));
         } else {

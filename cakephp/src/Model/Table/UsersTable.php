@@ -99,8 +99,8 @@ class UsersTable extends Table
             ->allowEmpty('role');
 
         $validator
-            ->boolean('status')
-            ->allowEmpty('status');
+            ->boolean('enable')
+            ->allowEmpty('enable');
 
         return $validator;
     }

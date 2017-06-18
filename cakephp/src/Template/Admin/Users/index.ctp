@@ -15,7 +15,7 @@
                         $this->Paginator->sort('nickname', __('Nickname')),
                         $this->Paginator->sort('role', __('Role')),
                         $this->Paginator->sort('created', __('Last Updated')),
-                        $this->Paginator->sort('status', __('Status')),
+                        $this->Paginator->sort('enable', __('Status')),
                         $this->Paginator->sort('count(projects)', __('Projects')),
                         ''
                     ]) ?></tr>
@@ -28,14 +28,14 @@
         } else {
             $col_style = '';
         }
-        if ($user->status) {
+        if ($user->enable) {
             $status_icon = 'fa-check-circle';
             $status_style = 'status_active';
-            $status_link  = $this->Form->postLink(__('Deactivate'), ['action' => 'deactivate', $user->id]);
+            $status_link  = $this->Form->postLink(__('Deactivate'), ['action' => 'disable', $user->id]);
         }  else {
             $status_icon = 'fa-ban';
             $status_style = 'status_deactive';
-            $status_link  = $this->Form->postLink(__('Activate'), ['action' => 'activate', $user->id]);
+            $status_link  = $this->Form->postLink(__('Activate'), ['action' => 'enable', $user->id]);
         }
 ?>
                 <tr class="<?= $col_style . ' ' . $status_style ?>">

@@ -117,14 +117,14 @@ class ArticlesTable extends Table
             ->contain('Projects')
             ->contain(['Points' => function($q){
                     return $q
-                        ->where(['title !=' => '', 'image !=' => 'NULL'])
+                        ->where(['visible' => 1])
                         ->order(['item_order' => 'ASC'])
                         ->limit(6);
                 }
             ])
             ->contain(['Items' => function($q){
                     return $q
-                        ->where(['image !=' => 'NULL'])
+                        ->where(['visible' => 1])
                         ->order(['item_order' => 'ASC'])
                         ->limit(6);
                 }

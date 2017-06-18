@@ -1,3 +1,11 @@
+<?php
+    $chekbox_options = [
+        'label' => __('Visible'),
+        'templates' => [
+            'nestingLabel' => '{{hidden}}<label class="custom-control custom-checkbox"{{attrs}}>{{input}}{{text}}</label>'
+        ]
+    ];
+?>
                 <section class="boxed-group">
                     <h2><?= __('Content') ?></h2>
                     <div class="boxed-group-inner">
@@ -33,6 +41,7 @@
                                         't' => '    ',
                                         'default' => $post->points[$i]->image_path
                                     ]) . PHP_EOL ?>
+                                    <?= $this->Form->control("points.{$i}.visible", $chekbox_options) . PHP_EOL ?>
                                 </div>
                             </div>
 <?php endfor; ?>
@@ -57,6 +66,7 @@
                                         't' => '    ',
                                         'default' => $post->items[$i]->image_path
                                     ]) . PHP_EOL ?>
+                                    <?= $this->Form->control("items.{$i}.visible", $chekbox_options) . PHP_EOL ?>
                                 </div>
                             </div>
 <?php endfor; ?>

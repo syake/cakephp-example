@@ -262,26 +262,16 @@ form a.js-upload-delete {
     -webkit-box-shadow:7px 7px 10px -6px rgba(0,0,0,0.2);
 }
 
-
-
-/*
-.section-box {
-    border: 1px solid #d8dee2 !important;
-    background-color: white;
+.sortable-box .checkbox {
+    margin-top: 1rem;
 }
-.section-box .col-lg-6 {
-    margin-bottom: 20px;
-}
-.section-box .col-lg-6:last-child {
+.sortable-box .checkbox .custom-control {
+    min-height: inherit;
     margin-bottom: 0;
 }
-
-@media (min-width:992px) {
-    .section-box .col-lg-6 {
-        margin-bottom: 0;
-    }
+.sortable-box .checkbox .custom-control-description {
+    height: 16px;
 }
-*/
 
 /* login
 -------------------------------------------*/

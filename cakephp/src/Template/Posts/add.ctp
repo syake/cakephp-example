@@ -10,7 +10,7 @@
     <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) . PHP_EOL ?>
         <div class="row">
             <div class="col-md-9">
-<?= $this->element('Projects/form') ?>
+<?= $this->element('Posts/form') ?>
             </div>
             <div class="col-md-3">
                 <section class="boxed-group">

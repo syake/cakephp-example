@@ -9,7 +9,8 @@ use Cake\ORM\Entity;
  * @property int $section_id
  * @property int $article_id
  * @property string $tag
- * @property int $order
+ * @property int $item_order
+ * @property bool $visible
  * @property string $title
  * @property string $description
  * @property string $image

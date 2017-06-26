@@ -39,9 +39,9 @@ class CustomHelper extends Helper
         $result .= $t0 . "{$t}{$t}" . '<div class="upload-empty-container">' . PHP_EOL;
         $result .= $t0 . "{$t}{$t}{$t}" . '<div class="upload-empty-inner">' . PHP_EOL;
         $result .= $t0 . "{$t}{$t}{$t}{$t}" . '<label for="' . $input_id . '">' . PHP_EOL;
-        $result .= $t0 . "{$t}{$t}{$t}{$t}{$t}" . $this->Form->hidden("{$name}_temp", ['class' => 'temp', 'value' => 0]) . PHP_EOL;
+        $result .= $t0 . "{$t}{$t}{$t}{$t}{$t}" . $this->Form->hidden("{$name}_disable", ['class' => 'disable', 'value' => 0]) . PHP_EOL;
         $result .= $t0 . "{$t}{$t}{$t}{$t}{$t}" . $this->Form->button(__('Select file'), ['type' => 'button']) . PHP_EOL;
-        $result .= $t0 . "{$t}{$t}{$t}{$t}{$t}" . $this->Form->file("{$name}[]", ['class' => 'file', 'id' => $input_id, 'data-id' => $id]) . PHP_EOL;
+        $result .= $t0 . "{$t}{$t}{$t}{$t}{$t}" . $this->Form->file("{$name}", ['class' => 'file', 'id' => $input_id, 'data-id' => $id]) . PHP_EOL;
         $result .= $t0 . "{$t}{$t}{$t}{$t}" . '</label>' . PHP_EOL;
         $result .= $t0 . "{$t}{$t}{$t}" . '</div>' . PHP_EOL;
         $result .= $t0 . "{$t}{$t}" . '</div>' . PHP_EOL;

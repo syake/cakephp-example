@@ -15,7 +15,24 @@ use RuntimeException;
 class PostsController extends AuthController
 {
     public $helpers = ['Custom'];
-    
+
+    /**
+     * Initialization hook method.
+     *
+     * Use this method to add common initialization code like loading components.
+     *
+     * e.g. `$this->loadComponent('Security');`
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Image', [
+            'namerule' => 'sha1'
+        ]);
+    }
+
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -152,16 +169,15 @@ class PostsController extends AuthController
             $data['status'] = 'publish';
             unset($data['publish']);
             
-            // upload
+            // upload files
             $folder_path = WWW_ROOT . ASSETS_PATH . DS . $uuid;
-            $data = $this->upload($data, $folder_path, $post);
-            $data = $this->uploadSections($data, $folder_path, $post);
+            $this->uploads($data, $folder_path, $post);
             
             $post = $this->Articles->patchEntity($post, $data, ['associated' => ['Projects.Users', 'Points', 'Items']]);
             if ($this->Articles->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
 
-                return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
+                return $this->redirect(['controller' => 'Posts', 'action' => 'edit', $post->id]);
             } else {
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
@@ -201,8 +217,7 @@ class PostsController extends AuthController
             
             // upload files
             $folder_path = WWW_ROOT . ASSETS_PATH . DS . $project->uuid;
-            $data = $this->upload($data, $folder_path, $post, ['after' => $id]);
-            $data = $this->uploadSections($data, $folder_path, $post);
+            $this->uploads($data, $folder_path, $post);
             
             $post = $this->Articles->patchEntity($post, $data);
             if ($this->Articles->save($post)) {
@@ -228,108 +243,60 @@ class PostsController extends AuthController
     }
     
     /**
-     * Upload method
+     * Uploads method
      *
      * @param array $data getData
      * @param string $folder_path folder path for image
      * @param Model\Entity\Article $post
      * @return $data
      */
-    private function uploadSections($data, $folder_path, $post)
+    private function uploads(&$data, $folder_path, $post)
     {
-        $sections_data = [];
-        if (isset($data['points'])) {
-            $sections_data['points'] = $data['points'];
-        }
-        if (isset($data['items'])) {
-            $sections_data['items'] = $data['items'];
-        }
-        foreach ($sections_data as $key => $sections) {
-            $sections_temp = [];
-            foreach ($sections as $i => $section) {
-                $after_key = sprintf("%03d", ($i + 1));
-                $sections_temp[] = $this->upload($section, $folder_path, $post, ['before' => $section['tag'], 'after' => $after_key, 'has_name' => false]);
+        foreach ($data as $key => $dat) {
+            if (!is_array($dat)) {
+                continue;
             }
-            $data[$key] = $sections_temp;
-        }
-        return $data;
-    }
-
-    /**
-     * Upload method
-     *
-     * @param array $data getData
-     * @param string $folder_path folder path for image
-     * @param Model\Entity\Article $post
-     * @param array|null $options
-     * @return $data
-     */
-    private function upload($data, $folder_path, $post, $options = [])
-    {
-        $options = array_merge([
-            'before' => null,
-            'after' => null,
-            'has_name' => true
-        ], $options);
-        
-        foreach ($data as $key => $obj) {
-            // check one for array
-            if (is_array($obj)) {
-                if (isset($obj[0])) {
-                    $file = $obj[0];
-                } else {
-                    continue;
+            if (array_values($dat) === $dat) {
+                foreach ($dat as $i => $da) {
+                    foreach ($da as $k => $d) {
+                        if (isset($d['tmp_name'])) {
+                            $disable_key = $k . '_disable';
+                            if (isset($da[$disable_key]) && $da[$disable_key] == 1) {
+                                unset($data[$key][$i][$k]);
+                            } else if (empty($d['name'])) {
+                                $data[$key][$i][$k] = null;
+                            } else {
+                                try {
+                                    $success = $this->Image->uploadFile($folder_path, $d);
+                                    if ($success) {
+                                        $data[$key][$i][$k] = $d['name'];
+                                    }
+                                } catch (RuntimeException $e) {
+                                    $id = $key . '_' . $i . '_' . $k;
+                                    $post->setError($id, $e->getMessage());
+                                }
+                            }
+                        }
+                    }
                 }
-            } else {
-                $file = $obj;
-            }
-            
-            // check file type
-            if (isset($file['name'])) {
-                // temp key
-                $temp_key = $key . '_temp';
-                
-                if (isset($data[$temp_key]) && ($data[$temp_key] == 0)) {
-                    // delete files
+            } else if (isset($dat['tmp_name'])) {
+                $disable_key = $key . '_disable';
+                if (isset($data[$disable_key]) && $data[$disable_key] == 1) {
+                    unset($data[$key]);
+                } else if (empty($dat['name'])) {
                     $data[$key] = null;
-                } else if (!empty($file['name'])) {
-                    // upload files
-                    $base_filename = $file['name'];
-                    $ext = substr($base_filename, strrpos($base_filename, '.') + 1);
-                    $filenames = [];
-                    if ($options['before'] != null) {
-                        $filenames[] = $options['before'];
-                    }
-                    if ($options['has_name']) {
-                        $filenames[] = $key;
-                    }
-                    if ($options['after'] != null) {
-                        $filenames[] = $options['after'];
-                    }
-                    if (count($filenames) > 0) {
-                        $filename = implode('-', $filenames) . '.' . $ext;
-                    } else {
-                        $filename = $base_filename;
-                    }
-                    $filename = mb_strtolower($filename);
-                    
+                } else {
                     try {
-                        $success = $this->uploadFile($folder_path, $file, ['name' => $filename]);
+                        $success = $this->Image->uploadFile($folder_path, $dat);
                         if ($success) {
-                            $data[$key] = $filename;
+                            $data[$key] = $dat['name'];
                         }
                     } catch (RuntimeException $e) {
                         $post->setError($key, $e->getMessage());
                     }
                 }
-                
-                if (is_array($data[$key])) {
-                    unset($data[$key]);
-                }
-                unset($data[$temp_key]);
             }
         }
-        return $data;
     }
 
     /**

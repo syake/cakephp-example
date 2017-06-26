@@ -29,7 +29,11 @@ class PostsController extends AuthController
     {
         parent::initialize();
         $this->loadComponent('Image', [
-            'namerule' => 'sha1'
+            'namerule' => 'sha1',
+            'resize' => [
+                'min_width' => 1024,
+                'min_height' => 1024
+            ]
         ]);
     }
 
@@ -267,7 +271,12 @@ class PostsController extends AuthController
                                 $data[$key][$i][$k] = null;
                             } else {
                                 try {
-                                    $success = $this->Image->uploadFile($folder_path, $d);
+                                    $success = $this->Image->upload($folder_path, $d, [
+                                            'resize' => [
+                                                'min_width' => 400,
+                                                'min_height' => 400
+                                            ]
+                                        ]);
                                     if ($success) {
                                         $data[$key][$i][$k] = $d['name'];
                                     }
@@ -287,7 +296,7 @@ class PostsController extends AuthController
                     $data[$key] = null;
                 } else {
                     try {
-                        $success = $this->Image->uploadFile($folder_path, $dat);
+                        $success = $this->Image->upload($folder_path, $dat);
                         if ($success) {
                             $data[$key] = $dat['name'];
                         }

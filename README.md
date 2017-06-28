@@ -10,7 +10,7 @@ CREATE TABLE `users` (
     `password` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(255),
     `role` ENUM('admin','author') DEFAULT 'author',
-    `status` TINYINT(1) DEFAULT 0,
+    `enable` TINYINT(1) DEFAULT 0,
     `created` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -104,7 +104,8 @@ CREATE TABLE `sections` (
     `id` BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `article_id` BIGINT(20) UNSIGNED NOT NULL,
     `tag` VARCHAR(20) NOT NULL,
-    `order` INT(11) DEFAULT 0,
+    `item_order` INT(11) DEFAULT 0,
+    `visible` TINYINT(1) DEFAULT 0,
     `title` VARCHAR(255),
     `description` TEXT,
     `image` VARCHAR(255)

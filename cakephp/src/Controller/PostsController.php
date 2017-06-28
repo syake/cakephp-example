@@ -30,7 +30,7 @@ class PostsController extends AuthController
         parent::initialize();
         $this->loadComponent('Image', [
             'namerule' => 'sha1',
-            'resize' => [
+            'size' => [
                 'min_width' => 1024,
                 'min_height' => 1024
             ]
@@ -270,13 +270,29 @@ class PostsController extends AuthController
                             } else if (empty($d['name'])) {
                                 $data[$key][$i][$k] = null;
                             } else {
-                                try {
-                                    $success = $this->Image->upload($folder_path, $d, [
-                                            'resize' => [
-                                                'min_width' => 400,
-                                                'min_height' => 400
+                                switch ($key) {
+                                    case 'points':
+                                        $options = [
+                                            'size' => [
+                                                'width' => 640,
+                                                'height' => 480
                                             ]
-                                        ]);
+                                        ];
+                                        break;
+                                    case 'items':
+                                        $options = [
+                                            'size' => [
+                                                'width' => 640,
+                                                'height' => 640
+                                            ]
+                                        ];
+                                        break;
+                                    default:
+                                        $options = [];
+                                        break;
+                                }
+                                try {
+                                    $success = $this->Image->upload($folder_path, $d, $options);
                                     if ($success) {
                                         $data[$key][$i][$k] = $d['name'];
                                     }

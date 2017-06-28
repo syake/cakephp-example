@@ -14,9 +14,6 @@ use Cake\Event\Event;
  */
 class AuthController extends AppController
 {
-    protected $user_id = null;
-    protected $user_role = null;
-    
     public $helpers = [
         'Form' => [
             'className' => 'Bootstrap.Form',
@@ -74,7 +71,7 @@ class AuthController extends AppController
                 'prefix' => false
             ],
             'loginRedirect' => [
-                'controller' => 'Users',
+                'controller' => 'Projects',
                 'action' => 'index',
                 'prefix' => false
             ],
@@ -104,31 +101,39 @@ class AuthController extends AppController
         $this->viewBuilder()->setLayout('admin');
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
+        $this->set('referer', null);
         
-        $user_id = $this->request->session()->read('Auth.User.id');
-        $user_name = null;
-        if (($user_id != null) && $this->Users->exists(['id' => $user_id])) {
+        $user_id = $this->Auth->user('id');
+        if ($user_id != null) {
             $user = $this->Users->get($user_id);
-            $user_name = $user->nickname;
-            $user_role = $user->role;
-            if (($user_name == null) || empty($user_name)) {
-                $user_name = $user->username;
-            }
-            if ($user_role == 'admin') {
+            $this->Auth->setUser($user);
+            if ($user->role == 'admin') {
                 $this->set('header', 'Users/header_admin');
             }
-            $this->user_id = $user_id;
-            $this->user_role = $user_role;
         }
-        $this->set(compact('user_name', 'user_id'));
     }
 
     public function isAuthorized($user = null)
     {
-        if ($this->user_id != null) {
-            return true;
+        return true;
+    }
+
+    /**
+     * Called after the controller action is run, but before the view is rendered. You can use this method
+     * to perform logic or set view variables that are required on every request.
+     *
+     * @param \Cake\Event\Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeRender(Event $event)
+    {
+        parent::beforeRender($event);
+        
+        $user_id = $this->Auth->user('id');
+        $user_name = $this->Auth->user('nickname');
+        if (($user_name == null) || empty($user_name)) {
+            $user_name = $this->Auth->user('username');
         }
-        $this->redirect(['controller' => 'Users', 'action' => 'logout']);
-        return false;
+        $this->set(compact('user_id', 'user_name'));
     }
 }

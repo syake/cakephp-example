@@ -13,13 +13,6 @@ use Cake\Event\Event;
  */
 class UsersController extends AuthController
 {
-    public $paginate = [
-        'limit' => 5,
-        'order' => [
-            'id' => 'DESC'
-        ]
-    ];
-
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -34,22 +27,6 @@ class UsersController extends AuthController
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null
-     */
-    public function index()
-    {
-        $id = $this->user_id;
-        $projects = $this->Users->get($id, [
-            'contain' => ['Projects', 'Projects.Articles', 'Projects.Users']
-        ])->projects;
-        
-        $this->set(compact('projects'));
-        $this->set('_serialize', ['projects']);
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
@@ -61,7 +38,7 @@ class UsersController extends AuthController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->find('list', ['conditions' => ['role' => 'admin']])->first() == null) {
                 $user->set('role', 'admin');
-                $user->set('status', 1);
+                $user->set('enable', 1);
             }
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
@@ -94,17 +71,22 @@ class UsersController extends AuthController
             $flash_key = 'flash';
         }
         
-        $id = $this->user_id;
-        $user = $this->Users->get($id, [
+        $login_user_id = $this->Auth->user('id');
+        $user = $this->Users->get($login_user_id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'), ['key' => $flash_key]);
+                $this->Auth->setUser($user);
             } else {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }
+        }
+        
+        if (($id != null) && ($user['role'] == 'admin')) {
+            $this->set('referer', 'users');
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);

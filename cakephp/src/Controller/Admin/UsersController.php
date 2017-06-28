@@ -13,19 +13,25 @@ use Cake\Event\Event;
  */
 class UsersController extends \App\Controller\AuthController
 {
+    public $paginate = [
+        'limit' => 10,
+        'order' => [
+            'id' => 'DESC'
+        ]
+    ];
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        
         $this->set('header', 'Users/header_admin');
     }
 
     public function isAuthorized($user = null)
     {
-        if ($this->user_role == 'admin') {
+        if ($user['role'] == 'admin') {
             return true;
         }
-        return parent::isAuthorized($user);
+        return false;
     }
 
     /**
@@ -35,8 +41,9 @@ class UsersController extends \App\Controller\AuthController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
-
+        $query = $this->Users->find()->contain(['Projects']);
+        $users = $this->paginate($query);
+        
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
     }
@@ -50,6 +57,10 @@ class UsersController extends \App\Controller\AuthController
      */
     public function edit($id = null)
     {
+        if ($id == $this->user_id) {
+            return $this->redirect(['controller' => 'Users', 'action' => 'edit', 'prefix' => false, $id], 303);
+        }
+        
         if ($this->request->data('_password')) {
             $flash_key = 'password';
         } else {
@@ -67,8 +78,52 @@ class UsersController extends \App\Controller\AuthController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }
         }
+        
+        $this->set('referer', 'users');
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
+    }
+
+    /**
+     * Enable method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function enable($id = null)
+    {
+        $this->request->allowMethod(['post']);
+        $user = $this->Users->get($id);
+        $user->set('enable',1);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('The user has been changed.'));
+        } else {
+            $this->Flash->error(__('The user could not be changed. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Disable method
+     *
+     * @param string|null $id User id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function disable($id = null)
+    {
+        $this->request->allowMethod(['post']);
+        $user = $this->Users->get($id);
+        $user->set('enable',0);
+        if ($this->Users->save($user)) {
+            $this->Flash->success(__('The user has been changed.'));
+        } else {
+            $this->Flash->error(__('The user could not be changed. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
     }
 
     /**

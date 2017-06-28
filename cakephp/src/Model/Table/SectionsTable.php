@@ -60,6 +60,10 @@ class SectionsTable extends Table
             ->allowEmpty('item_order');
 
         $validator
+            ->boolean('visible')
+            ->allowEmpty('visible');
+
+        $validator
             ->allowEmpty('title');
 
         $validator

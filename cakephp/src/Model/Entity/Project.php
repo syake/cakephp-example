@@ -36,9 +36,6 @@ class Project extends Entity
     public function hasAdmin($user_id)
     {
         $users = $this->users;
-        if ($users == null) {
-            return false;
-        }
         foreach ($users as $user) {
             if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
                 return true;

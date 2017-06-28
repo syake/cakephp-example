@@ -20,7 +20,7 @@
         var $this = $(this);
         var $empty = $this.children();
         var $input = $this.find('input[type=file]');
-        var $temp = $this.find('input[type=hidden].temp');
+        var $disable = $this.find('input[type=hidden].disable');
         var $image = $('<img>');
         var $holder = $('<div>');
         
@@ -28,7 +28,6 @@
             $image.attr('src',img);
             $this.append($image);
             $empty.hide();
-            $temp.val(1);
         }
         
         var change = function(e){
@@ -39,6 +38,7 @@
                 imgload(loadedImageUri);
             }
             fileReader.readAsDataURL(file);
+            $disable.val(0);
         };
         
         $image.on('click',function(e){
@@ -48,7 +48,7 @@
         $this.on('delete',function(e){
             $holder.append($image);
             $empty.show();
-            $temp.val(0);
+            $disable.val(0);
             $input.off('change');
             var $clone = $input.clone();
             $clone.val('');
@@ -73,6 +73,7 @@
         var default_image = $this.data('default');
         if ((default_image != null) && (default_image != '')) {
             imgload(default_image);
+            $disable.val(1);
         }
     });
     
@@ -85,8 +86,24 @@
 })(jQuery);
 
 /* ========================================================================
- * add box
+ * draggable box
  * ======================================================================== */
 +(function($){
-    
+    $('.js-sortable').sortable({
+        placeholder:'placeholder',
+        delay: 150,
+        forcePlaceholderSize: true,
+        start:function(event, ui){
+            ui.item.toggleClass('focus');
+        },
+        stop:function(event, ui){
+            ui.item.toggleClass('focus');
+        },
+        update:function(event, ui){
+            $(event.target).find('input[name*="item_order"]').each(function(index){
+                $(this).val(index);
+            });
+        }
+    });
+    $('.js-sortable').disableSelection();
 })(jQuery);

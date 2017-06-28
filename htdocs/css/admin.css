@@ -59,15 +59,18 @@ a.btn-delete:before {
     padding-right: 0.4rem;
 }
 
-.topicpath {
-    margin-left: -0.5em;
-    padding-top: 0.5rem;
-}
-
 footer {
     padding: 2rem 0;
     color: #9b9b9b;
     text-align: center;
+}
+
+/* breadcrumb
+-------------------------------------------*/
+.breadcrumb {
+    background-color: inherit;
+    padding: 1rem 0.5rem 0.5rem;
+    margin-bottom: 0;
 }
 
 /* form
@@ -110,8 +113,11 @@ form .upload .upload-empty-inner {
     text-align: center;
     vertical-align: middle;
 }
+form .upload .upload-empty button {
+    display: none;
+}
 form .upload .upload-empty input.file {
-    width: 100%;
+    width: 250px;
 }
 form .upload img {
     width: 100%;
@@ -225,17 +231,46 @@ form a.js-upload-delete {
 
 /* section-box
 -------------------------------------------*/
-.section-box .col-lg-6 {
-    margin-bottom: 20px;
+.sortable-box {
+    border: 1px solid #d8dee2;
+    background-color: white;
+    padding: 15px;
+    margin: 10px 0;
 }
-.section-box .col-lg-6:last-child {
-    margin-bottom: 0;
+.sortable-box .upload .upload-empty-container {
+    height: 150px;
+}
+.sortable-box .upload .upload-empty button {
+    display: inline;
+    border-radius: inherit;
+    border: 2px outset buttonface;
+    padding: 2px 6px 3px;
+}
+.sortable-box .upload input.file {
+    display: none;
+}
+.ui-sortable .sortable-box {
+    cursor: move;
+}
+.ui-sortable .placeholder {
+	border: 1px dashed red;
+	background-color: pink;
+}
+.ui-sortable .focus .sortable-box {
+    box-shadow:7px 7px 10px -6px rgba(0,0,0,0.2);
+    -moz-box-shadow:7px 7px 10px -6px rgba(0,0,0,0.2);
+    -webkit-box-shadow:7px 7px 10px -6px rgba(0,0,0,0.2);
 }
 
-@media (min-width:992px) {
-    .section-box .col-lg-6 {
-        margin-bottom: 0;
-    }
+.sortable-box .checkbox {
+    margin-top: 1rem;
+}
+.sortable-box .checkbox .custom-control {
+    min-height: inherit;
+    margin-bottom: 0;
+}
+.sortable-box .checkbox .custom-control-description {
+    height: 16px;
 }
 
 /* login
@@ -401,14 +436,29 @@ form a.js-upload-delete {
     margin-bottom: 2.5rem;
 }
 
+.index-content table.table {
+    margin-bottom: 0.5rem;
+}
+.index-content table.table thead i.fa {
+    margin-left: 0.5rem;
+}
 .index-content table.table .num {
     width: 4rem;
     text-align: center;
     font-weight: 400;
 }
 .index-content table.table .status {
-    width: 4rem;
     text-align: center;
+}
+
+.index-content p.pagination-help {
+    color: #9b9b9b;
+    text-align: right;
+    padding-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.index-content p.pagination-help .pages {
+    margin-left: 1rem;
 }
 
 .index-content a.add-link {
@@ -437,32 +487,63 @@ form a.js-upload-delete {
     margin-bottom: 2.5rem;
 }
 
+.users-content .table-wrapper {
+    border: 0.2rem solid #f7f7f9;
+    padding: 1.5rem;
+}
+.users-content table.table {
+    margin-bottom: 0.5rem;
+}
 .users-content table.table thead i.fa {
     margin-left: 0.5rem;
 }
-.users-content table.table .num {
-    max-width: 4rem;
-    text-align: center;
-    font-weight: 400;
+.users-content table.table tbody td {
+    padding-left: 1.0rem;
 }
-.users-content table.table .status {
-    max-width: 4rem;
-    text-align: center;
+.users-content table.table .active td.username:after {
+    content: '\f00c';
+    font-family: FontAwesome;
+    padding-left: 0.4rem;
+    color: #5cb85c;
 }
-.users-content table.table .status .custom-control {
-    margin: auto;
+.users-content table.table .status_deactive td {
+    color: #9b9b9b;
 }
-
-.users-content table.table .active td {
-    background-color: #d9edf7;
-    border-color: #bcdff1;
-    color: #31708f;
-}
-.users-content table.table .invalid td {
+.users-content table.table td.postlink {
+    font-size: 0.8rem;
     color: #9b9b9b;
 }
 
-.users-content p.pagination-doc {
+.users-content p.pagination-help {
     color: #9b9b9b;
     text-align: right;
+    padding-right: 0.5rem;
+    margin-bottom: 0;
+}
+.users-content p.pagination-help .pages {
+    margin-left: 1rem;
+}
+
+/* error
+-------------------------------------------*/
+.error-content {
+    color: #666666;
+    text-align: center;
+    padding: 8rem 0;
+}
+.error-content h1 {
+    font-weight: 700;
+    font-size: 6rem;
+    margin-bottom: 1rem;
+}
+.error-content h1 small {
+    font-weight: 400;
+    font-size: 2rem;
+    color: #9b9b9b;
+    padding-left: 1rem;
+    vertical-align: baseline;
+}
+.error-content p {
+    font-weight: 500;
+    font-size: 1.5rem;
 }

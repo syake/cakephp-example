@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Exception;
 use RuntimeException;
 
 /**
@@ -224,10 +226,19 @@ class PostsController extends AuthController
             $this->uploads($data, $folder_path, $post);
             
             $post = $this->Articles->patchEntity($post, $data);
-            if ($this->Articles->save($post)) {
-                $this->Flash->success(__('The post has been saved.'));
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+            
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($this->Articles->save($post)) {
+                    $this->Flash->success(__('The post has been saved.'));
+                } else {
+                    $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                }
+                $this->Articles->connection()->commit();
+            } catch(Exception $e) {
+                $this->Flash->error($e);
+                $connection->rollback();
             }
         }
         

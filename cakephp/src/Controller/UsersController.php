@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Mailer\MailerAwareTrait;
 
 /**
  * Users Controller
@@ -13,6 +14,8 @@ use Cake\Event\Event;
  */
 class UsersController extends AuthController
 {
+    use MailerAwareTrait;
+    
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -40,9 +43,11 @@ class UsersController extends AuthController
                 $user->set('role', 'admin');
                 $user->set('enable', 1);
             }
+            
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
                 $this->Auth->setUser($user);
+                $this->getMailer('User')->send('welcome', [$user]);
 
                 return $this->redirect(['action' => 'index']);
             }

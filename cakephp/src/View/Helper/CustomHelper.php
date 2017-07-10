@@ -14,6 +14,7 @@ class CustomHelper extends Helper
     public function upload($name, $options = array())
     {
         $options = array_merge([
+            'value' => '',
             'indent' => 0,
             't' => '',
             'help' => null,

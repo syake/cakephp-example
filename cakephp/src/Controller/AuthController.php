@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
+use Exception;
 
 /**
  * Admin Controller
@@ -105,10 +106,15 @@ class AuthController extends AppController
         
         $user_id = $this->Auth->user('id');
         if ($user_id != null) {
-            $user = $this->Users->get($user_id);
-            $this->Auth->setUser($user);
-            if ($user->role == 'admin') {
-                $this->set('header', 'Users/header_admin');
+            try {
+                $user = $this->Users->get($user_id);
+                $this->Auth->setUser($user);
+                if ($user->role == 'admin') {
+                    $this->set('header', 'Users/header_admin');
+                }
+            } catch(Exception $e) {
+                $this->Flash->error($e);
+                $this->request->session()->destroy();
             }
         }
     }

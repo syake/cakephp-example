@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Exception;
 use RuntimeException;
 
 /**
@@ -204,12 +206,8 @@ class PostsController extends AuthController
             'contain' => [
                 'Projects',
                 'Projects.Users',
-                'Points' => function($q){
-                    return $q->order(['item_order' => 'ASC'])->limit(6);
-                },
-                'Items' => function($q){
-                    return $q->order(['item_order' => 'ASC'])->limit(6);
-                }
+                'Points',
+                'Items'
             ]
         ]);
         $project = $post->project;
@@ -224,11 +222,30 @@ class PostsController extends AuthController
             $this->uploads($data, $folder_path, $post);
             
             $post = $this->Articles->patchEntity($post, $data);
-            if ($this->Articles->save($post)) {
-                $this->Flash->success(__('The post has been saved.'));
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($this->Articles->save($post)) {
+                    $this->Flash->success(__('The post has been saved.'));
+                } else {
+                    $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                }
+                $this->Articles->connection()->commit();
+            } catch(Exception $e) {
+                $this->Flash->error($e);
+                $connection->rollback();
             }
+            
+            // sort
+            $compare = function($a, $b) {
+                if ($a['item_order'] > $b['item_order']) {
+                    return +1;
+                } else {
+                    return -1;
+                }
+            };
+            usort($post->points, $compare);
+            usort($post->items, $compare);
         }
         
         // user admin
@@ -260,7 +277,24 @@ class PostsController extends AuthController
             if (!is_array($dat)) {
                 continue;
             }
-            if (array_values($dat) === $dat) {
+            
+            if (isset($dat['tmp_name'])) {
+                $disable_key = $key . '_disable';
+                if (isset($data[$disable_key]) && $data[$disable_key] == 1) {
+                    unset($data[$key]);
+                } else if (empty($dat['name'])) {
+                    $data[$key] = null;
+                } else {
+                    try {
+                        $success = $this->Image->upload($folder_path, $dat);
+                        if ($success) {
+                            $data[$key] = $dat['name'];
+                        }
+                    } catch (RuntimeException $e) {
+                        $post->setError($key, $e->getMessage());
+                    }
+                }
+            } else {
                 foreach ($dat as $i => $da) {
                     foreach ($da as $k => $d) {
                         if (isset($d['tmp_name'])) {
@@ -302,22 +336,6 @@ class PostsController extends AuthController
                                 }
                             }
                         }
-                    }
-                }
-            } else if (isset($dat['tmp_name'])) {
-                $disable_key = $key . '_disable';
-                if (isset($data[$disable_key]) && $data[$disable_key] == 1) {
-                    unset($data[$key]);
-                } else if (empty($dat['name'])) {
-                    $data[$key] = null;
-                } else {
-                    try {
-                        $success = $this->Image->upload($folder_path, $dat);
-                        if ($success) {
-                            $data[$key] = $dat['name'];
-                        }
-                    } catch (RuntimeException $e) {
-                        $post->setError($key, $e->getMessage());
                     }
                 }
             }

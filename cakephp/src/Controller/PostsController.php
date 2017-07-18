@@ -154,6 +154,7 @@ class PostsController extends AuthController
                 // new projects
                 $uuid = $this->Projects::uuid();
                 $project = ['uuid' => $uuid];
+                
                 // publish
                 if (isset($data['publish']) && ($data['publish'] == 1)) {
                     $project['status'] = 1;
@@ -296,6 +297,10 @@ class PostsController extends AuthController
                 }
             } else {
                 foreach ($dat as $i => $da) {
+                    if (!is_array($da)) {
+                      continue;
+                    }
+                    
                     foreach ($da as $k => $d) {
                         if (isset($d['tmp_name'])) {
                             $disable_key = $k . '_disable';

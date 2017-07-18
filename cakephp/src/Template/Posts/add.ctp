@@ -2,12 +2,20 @@
     $this->assign('title', __('Create a new post'));
 ?>
 <?= $this->element('Users/breadcrumb') ?>
-<div class="content add-post-content">
-    <div class="title">
-        <h1><?= $this->fetch('title') ?></h1>
-    </div>
-    <?= $this->Flash->render() ?>
+<div class="content edit-post-content">
     <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) . PHP_EOL ?>
+        <div class="title">
+            <h1><?= $this->fetch('title') ?></h1>
+            <ul class="controllers">
+                <li><?= $this->Form->button(__('Save Draft'), ['class' => 'btn-secondary btn-sm']) ?></li>
+                <li><?= $this->Form->button(__('Save &amp; Publish'), ['name' => 'publish', 'value' => '1', 'class' => 'btn-primary btn-sm']) ?></li>
+            </ul>
+        </div>
+        <?= $this->Flash->render() ?>
+        <div class="form">
+<?= $this->element('Posts/form') ?>
+        </div>
+<!--
         <div class="row">
             <div class="col-md-9">
 <?= $this->element('Posts/form') ?>
@@ -32,6 +40,7 @@
                     </div>
                 </section>
             </div>
-        </div>
+-->
+<!--         </div> -->
     <?= $this->Form->end() . PHP_EOL ?>
 </div>

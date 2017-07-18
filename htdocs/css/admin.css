@@ -179,27 +179,6 @@ form a.js-upload-delete {
     margin-left: 1rem;
 }
 
-.boxed-group .boxed-group-inner a.view-link {
-    display: block;
-    border-bottom: 1px dotted #d8dee2;
-    padding-bottom: 0.5rem;
-}
-.boxed-group .boxed-group-inner dl.status-list {
-    margin: 0;
-}
-.boxed-group .boxed-group-inner dl.status-list dt {
-    font-weight: 300;
-    margin-top: 0.5rem;
-}
-.boxed-group .boxed-group-inner dl.status-list dt:first-child {
-    margin-top: 0;
-}
-.boxed-group .boxed-group-inner dl.status-list dd {
-    font-weight: 500;
-    margin-left: 1rem;
-    margin-bottom: 0;
-}
-
 .boxed-group .boxed-group-inner .boxed-group-section {
     margin-bottom: 10px;
 }
@@ -350,34 +329,6 @@ form a.js-upload-delete {
     content: '';
 }
 
-/* add post
--------------------------------------------*/
-.add-post-content {
-    padding: 20px 0 40px;
-}
-.add-post-content h1 {
-    font-weight: 400;
-    font-size: 1.5rem;
-    border-bottom: 1px #e1e4e8 solid;
-    padding-bottom: 1rem;
-    margin-bottom: 2.5rem;
-}
-.add-post-content .control-label,
-.add-post-content .custom-control {
-    font-weight: 500;
-}
-.add-post-content .js-content-field {
-    height: 20rem;
-}
-.add-post-content hr {
-    height: 0;
-    margin: 15px 0;
-    overflow: hidden;
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid #dfe2e5
-}
-
 /* edit post
 -------------------------------------------*/
 .edit-post-content {
@@ -385,23 +336,49 @@ form a.js-upload-delete {
 }
 .edit-post-content .title {
     border-bottom: 1px #e1e4e8 solid;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.0rem;
+    display: flex;
 }
 .edit-post-content h1 {
     font-weight: 400;
     font-size: 1.5rem;
     display: inline-block;
+    margin-right: auto;
 }
 .edit-post-content .badge {
     margin-left: 0.8rem;
     font-size: 0.7rem;
     vertical-align: middle;
 }
-.edit-post-content .nav {
-    float: right;
-    display: inline-block;
+
+.edit-post-content ul.controllers {
+    list-style: none;
+    margin: 0;
 }
+.edit-post-content ul.controllers li {
+    display: inline-block;
+    padding-left: 10px;
+}
+
+.edit-post-content .status {
+    display: flex;
+}
+.edit-post-content .status dl {
+    display: flex;
+    margin: 0;
+}
+.edit-post-content .status dt {
+    font-weight: 400;
+}
+.edit-post-content .status dd {
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+.edit-post-content .status dl.project_id {
+    margin-right: auto;
+}
+
 .edit-post-content .js-content-field {
     height: 20rem;
 }

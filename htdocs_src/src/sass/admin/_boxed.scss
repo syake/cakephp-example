@@ -1,0 +1,93 @@
+/* boxed-group
+-------------------------------------------*/
+.boxed-group,
+.boxed-group h2,
+.boxed-group .boxed-group-inner,
+.boxed-group .boxed-group-footer {
+  border-style: solid;
+  border-color: #d8dee2;
+}
+
+.boxed-group {
+  border-width: 0 1px 1px;
+  border-radius: 3px;
+  margin-bottom: 30px;
+  
+  h2 {
+    font-weight: 500;
+    font-size: 1rem;
+    border-width: 1px 0 0;
+    margin: 0;
+    padding: 8px 10px;
+    background-color: #f6f8fa;
+  }
+  
+  .boxed-group-inner {
+    padding: 20px;
+    border-width: 1px 0 0;
+    
+    .form-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      .radio-group,
+      .checkbox {
+        margin-left: 1rem;
+      }
+    }
+    
+    label {
+      font-weight: 500;
+    }
+    
+    input.form-control {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .boxed-group-section {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  .boxed-group-inner-table {
+    padding: 30px 20px 20px;
+    
+    thead th {
+      background-color: #f6f8fa;
+    }
+  }
+  
+  .boxed-group-footer {
+    border-width: 1px 0 0;
+    padding: 8px 10px;
+    text-align: right;
+  }
+  
+  .boxed-group-row {
+    min-height: 60px;
+    
+    .btn {
+      float: right;
+    }
+    
+    p.doc {
+      font-size: 1.0rem;
+    }
+  }
+}
+
+@media (min-width:576px) {
+  .boxed-group {
+    .boxed-group-inner {
+      input.form-control {
+        margin-bottom: 0;
+      }
+    }
+  } 
+}

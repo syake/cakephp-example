@@ -7,7 +7,6 @@
 <title><?= $this->fetch('title') ?></title>
 <?= $this->Html->meta('icon') . PHP_EOL ?>
 <?= $this->Html->css('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css') . PHP_EOL ?>
-<?= $this->Html->css('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') . PHP_EOL ?>
 <?= $this->Html->css('admin.css') . PHP_EOL ?>
 <?= $this->fetch('css') ?>
 </head>

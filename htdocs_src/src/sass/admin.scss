@@ -3,14 +3,22 @@
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../node_modules/font-awesome/scss/font-awesome.scss";
 
+/* global
+-------------------------------------------*/
+@import 'admin/_basic.scss';
+@import 'admin/_header.scss';
+@import 'admin/_footer.scss';
+
 /* base
 -------------------------------------------*/
+/*
 @import "admin/_fonts";
 @import "admin/_basic";
+*/
 
 /* parts
 -------------------------------------------*/
-@import "admin/_footer";
+// @import "admin/_footer";
 @import "admin/_breadcrumb";
 @import "admin/_boxed";
 @import "admin/_sortable";

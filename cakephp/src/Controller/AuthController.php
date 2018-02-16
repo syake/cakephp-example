@@ -82,7 +82,7 @@ class AuthController extends AppController
                 'prefix' => false
             ]
         ]);
-        
+
         $this->Users = TableRegistry::get('Users');
         $this->Projects = TableRegistry::get('Projects');
         $this->Articles = TableRegistry::get('Articles');
@@ -98,12 +98,12 @@ class AuthController extends AppController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        
-        $this->viewBuilder()->setLayout('admin');
+
+        $this->viewBuilder()->layout('logging_off');
         $this->set('header', 'Users/header');
         $this->set('style', 'index');
         $this->set('referer', null);
-        
+
         $user_id = $this->Auth->user('id');
         if ($user_id != null) {
             try {
@@ -134,7 +134,7 @@ class AuthController extends AppController
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-        
+
         $user_id = $this->Auth->user('id');
         $user_name = $this->Auth->user('nickname');
         if (($user_name == null) || empty($user_name)) {

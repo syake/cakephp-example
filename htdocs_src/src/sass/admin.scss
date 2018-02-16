@@ -1,7 +1,7 @@
 /* bootstrap
 -------------------------------------------*/
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
-// @import "../../node_modules/font-awesome/scss/font-awesome.scss";
+@import "../../node_modules/font-awesome/scss/font-awesome.scss";
 
 /* base
 -------------------------------------------*/
@@ -15,9 +15,10 @@
 @import "admin/_boxed";
 @import "admin/_sortable";
 
-/* login
+/* users content
 -------------------------------------------*/
-@import "admin/_login";
+@import 'admin/users/_add.scss';
+@import 'admin/users/_login.scss';
 
 /* content
 -------------------------------------------*/
@@ -26,5 +27,5 @@
 @import "admin/content/_edit-user";
 @import "admin/content/_error";
 @import "admin/content/_index";
-@import "admin/content/_login";
+// @import "admin/content/_login";
 @import "admin/content/_users";

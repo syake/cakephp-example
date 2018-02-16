@@ -15,7 +15,7 @@ use Cake\Mailer\MailerAwareTrait;
 class UsersController extends AuthController
 {
     use MailerAwareTrait;
-    
+
     /**
      * Called before the controller action. You can use this method to configure and customize components
      * or perform logic that needs to happen before each controller action.
@@ -43,7 +43,7 @@ class UsersController extends AuthController
                 $user->set('role', 'admin');
                 $user->set('enable', 1);
             }
-            
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
                 $this->Auth->setUser($user);
@@ -75,7 +75,7 @@ class UsersController extends AuthController
         } else {
             $flash_key = 'flash';
         }
-        
+
         $login_user_id = $this->Auth->user('id');
         $user = $this->Users->get($login_user_id, [
             'contain' => []
@@ -89,7 +89,7 @@ class UsersController extends AuthController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'), ['key' => $flash_key]);
             }
         }
-        
+
         if (($id != null) && ($user['role'] == 'admin')) {
             $this->set('referer', 'users');
         }
@@ -99,6 +99,7 @@ class UsersController extends AuthController
 
     public function login()
     {
+        $this->viewBuilder()->layout('login');
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
             if ($user) {
@@ -107,7 +108,7 @@ class UsersController extends AuthController
             }
             $this->Flash->error(__('Invalid username or password, try again'));
         }
-        
+
         $this->set('header', 'Users/header_login');
         $this->set('style', 'login');
     }

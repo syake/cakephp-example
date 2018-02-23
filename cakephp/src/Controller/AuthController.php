@@ -73,11 +73,7 @@ class AuthController extends AppController
                 'action' => 'login',
                 'prefix' => false
             ],
-            'loginRedirect' => [
-                'controller' => 'Projects',
-                'action' => 'index',
-                'prefix' => false
-            ],
+            'loginRedirect' => '/',
             'logoutRedirect' => [
                 'controller' => 'Users',
                 'action' => 'login',
@@ -86,8 +82,6 @@ class AuthController extends AppController
         ]);
 
         $this->Users = TableRegistry::get('Users');
-        $this->Projects = TableRegistry::get('Projects');
-        $this->Articles = TableRegistry::get('Articles');
     }
 
     /**

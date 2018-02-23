@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 use Exception;
 use RuntimeException;
 
@@ -17,6 +18,15 @@ use RuntimeException;
 class PostsController extends AuthController
 {
     public $helpers = ['Custom'];
+    public $paginate = [
+        'sortWhitelist' => [
+            'id',
+            'status',
+            'status',
+            'Articles.title',
+            'Articles.modified'
+        ]
+    ];
 
     /**
      * Initialization hook method.
@@ -30,6 +40,8 @@ class PostsController extends AuthController
     public function initialize()
     {
         parent::initialize();
+        $this->Projects = TableRegistry::get('Projects');
+
         $this->loadComponent('Image', [
             'namerule' => 'sha1',
             'size' => [
@@ -46,11 +58,13 @@ class PostsController extends AuthController
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
+/*
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->Auth->allow(['index']);
     }
+*/
 
     public function isAuthorized($user = null)
     {
@@ -58,6 +72,19 @@ class PostsController extends AuthController
             return true;
         }
         return false;
+    }
+
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function index()
+    {
+        $query = $this->Projects->find('posts', ['user_id' => $this->user->id]);
+        $posts = $this->paginate($query);
+        $this->set(compact('posts'));
+        $this->set('_serialize', ['posts']);
     }
 
     /**
@@ -78,24 +105,24 @@ class PostsController extends AuthController
             'valueField' => 'id',
             'limit' => 1
         ]);
-        
+
         if ($project_id != null) {
             $post = $this->Articles->find('view', ['Articles.project_id' => $project_id]);
         } else {
             $post = null;
         }
-        
+
         if ($post == null) {
             return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
         }
         $filepath = DS . ASSETS_PATH . DS . $uuid . DS;
         $post->setFilepath($filepath);
-        
+
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
         $this->render('view');
     }
-    
+
     /**
      * View method
      *
@@ -105,14 +132,14 @@ class PostsController extends AuthController
     public function view($id = null)
     {
         $this->viewBuilder()->layout('post');
-        
+
         $post = $this->Articles->find('view', ['Articles.id' => $id]);
         if ($post == null) {
             // error
         }
         $filepath = DS . ASSETS_PATH . DS . $post->project->uuid . DS;
         $post->setFilepath($filepath);
-        
+
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
     }
@@ -136,11 +163,11 @@ class PostsController extends AuthController
                 ['tag' => 'item', 'item_order' => 2]
             ]
         ]);
-        
+
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $login_user_id = $this->Auth->user('id');
-            
+
             if (isset($data['project_id']) != null) {
                 $uuid = $this->Projects->find('list', [
                         'conditions' => [
@@ -154,7 +181,7 @@ class PostsController extends AuthController
                 // new projects
                 $uuid = $this->Projects::uuid();
                 $project = ['uuid' => $uuid];
-                
+
                 // publish
                 if (isset($data['publish']) && ($data['publish'] == 1)) {
                     $project['status'] = 1;
@@ -170,16 +197,16 @@ class PostsController extends AuthController
                 ];
                 $data['project'] = $project;
             }
-            
+
             // default
             $data['author_id'] = $login_user_id;
             $data['status'] = 'publish';
             unset($data['publish']);
-            
+
             // upload files
             $folder_path = WWW_ROOT . ASSETS_PATH . DS . $uuid;
             $this->uploads($data, $folder_path, $post);
-            
+
             $post = $this->Articles->patchEntity($post, $data, ['associated' => ['Projects.Users', 'Points', 'Items']]);
             if ($this->Articles->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
@@ -189,7 +216,7 @@ class PostsController extends AuthController
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
-        
+
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
     }
@@ -214,14 +241,14 @@ class PostsController extends AuthController
         $project = $post->project;
         $filepath = DS . ASSETS_PATH . DS . $project->uuid . DS;
         $post->setFilepath($filepath);
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
-            
+
             // upload files
             $folder_path = WWW_ROOT . ASSETS_PATH . DS . $project->uuid;
             $this->uploads($data, $folder_path, $post);
-            
+
             $post = $this->Articles->patchEntity($post, $data);
             $connection = ConnectionManager::get('default');
             $connection->begin();
@@ -236,7 +263,7 @@ class PostsController extends AuthController
                 $this->Flash->error($e);
                 $connection->rollback();
             }
-            
+
             // sort
             $compare = function($a, $b) {
                 if ($a['item_order'] > $b['item_order']) {
@@ -248,7 +275,7 @@ class PostsController extends AuthController
             usort($post->points, $compare);
             usort($post->items, $compare);
         }
-        
+
         // user admin
         $is_admin = false;
         $users = $project->users;
@@ -259,11 +286,11 @@ class PostsController extends AuthController
                 break;
             }
         }
-        
+
         $this->set(compact('post', 'project', 'is_admin'));
         $this->set('_serialize', ['post']);
     }
-    
+
     /**
      * Uploads method
      *
@@ -278,7 +305,7 @@ class PostsController extends AuthController
             if (!is_array($dat)) {
                 continue;
             }
-            
+
             if (isset($dat['tmp_name'])) {
                 $disable_key = $key . '_disable';
                 if (isset($data[$disable_key]) && $data[$disable_key] == 1) {
@@ -300,7 +327,7 @@ class PostsController extends AuthController
                     if (!is_array($da)) {
                       continue;
                     }
-                    
+
                     foreach ($da as $k => $d) {
                         if (isset($d['tmp_name'])) {
                             $disable_key = $k . '_disable';

@@ -52,6 +52,11 @@ class ArticlesTable extends Table
             'foreignKey' => 'author_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('u', [
+            'foreignKey' => 'author_id',
+            'className' => 'Users',
+            'joinType' => 'INNER'
+        ]);
         $this->hasMany('Sections', [
             'foreignKey' => 'article_id',
             'dependent' => true

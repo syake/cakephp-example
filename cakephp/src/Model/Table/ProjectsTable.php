@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -63,12 +65,12 @@ class ProjectsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('id', 'create');
+            ->allowEmpty('id', 'create')
+            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
-            ->requirePresence('uuid', 'create')
-            ->notEmpty('uuid')
-            ->add('uuid', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmpty('slug')
+            ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->boolean('status')
@@ -86,19 +88,31 @@ class ProjectsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['uuid']));
+        $rules->add($rules->isUnique(['id']));
 
         return $rules;
     }
 
     /**
+     * Before save listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @return void
+     */
+    public function beforeSave(Event $event, EntityInterface $entity)
+    {
+        $entity->set('id', $this->_createId());
+    }
+
+    /**
      * Create unique id
-     * 
+     *
      * @return int
      */
-    public static function uuid($d = 6)
+    private function _createId($d = 7)
     {
-        $max = 10 ** $d;
+        $max = 10 ** ($d - 1);
         if (function_exists('random_int')) {
             $uuid = random_int(1, ($max - 1));
         } else {
@@ -106,5 +120,30 @@ class ProjectsTable extends Table
         }
         $uuid += (rand(1, 9) * $max);
         return $uuid;
+    }
+
+    public function findPosts(Query $query, array $options)
+    {
+        return $query
+            ->matching('Users', function(Query $q) use ($options) {
+                return $q->where([
+                    'Users.id' => $options['user_id']
+                ]);
+            })
+            ->leftJoinWith('Articles', function(Query $q) {
+                return $q
+                    ->where(['Articles.status' => 'publish'])
+                    ->leftJoinWith('u', function(Query $q2) {
+                        return $q2->select(['username']);
+                    })
+                    ->select(['title', 'modified', 'author' => 'u.username']);
+            })
+            ->group(['Projects.id'])
+            ->select([
+                'title' => 'Articles.title',
+                'modified' => 'Articles.modified',
+                'author' => 'Articles.author'
+            ])
+            ->enableAutoFields(true);
     }
 }

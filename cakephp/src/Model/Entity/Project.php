@@ -8,7 +8,6 @@ use Cake\ORM\TableRegistry;
  * Project Entity
  *
  * @property int $id
- * @property int $uuid
  * @property bool $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified

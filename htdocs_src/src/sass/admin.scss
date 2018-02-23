@@ -28,12 +28,19 @@
 @import 'admin/users/_add.scss';
 @import 'admin/users/_login.scss';
 
+/* posts content
+-------------------------------------------*/
+@import 'admin/posts/_index.scss';
+
+
 /* content
 -------------------------------------------*/
+/*
 @import "admin/content/_add-user";
 @import "admin/content/_edit-post";
 @import "admin/content/_edit-user";
 @import "admin/content/_error";
 @import "admin/content/_index";
+*/
 // @import "admin/content/_login";
-@import "admin/content/_users";
+// @import "admin/content/_users";

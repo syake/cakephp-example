@@ -75,9 +75,6 @@ use Cake\Utility\Security;
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
-    
-    // Load custom config file
-    Configure::load('const', 'default');
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -228,3 +225,6 @@ if (Configure::read('debug')) {
  * Added Bootstrap Helpers
  */
 Plugin::load('Bootstrap');
+
+// Load custom config file
+Configure::load('const', 'default');

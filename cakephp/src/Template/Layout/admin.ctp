@@ -18,7 +18,7 @@
 <?= $this->Element('admin_headmeta') ?>
 <body>
   <header class="navbar navbar-expand navbar-dark flex-row bd-navbar">
-    <a href="/" class="navbar-brand mr-0 mr-md-2"><?= SITE_TITLE ?></a>
+    <a href="/" class="navbar-brand mr-0 mr-md-2"><?= __(SITE_TITLE) ?></a>
     <ul class="navbar-nav flex-row ml-auto d-md-flex">
       <li class="nav-item"><?= $this->Html->link(__('Sign out'), ['controller' => 'Users', 'action' => 'logout'], ['class' => 'nav-link logout-link']) ?></li>
     </ul>

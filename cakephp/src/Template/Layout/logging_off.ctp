@@ -15,32 +15,19 @@
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-  <?= $this->Html->charset() . PHP_EOL ?>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?= $this->fetch('title') ?></title>
-  <?= $this->Html->meta('icon') . PHP_EOL ?>
-  <?= $this->Html->css('admin.css') . PHP_EOL ?>
-  <?= $this->fetch('meta') . PHP_EOL ?>
-  <?= $this->fetch('css') . PHP_EOL ?>
-</head>
+<?= $this->Element('admin_headmeta') ?>
 <body>
   <header class="navbar navbar-expand navbar-dark flex-row bd-navbar">
     <a href="/" class="navbar-brand mr-0 mr-md-2"><?= SITE_TITLE ?></a>
     <ul class="navbar-nav flex-row ml-auto d-md-flex">
-      <li class="nav-item"><?= $this->Html->link('sign in', ['action' => 'login'], ['class' => 'nav-link login-link']) ?></li>
+      <li class="nav-item"><?= $this->Html->link(__('Sign in'), ['controller' => 'Users', 'action' => 'login'], ['class' => 'nav-link login-link']) ?></li>
     </ul>
   </header>
   <main id="content" role="main">
     <?= $this->Flash->render() . PHP_EOL ?>
     <?= $this->fetch('content') ?>
   </main>
-  <footer class="bd-footer text-muted">
-    <div class="container-fluid p-3 p-md-5">
-      <p><?= COPY_RIGHT ?></p>
-    </div>
-  </footer>
+<?= $this->Element('admin_footer', ['class' => 'bd-footer']) ?>
 <?= $this->fetch('postLink') ?>
 <?= $this->fetch('script') ?>
 </body>

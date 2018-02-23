@@ -15,6 +15,8 @@ use Exception;
  */
 class AuthController extends AppController
 {
+    protected $user = null;
+
     public $helpers = [
         'Form' => [
             'className' => 'Bootstrap.Form',
@@ -100,22 +102,17 @@ class AuthController extends AppController
         parent::beforeFilter($event);
 
         $this->viewBuilder()->layout('logging_off');
-        $this->set('header', 'Users/header');
-        $this->set('style', 'index');
-        $this->set('referer', null);
 
         $user_id = $this->Auth->user('id');
         if ($user_id != null) {
             try {
                 $user = $this->Users->get($user_id);
-                $this->Auth->setUser($user);
-                if ($user->role == 'admin') {
-                    $this->set('header', 'Users/header_admin');
-                }
+                $this->user = $user;
             } catch(Exception $e) {
-                $this->Flash->error($e);
                 $this->request->session()->destroy();
+                throw new ForbiddenException();
             }
+            $this->viewBuilder()->layout('admin');
         }
     }
 

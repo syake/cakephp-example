@@ -25,7 +25,7 @@ $this->assign('title', __('Projects') . ' | ' . __(SITE_TITLE));
                   <?= $this->Html->link($post->id, ['controller' => 'Posts', 'action' => 'edit', $post->id], ['class' => 'post_id']) ?>
                   <i class="fa <?= $status_icon ?>" aria-hidden="true"></i>
                 </div>
-                <strong><?= h($post->title) ?></strong>
+                <strong><?= h($post->title) ?>&nbsp;</strong>
                 <span class="d-block"><?= h($post->author) ?> - <?= __('Last Update') ?> <?= $this->Time->format($post->modified, 'yyyy-MM-dd HH:mm') ?></span>
               </div>
             </div>

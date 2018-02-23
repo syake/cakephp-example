@@ -19,6 +19,7 @@ class PostsController extends AuthController
 {
     public $helpers = ['Custom'];
     public $paginate = [
+        'limit' => 10,
         'sortWhitelist' => [
             'id',
             'status',

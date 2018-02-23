@@ -1,25 +1,15 @@
 /* posts index content
 -------------------------------------------*/
 .posts-index-content {
-  padding: 20px 0;
+  padding: 20px 0 40px;
   margin-left: auto;
   margin-right: auto;
-
-  h1 {
-    font-weight: 400;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
   
-  p.pagination-help {
-    color: #9b9b9b;
-    text-align: right;
-    padding-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    
-    .pages {
-      margin-left: 1rem;
-    }
+  .box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  }
+  a.post_id {
+    font-weight: bold;
   }
   
   a.add-link {
@@ -34,13 +24,5 @@
       font-family: FontAwesome;
       padding-right: 0.4rem;
     } 
-  }
-}
-
-@media (min-width: 768px) {
-  .posts-index-content {
-/*
-    width: 690px;
-*/
   }
 }

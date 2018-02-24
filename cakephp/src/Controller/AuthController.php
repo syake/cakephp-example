@@ -67,13 +67,13 @@ class AuthController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Auth', [
-            'authorize' => 'Controller',
+            'authorize' => ['Controller'],
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login',
                 'prefix' => false
             ],
-            'loginRedirect' => '/',
+            'loginRedirect' => [],
             'logoutRedirect' => [
                 'controller' => 'Users',
                 'action' => 'login',
@@ -110,10 +110,12 @@ class AuthController extends AppController
         }
     }
 
+/*
     public function isAuthorized($user = null)
     {
         return true;
     }
+*/
 
     /**
      * Called after the controller action is run, but before the view is rendered. You can use this method

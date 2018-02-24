@@ -26,7 +26,15 @@ class UsersController extends AuthController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['add', 'logout']);
+        $this->Auth->allow(['add', 'login', 'logout']);
+
+        if ($this->user != NULL) {
+            $action = $this->request->params['action'];
+            if (in_array($action, ['add', 'login'])) {
+//                 var_dump($this->user);
+//                 return $this->redirect('/');
+            }
+        }
     }
 
     /**
@@ -49,14 +57,12 @@ class UsersController extends AuthController
                 $this->Auth->setUser($user);
                 $this->getMailer('User')->send('welcome', [$user]);
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/');
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
-        $this->set('header', 'Users/header_add');
-        $this->set('style', 'add');
     }
 
     /**
@@ -108,9 +114,7 @@ class UsersController extends AuthController
             }
             $this->Flash->error(__('Invalid username or password, try again'));
         }
-
-        $this->set('header', 'Users/header_login');
-        $this->set('style', 'login');
+        $this->render('/Users/login');
     }
 
     public function logout()

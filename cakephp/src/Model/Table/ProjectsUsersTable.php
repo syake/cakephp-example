@@ -34,8 +34,7 @@ class ProjectsUsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('projects_users');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+        $this->setPrimaryKey(['project_id', 'user_id']);
 
         $this->belongsTo('Projects', [
             'foreignKey' => 'project_id',
@@ -55,9 +54,6 @@ class ProjectsUsersTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator
-            ->allowEmpty('id', 'create');
-
         $validator
             ->allowEmpty('role');
 

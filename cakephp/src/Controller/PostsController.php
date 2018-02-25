@@ -158,6 +158,61 @@ class PostsController extends AuthController
     public function add()
     {
         $post = $this->Articles->newEntity([
+            'title' => 'Welcome to my page',
+            'content' => 'コンテンツ内容です'
+        ]);
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $user_id = $this->user->id;
+            $data['author_id'] = $user_id;
+            $data['status'] = 'publish';
+            $data['project'] = [
+                'users' => [
+                    [
+                        'id' => $user_id,
+                        '_joinData' => [
+                            'role' => 'admin'
+                        ]
+                    ]
+                ]
+            ];
+            if (isset($data['_publish']) && ($data['_publish'] == 1)) {
+                $data['project']['status'] = 1;
+                unset($data['_publish']);
+            }
+            $post = $this->Articles->patchEntity($post, $data, [
+                'associated' => [
+                    'Projects.Users'
+                ]
+            ]);
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($success = $this->Articles->save($post, ['associated' => ['Projects.Users']])) {
+                    $this->Flash->success(__('The post has been saved.'));
+                } else {
+                    $this->log(print_r($post->errors(),true), LOG_DEBUG);
+                    $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                }
+                $this->Articles->connection()->commit();
+                if ($success) {
+                    return $this->redirect(['action' => 'edit', $post->project_id]);
+                }
+            } catch(Exception $e) {
+                $this->Flash->error($e);
+                $connection->rollback();
+            }
+        }
+
+        $this->set(compact('post'));
+        $this->set('_serialize', ['post']);
+        $this->viewBuilder()->layout('admin_editor');
+        $this->render('/Posts/editor');
+
+
+/*
+
+        $post = $this->Articles->newEntity([
             'points' => [
                 ['tag' => 'point', 'item_order' => 0],
                 ['tag' => 'point', 'item_order' => 1],
@@ -225,12 +280,13 @@ class PostsController extends AuthController
 
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
+*/
     }
 
     /**
      * Edit method
      *
-     * @param string|null $id Article id.
+     * @param string|null $id Project id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -254,7 +310,7 @@ class PostsController extends AuthController
                 }
                 $this->Articles->connection()->commit();
                 if ($success) {
-                    return $this->redirect(['action' => 'edit', $id]);
+                    return $this->redirect(['action' => 'edit', $post->project_id]);
                 }
             } catch(Exception $e) {
                 $this->Flash->error($e);
@@ -265,6 +321,7 @@ class PostsController extends AuthController
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
         $this->viewBuilder()->layout('admin_editor');
+        $this->render('/Posts/editor');
 
 //         return;
 /*

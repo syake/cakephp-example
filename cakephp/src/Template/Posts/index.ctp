@@ -5,7 +5,7 @@
  */
 $this->assign('title', __('Projects') . ' | ' . __(SITE_TITLE));
 ?>
-<div class="posts-index-content">
+<div class="posts-index-content py-4">
         <div class="container">
 <?php if (count($posts) > 0) : ?>
           <section class="my-3 p-3 bg-white rounded box-shadow">

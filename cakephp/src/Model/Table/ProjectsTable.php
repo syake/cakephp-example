@@ -102,7 +102,9 @@ class ProjectsTable extends Table
      */
     public function beforeSave(Event $event, EntityInterface $entity)
     {
-        $entity->set('id', $this->_createId());
+        if ($entity->isNew()) {
+            $entity->set('id', $this->_createId());
+        }
     }
 
     /**

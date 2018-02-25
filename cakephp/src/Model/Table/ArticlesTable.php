@@ -138,4 +138,34 @@ class ArticlesTable extends Table
             ])
             ->first();
     }
+
+    public function findPost(Query $query, array $options)
+    {
+/*
+        if (isset($options['user_id'])) {
+            $query->matching('Users', function(Query $q) use ($options) {
+                    return $q->where([
+                        'Users.id' => $options['user_id']
+                    ]);
+                });
+        }
+*/
+        return $query
+            ->matching('Projects', function(Query $q) use ($options) {
+                return $q->where([
+                    'Projects.id' => $options['id']
+                ]);
+            })
+            ->where(['Articles.status' => 'publish'])
+//             ->group(['Projects.id'])
+/*
+            ->select([
+                'project_id' => 'Projects.title',
+                'modified' => 'Articles.modified',
+                'author' => 'Articles.author'
+            ])
+*/
+            ->enableAutoFields(true)
+            ->first();
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Exception;
 use RuntimeException;
@@ -42,6 +43,7 @@ class PostsController extends AuthController
     {
         parent::initialize();
         $this->Projects = TableRegistry::get('Projects');
+        $this->Articles = TableRegistry::get('Articles');
 
         $this->loadComponent('Image', [
             'namerule' => 'sha1',
@@ -234,6 +236,39 @@ class PostsController extends AuthController
      */
     public function edit($id = null)
     {
+        $post = $this->Articles->find('post', ['user_id' => $this->user->id, 'id' => $id]);
+        if ($post == NULL) {
+            throw new ForbiddenException();
+        }
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            $post = $this->Articles->patchEntity($post, $data);
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($success = $this->Articles->save($post)) {
+                    $this->Flash->success(__('The post has been saved.'));
+                } else {
+                    $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                }
+                $this->Articles->connection()->commit();
+                if ($success) {
+                    return $this->redirect(['action' => 'edit', $id]);
+                }
+            } catch(Exception $e) {
+                $this->Flash->error($e);
+                $connection->rollback();
+            }
+        }
+
+        $this->set(compact('post'));
+        $this->set('_serialize', ['post']);
+        $this->viewBuilder()->layout('admin_editor');
+
+//         return;
+/*
+
         $post = $this->Articles->get($id, [
             'contain' => [
                 'Projects',
@@ -293,6 +328,7 @@ class PostsController extends AuthController
 
         $this->set(compact('post', 'project', 'is_admin'));
         $this->set('_serialize', ['post']);
+*/
     }
 
     /**

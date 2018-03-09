@@ -22,6 +22,35 @@ module.exports = [
     output: {
       path: __dirname + '/dist',
       filename: '[name].js'
+    },
+    
+    // ビルドに必要なモジュール（loader）を指定
+    module: {
+      rules: [
+        {
+          // ビルドの対象ファイル
+          test: /\.js$/,
+          
+          // ビルドから除外するディレクトリを指定
+          exclude: /node_modules/,
+          
+          // ビルドで使用するloaderを指定
+          use: [
+            {
+              // JavaScriptファイルを互換性のあるECMAScript 5に変換するモジュール
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  // env を指定することで、ES2017 を ES5 に変換。
+                  // {modules: false}にしないと import 文が Babel によって CommonJS に変換され、
+                  // webpack の Tree Shaking 機能が使えない
+                  ['env', {'modules': false}]
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   },
   
@@ -35,11 +64,11 @@ module.exports = [
       path: __dirname + '/dist',
       filename: '[name].css'
     },
-    
     module: {
       rules: [
         {
           test: /\.scss$/,
+          exclude: /node_modules/,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [

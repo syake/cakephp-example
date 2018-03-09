@@ -79,7 +79,7 @@ module.exports = [
                   url: false,
                   
                   // CSSの圧縮
-                  minimize: true,
+                  minimize: (MODE !== 'development'),
                   
                   // ソースマップの利用有無
                   sourceMap: (MODE === 'development'),

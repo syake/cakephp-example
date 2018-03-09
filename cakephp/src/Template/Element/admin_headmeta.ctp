@@ -5,6 +5,7 @@
   <title><?= $this->fetch('title') ?></title>
   <?= $this->Html->meta('icon') . PHP_EOL ?>
   <?= $this->Html->css('admin.css') . PHP_EOL ?>
+  <?= $this->Html->script('admin.js') . PHP_EOL ?>
   <?= $this->fetch('meta') . PHP_EOL ?>
   <?= $this->fetch('css') . PHP_EOL ?>
 </head>

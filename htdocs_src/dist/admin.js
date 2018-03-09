@@ -66,19 +66,19 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./js/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./admin.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./js/index.js":
-/*!*********************!*\
-  !*** ./js/index.js ***!
-  \*********************/
+/***/ "./admin.js":
+/*!******************!*\
+  !*** ./admin.js ***!
+  \******************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("console.log('hoge');\n\n\n//# sourceURL=webpack:///./js/index.js?");
+eval("console.log('hoge');\n\n\n//# sourceURL=webpack:///./admin.js?");
 
 /***/ })
 

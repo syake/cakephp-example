@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack"
+    "build": "webpack --watch --progress"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.23.5",
+    "css-loader": "^0.28.10",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.9.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.3",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.2",
     "webpack": "^4.1.1",
     "webpack-cli": "^2.0.10"
   },
@@ -22,7 +26,6 @@
     "font-awesome": "^4.7.0",
     "font-awesome-webpack": "0.0.5-beta.2",
     "jquery": "^3.2.1",
-    "popper.js": "^1.12.9",
-    "url-loader": "^0.6.2"
+    "popper.js": "^1.12.9"
   }
 }

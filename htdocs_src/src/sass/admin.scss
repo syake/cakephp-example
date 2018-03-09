@@ -1,7 +1,9 @@
 /* bootstrap
 -------------------------------------------*/
+/*
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 @import "../../node_modules/font-awesome/scss/font-awesome.scss";
+*/
 
 /* global
 -------------------------------------------*/
@@ -9,29 +11,41 @@
 @import 'admin/_header.scss';
 @import 'admin/_footer.scss';
 
+/* parts
+-------------------------------------------*/
+/*
+@import "admin/_breadcrumb";
+@import "admin/_boxed";
+@import "admin/_sortable";
+*/
+
+/* users content
+-------------------------------------------*/
+/*
+@import 'admin/users/_add.scss';
+@import 'admin/users/_login.scss';
+*/
+
+/* posts content
+-------------------------------------------*/
+@import 'admin/posts/_index.scss';
+@import 'admin/posts/_edit.scss';
+
+
+
+
+
+
+
+
+// @import "admin/_footer";
+
 /* base
 -------------------------------------------*/
 /*
 @import "admin/_fonts";
 @import "admin/_basic";
 */
-
-/* parts
--------------------------------------------*/
-// @import "admin/_footer";
-@import "admin/_breadcrumb";
-@import "admin/_boxed";
-@import "admin/_sortable";
-
-/* users content
--------------------------------------------*/
-@import 'admin/users/_add.scss';
-@import 'admin/users/_login.scss';
-
-/* posts content
--------------------------------------------*/
-@import 'admin/posts/_index.scss';
-@import 'admin/posts/_edit.scss';
 
 
 /* content

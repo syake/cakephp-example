@@ -1,3 +1,24 @@
+/* ========================================================================
+ * fontawesome
+ * ======================================================================== */
+import fontawesome from '@fortawesome/fontawesome';
+import faPlus from '@fortawesome/fontawesome-free-solid/faPlus';
+import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
+import faBan from '@fortawesome/fontawesome-free-solid/faBan';
+// import faCircle from '@fortawesome/fontawesome-free-regular/faCircle'
+// import faFacebook from '@fortawesome/fontawesome-free-brands/faFacebook'
+
+fontawesome.library.add(faPlus, faCheckCircle, faBan);
+/*
+fontawesome.library.add(faCircle)
+fontawesome.library.add(faFacebook)
+*/
+
+/* ========================================================================
+ * editor
+ * ======================================================================== */
+import init from './_editor';
+init();
 
 
 /* ========================================================================

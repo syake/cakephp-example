@@ -13,9 +13,9 @@ $this->assign('title', __('Projects') . ' | ' . __(SITE_TITLE));
 <?php
     foreach($posts as $i => $post):
         if ($post->status) {
-            $status_icon = 'fa-check-circle';
+            $status_icon = '<i class="fas fa-check-circle text-success"></i>';
         }  else {
-            $status_icon = 'fa-ban';
+            $status_icon = '<i class="fas fa-ban text-muted"></i>';
         }
 ?>
             <div class="media text-muted pt-3">
@@ -23,7 +23,7 @@ $this->assign('title', __('Projects') . ' | ' . __(SITE_TITLE));
               <div class="media-body pb-3 mb-0 small border-bottom border-gray">
                 <div class="d-flex justify-content-between align-items-center w-100">
                   <?= $this->Html->link($post->id, ['controller' => 'Posts', 'action' => 'edit', $post->id], ['class' => 'post_id']) ?>
-                  <i class="fa <?= $status_icon ?>" aria-hidden="true"></i>
+                  <?= $status_icon ?>
                 </div>
                 <strong><?= h($post->title) ?>&nbsp;</strong>
                 <span class="d-block"><?= h($post->author) ?> - <?= __('Last Update') ?> <?= $this->Time->format($post->modified, 'yyyy-MM-dd HH:mm') ?></span>
@@ -42,7 +42,7 @@ $this->assign('title', __('Projects') . ' | ' . __(SITE_TITLE));
             </ul>
           </nav>
 <?php endif; ?>
-          <?= $this->Html->link(__('Create new post'), ['controller' => 'Posts', 'action' => 'add'], ['class' => 'add-link']) . PHP_EOL ?>
+          <?= $this->Html->link('<i class="fas fa-plus"></i> ' . __('Create new post'), ['controller' => 'Posts', 'action' => 'add'], ['class' => 'add-link', 'escape' => false]) . PHP_EOL ?>
         </div>
       </div>
 

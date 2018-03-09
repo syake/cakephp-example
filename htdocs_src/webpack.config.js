@@ -20,7 +20,7 @@ module.exports = [
     
     // ファイルの出力設定
     output: {
-      path: __dirname + '/dist',
+      path: __dirname + '/../htdocs/js',
       filename: '[name].js'
     },
     
@@ -61,7 +61,7 @@ module.exports = [
       admin: './admin.scss'
     },
     output: {
-      path: __dirname + '/dist',
+      path: __dirname + '/../htdocs/css',
       filename: '[name].css'
     },
     module: {

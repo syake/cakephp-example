@@ -96,7 +96,7 @@ class AuthController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->viewBuilder()->layout('logging_off');
+        $this->viewBuilder()->setLayout('logging_off');
 
         $user_id = $this->Auth->user('id');
         if ($user_id != null) {
@@ -107,7 +107,7 @@ class AuthController extends AppController
                 $this->request->session()->destroy();
                 throw new ForbiddenException();
             }
-            $this->viewBuilder()->layout('admin');
+            $this->viewBuilder()->setLayout('admin');
         }
     }
 

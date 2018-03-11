@@ -7,20 +7,20 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Sections Model
+ * ClauseImages Model
  *
+ * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\BelongsTo $Sections
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
- * @property |\Cake\ORM\Association\HasMany $ClauseImages
  *
- * @method \App\Model\Entity\Section get($primaryKey, $options = [])
- * @method \App\Model\Entity\Section newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Section[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Section|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Section patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Section[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Section findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\ClauseImage get($primaryKey, $options = [])
+ * @method \App\Model\Entity\ClauseImage newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\ClauseImage[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\ClauseImage|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\ClauseImage patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\ClauseImage[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\ClauseImage findOrCreate($search, callable $callback = null, $options = [])
  */
-class SectionsTable extends Table
+class ClauseImagesTable extends Table
 {
 
     /**
@@ -33,16 +33,17 @@ class SectionsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('sections');
-        $this->setDisplayField('title');
-        $this->setPrimaryKey(['id', 'article_id']);
+        $this->setTable('clause_images');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey(['id', 'section_id', 'article_id']);
 
+        $this->belongsTo('Sections', [
+            'foreignKey' => 'section_id',
+            'joinType' => 'INNER'
+        ]);
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
-        ]);
-        $this->hasMany('ClauseImages', [
-            'foreignKey' => 'section_id'
         ]);
     }
 
@@ -58,9 +59,14 @@ class SectionsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('title')
-            ->maxLength('title', 255)
-            ->allowEmpty('title');
+            ->requirePresence('data', 'create')
+            ->notEmpty('data');
+
+        $validator
+            ->scalar('mime')
+            ->maxLength('mime', 255)
+            ->requirePresence('mime', 'create')
+            ->notEmpty('mime');
 
         $validator
             ->integer('menu_order')
@@ -78,6 +84,7 @@ class SectionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['section_id'], 'Sections'));
         $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;

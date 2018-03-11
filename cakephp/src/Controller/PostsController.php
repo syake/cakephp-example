@@ -163,13 +163,11 @@ class PostsController extends AuthController
         ]);
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $user_id = $this->user->id;
-            $data['author_id'] = $user_id;
             $data['status'] = 'publish';
             $data['project'] = [
                 'users' => [
                     [
-                        'id' => $user_id,
+                        'id' => $this->user->id,
                         '_joinData' => [
                             'role' => 'admin'
                         ]
@@ -180,6 +178,7 @@ class PostsController extends AuthController
                 $data['project']['status'] = 1;
                 unset($data['_publish']);
             }
+            $data['author_id'] = $this->user->id;
             $post = $this->Articles->patchEntity($post, $data, [
                 'associated' => [
                     'Projects.Users'
@@ -206,7 +205,7 @@ class PostsController extends AuthController
 
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
-        $this->viewBuilder()->layout('admin_editor');
+        $this->viewBuilder()->setLayout('admin_editor');
         $this->render('/Posts/editor');
 
 
@@ -299,11 +298,14 @@ class PostsController extends AuthController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $data['author_id'] = $this->user->id;
             $post = $this->Articles->patchEntity($post, $data);
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
-                if ($success = $this->Articles->save($post)) {
+                if ($success = $this->Articles->save($post, [
+                    'associated' => ['Sections']
+                ])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {
                     $this->Flash->error(__('The post could not be saved. Please, try again.'));
@@ -320,7 +322,7 @@ class PostsController extends AuthController
 
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
-        $this->viewBuilder()->layout('admin_editor');
+        $this->viewBuilder()->setLayout('admin_editor');
         $this->render('/Posts/editor');
 
 //         return;

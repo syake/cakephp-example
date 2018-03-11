@@ -31,6 +31,11 @@ if ($post->status) {
           <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
           <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
         </fieldset>
+        <fieldset class="bd-fieldset">
+          <?= $this->Form->control('sections.0.title', ['label' => __('Title')]) . PHP_EOL ?>
+          <?= $this->Form->hidden('sections.0.id', ['value' => '0']) . PHP_EOL ?>
+          <?= $this->Form->hidden('sections.0.article_id', ['value' => $post->id]) . PHP_EOL ?>
+        </fieldset>
       </div>
     </div>
   </main>

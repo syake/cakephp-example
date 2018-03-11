@@ -61,18 +61,6 @@ class ArticlesTable extends Table
             'foreignKey' => 'article_id',
             'dependent' => true
         ]);
-        $this->hasMany('Points', [
-            'foreignKey' => 'article_id',
-            'className' => 'Sections',
-            'conditions' => ['tag' => 'point'],
-            'sort' => ['item_order' => 'ASC']
-        ]);
-        $this->hasMany('Items', [
-            'foreignKey' => 'article_id',
-            'className' => 'Sections',
-            'conditions' => ['tag' => 'item'],
-            'sort' => ['item_order' => 'ASC']
-        ]);
     }
 
     /**
@@ -157,6 +145,7 @@ class ArticlesTable extends Table
                 ]);
             })
             ->where(['Articles.status' => 'publish'])
+            ->contain(['Sections'])
 //             ->group(['Projects.id'])
 /*
             ->select([

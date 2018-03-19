@@ -159,7 +159,8 @@ class PostsController extends AuthController
     {
         $post = $this->Articles->newEntity([
             'title' => 'Welcome to my page',
-            'content' => 'コンテンツ内容です'
+            'content' => 'コンテンツ内容です',
+            'sections' => []
         ]);
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -175,14 +176,16 @@ class PostsController extends AuthController
             $data['author_id'] = $this->user->id;
             $post = $this->Articles->patchEntity($post, $data, [
                 'associated' => [
-                    'Projects.Users'
+                    'Projects.Users',
+                    'Sections'
                 ]
             ]);
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
-                if ($success = $this->Articles->save($post)) {
-//                 if ($success = $this->Articles->save($post, ['associated' => ['Projects.Users']])) {
+                if ($success = $this->Articles->save($post, [
+                    'associated' => ['Projects', 'Sections']
+                ])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {
                     $this->log(print_r($post->errors(),true), LOG_DEBUG);

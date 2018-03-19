@@ -42,13 +42,17 @@ $this->Html->scriptEnd();
           </fieldset>
           <template v-if="sections.length > 0">
             <fieldset class="bd-fieldset" v-for="(section, i) in sections">
-              <div class="d-flex justify-content-end pt-2 pr-2">
+              <div class="d-flex justify-content-between bd-fieldset-header">
+                <div>
+                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 db-btn-up" v-on:click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 db-btn-down" v-on:click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
+                </div>
                 <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" v-on:click="removeSection(i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
                 <div class="form-group">
                   <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
-                  <input type="text" :name="'sections[' + i + '][section_title]'" :value="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
+                  <input type="text" :name="'sections[' + i + '][section_title]'" v-model="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
                   <input type="hidden" :name="'sections[' + i + '][id]'" :value="section.id" v-if="section.id > -1">
                   <input type="hidden" :name="'sections[' + i + '][section_order]'" :value="i">
                 </div>

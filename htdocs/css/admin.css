@@ -6050,9 +6050,6 @@ body {
 strong {
   font-weight: 500; }
 
-.btn {
-  cursor: pointer; }
-
 a.view-link:after,
 a.edit-link:before,
 a.setup-link:before,
@@ -6272,9 +6269,15 @@ form a.js-upload-delete {
   margin-bottom: 20px;
   border: solid #f7f7f9;
   border-width: .2rem; }
+  .posts-edit-content .bd-fieldset .db-btn-down,
+  .posts-edit-content .bd-fieldset .db-btn-up {
+    font-size: 1.6rem;
+    line-height: 1; }
   .posts-edit-content .bd-fieldset .db-btn-remove {
     font-size: 1.6rem;
     line-height: 1; }
+  .posts-edit-content .bd-fieldset .bd-fieldset-header {
+    padding: .5rem .5rem 0 1rem; }
   .posts-edit-content .bd-fieldset .bd-fieldset-body {
     padding: 1rem 1rem 0; }
   .posts-edit-content .bd-fieldset .bd-btn-field {

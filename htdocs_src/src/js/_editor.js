@@ -33,7 +33,15 @@ export default function editor() {
       removeSection: function(index) {
         if (event) event.preventDefault();
         this.sections.splice(index, 1);
-      }
+      },
+      upSection: function(index) {
+        if (event) event.preventDefault();
+        this.sections.splice(index-1, 2, this.sections[index], this.sections[index-1]);
+      },
+      downSection: function(index) {
+        if (event) event.preventDefault();
+        this.sections.splice(index, 2, this.sections[index+1], this.sections[index]);
+      },
     }
   });
 }

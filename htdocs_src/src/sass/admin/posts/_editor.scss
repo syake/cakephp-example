@@ -9,11 +9,19 @@
     border: solid #f7f7f9;
     border-width: .2rem;
     
+    .db-btn-down,
+    .db-btn-up {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
     .db-btn-remove {
       font-size: 1.6rem;
       line-height: 1;
     }
     
+    .bd-fieldset-header {
+      padding: .5rem .5rem 0 1rem; 
+    }
     .bd-fieldset-body {
       padding: 1rem 1rem 0;
     }

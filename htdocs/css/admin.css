@@ -6270,24 +6270,27 @@ form a.js-upload-delete {
   background-color: white;
   margin: 0;
   margin-bottom: 20px;
-  padding: 1.5rem;
   border: solid #f7f7f9;
   border-width: .2rem; }
-
-.posts-edit-content .btn-field {
-  margin: 0;
-  display: block;
-  width: 100%;
-  padding: .5rem;
-  background-color: white; }
-  .posts-edit-content .btn-field > span {
+  .posts-edit-content .bd-fieldset .db-btn-remove {
+    font-size: 1.6rem;
+    line-height: 1; }
+  .posts-edit-content .bd-fieldset .bd-fieldset-body {
+    padding: 1rem 1rem 0; }
+  .posts-edit-content .bd-fieldset .bd-btn-field {
+    margin: 0;
     display: block;
-    padding: 2rem;
-    border-style: dashed;
-    border-width: .2rem;
-    border-color: #666666; }
-  .posts-edit-content .btn-field:hover > span {
-    border-color: #999999; }
+    width: 100%;
+    padding: .5rem;
+    background-color: white; }
+    .posts-edit-content .bd-fieldset .bd-btn-field > span {
+      display: block;
+      padding: 2rem;
+      border-style: dashed;
+      border-width: .2rem;
+      border-color: #666666; }
+    .posts-edit-content .bd-fieldset .bd-btn-field:hover > span {
+      border-color: #999999; }
 
 /* base
 -------------------------------------------*/

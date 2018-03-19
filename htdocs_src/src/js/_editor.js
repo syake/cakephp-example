@@ -29,6 +29,10 @@ export default function editor() {
       addSection: function(event) {
         if (event) event.preventDefault();
         this.sections.push(this.default_section);
+      },
+      removeSection: function(index) {
+        if (event) event.preventDefault();
+        this.sections.splice(index, 1);
       }
     }
   });

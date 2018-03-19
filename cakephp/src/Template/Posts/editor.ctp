@@ -34,19 +34,33 @@ $this->Html->scriptEnd();
         <?= $this->Flash->render() . PHP_EOL ?>
         <div id="editor">
           <fieldset class="bd-fieldset">
-            <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
-            <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
-            <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
-          </fieldset>
-          <fieldset class="bd-fieldset" v-for="(section, i) in sections">
-            <div class="form-group">
-              <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
-              <input type="text" :name="'sections[' + i + '][section_title]'" :value="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
+            <div class="bd-fieldset-body">
+              <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
+              <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
+              <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
             </div>
-            <input type="hidden" :name="'sections[' + i + '][id]'" :value="section.id" v-if="section.id > -1">
-            <input type="hidden" :name="'sections[' + i + '][section_order]'" :value="i">
           </fieldset>
-          <button class="btn btn-field" v-on:click="addSection"><span><i class="fas fa-plus"></i></span></button>
+          <template v-if="sections.length > 0">
+            <fieldset class="bd-fieldset" v-for="(section, i) in sections">
+              <div class="d-flex justify-content-end pt-2 pr-2">
+                <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" v-on:click="removeSection(i)"><i class="far fa-minus-square"></i></button>
+              </div>
+              <div class="bd-fieldset-body">
+                <div class="form-group">
+                  <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
+                  <input type="text" :name="'sections[' + i + '][section_title]'" :value="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
+                  <input type="hidden" :name="'sections[' + i + '][id]'" :value="section.id" v-if="section.id > -1">
+                  <input type="hidden" :name="'sections[' + i + '][section_order]'" :value="i">
+                </div>
+              </div>
+            </fieldset>
+          </template>
+          <template v-else>
+            <input type="hidden" name="sections" value="[]">
+          </template>
+          <fieldset class="bd-fieldset">
+            <button class="btn bd-btn-field" v-on:click="addSection"><span><i class="fas fa-plus"></i></span></button>
+          </fieldset>
         </div>
       </div>
     </div>

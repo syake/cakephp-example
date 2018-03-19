@@ -15,10 +15,7 @@ export default function editor() {
     el: '#editor',
     data: {
       post: post,
-      sections: [],
-      default_section: {
-        section_title: ''
-      }
+      sections: []
     },
     mounted: function() {
       if (this.post) {
@@ -28,7 +25,9 @@ export default function editor() {
     methods: {
       addSection: function(event) {
         if (event) event.preventDefault();
-        this.sections.push(this.default_section);
+        this.sections.push({
+          section_title: ''
+        });
       },
       removeSection: function(index) {
         if (event) event.preventDefault();

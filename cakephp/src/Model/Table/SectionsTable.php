@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -77,5 +79,21 @@ class SectionsTable extends Table
         $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;
+    }
+
+    /**
+     * Before save listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @return void
+     */
+    public function beforeSave(Event $event, EntityInterface $entity)
+    {
+        if ($entity->isNew()) {
+            $query = $this->find()->where(['article_id' => $entity->article_id]);
+            $ret = $query->select(['max_id' => $query->func()->max('id')])->first();
+            $entity->set('id', $ret['max_id'] +1);
+        }
     }
 }

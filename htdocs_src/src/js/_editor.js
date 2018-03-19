@@ -17,7 +17,7 @@ export default function editor() {
       post: post,
       sections: [],
       default_section: {
-        title: ''
+        section_title: ''
       }
     },
     mounted: function() {

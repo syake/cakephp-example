@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Cake\ORM\Query;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
@@ -23,7 +24,6 @@ class PostsController extends AuthController
         'limit' => 10,
         'sortWhitelist' => [
             'id',
-            'status',
             'status',
             'Articles.title',
             'Articles.modified'
@@ -163,21 +163,15 @@ class PostsController extends AuthController
         ]);
         if ($this->request->is('post')) {
             $data = $this->request->getData();
-            $data['status'] = 'publish';
-            $data['project'] = [
-                'users' => [
-                    [
-                        'id' => $this->user->id,
-                        '_joinData' => [
-                            'role' => 'admin'
-                        ]
+            if (!isset($data['project'])) $data['project'] = [];
+            $data['project']['users'] = [
+                [
+                    'id' => $this->user->id,
+                    '_joinData' => [
+                        'role' => 'admin'
                     ]
                 ]
             ];
-            if (isset($data['_publish']) && ($data['_publish'] == 1)) {
-                $data['project']['status'] = 1;
-                unset($data['_publish']);
-            }
             $data['author_id'] = $this->user->id;
             $post = $this->Articles->patchEntity($post, $data, [
                 'associated' => [
@@ -187,18 +181,21 @@ class PostsController extends AuthController
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
-                if ($success = $this->Articles->save($post, ['associated' => ['Projects.Users']])) {
+                if ($success = $this->Articles->save($post)) {
+//                 if ($success = $this->Articles->save($post, ['associated' => ['Projects.Users']])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {
                     $this->log(print_r($post->errors(),true), LOG_DEBUG);
+                    debug($post->errors());
                     $this->Flash->error(__('The post could not be saved. Please, try again.'));
                 }
                 $this->Articles->connection()->commit();
                 if ($success) {
-                    return $this->redirect(['action' => 'edit', $post->project_id]);
+                    return $this->redirect(['action' => 'edit', $post->id]);
                 }
             } catch(Exception $e) {
                 $this->Flash->error($e);
+                debug($e);
                 $connection->rollback();
             }
         }
@@ -291,11 +288,21 @@ class PostsController extends AuthController
      */
     public function edit($id = null)
     {
-        $post = $this->Articles->find('post', ['user_id' => $this->user->id, 'id' => $id]);
+        $user_id = $this->user->id;
+        $post = $this->Articles->find('all')
+            ->matching('Projects.Users', function(Query $q) use ($user_id) {
+                return $q->where([
+                    'Users.id' => $user_id
+                ]);
+            })
+            ->where(['Articles.id' => $id])
+            ->contain(['Projects', 'Sections'])
+            ->enableAutoFields(true)
+            ->first();
+
         if ($post == NULL) {
             throw new ForbiddenException();
         }
-
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             $data['author_id'] = $this->user->id;
@@ -308,14 +315,18 @@ class PostsController extends AuthController
                 ])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {
+                    $this->log(print_r($post->errors(),true), LOG_DEBUG);
+                    debug($post->errors());
                     $this->Flash->error(__('The post could not be saved. Please, try again.'));
                 }
                 $this->Articles->connection()->commit();
                 if ($success) {
-                    return $this->redirect(['action' => 'edit', $post->project_id]);
+                    return $this->redirect(['action' => 'edit', $post->id]);
                 }
             } catch(Exception $e) {
                 $this->Flash->error($e);
+                $this->log(print_r($post->errors(),true), LOG_DEBUG);
+                debug($e);
                 $connection->rollback();
             }
         }

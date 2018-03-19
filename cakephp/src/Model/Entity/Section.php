@@ -8,8 +8,8 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $article_id
- * @property string $title
- * @property int $menu_order
+ * @property string $section_title
+ * @property int $section_order
  *
  * @property \App\Model\Entity\Article $article
  */
@@ -26,8 +26,8 @@ class Section extends Entity
      * @var array
      */
     protected $_accessible = [
-        'title' => true,
-        'menu_order' => true,
+        'section_title' => true,
+        'section_order' => true,
         'article' => true
     ];
 }

@@ -29,7 +29,8 @@ class ArticlesTableTest extends TestCase
         'app.users',
         'app.projects_users',
         'app.authors',
-        'app.sections'
+        'app.sections',
+        'app.clause_images'
     ];
 
     /**
@@ -40,7 +41,7 @@ class ArticlesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Articles') ? [] : ['className' => 'App\Model\Table\ArticlesTable'];
+        $config = TableRegistry::exists('Articles') ? [] : ['className' => ArticlesTable::class];
         $this->Articles = TableRegistry::get('Articles', $config);
     }
 
@@ -82,6 +83,26 @@ class ArticlesTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findView method
+     *
+     * @return void
+     */
+    public function testFindView()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test findPost method
+     *
+     * @return void
+     */
+    public function testFindPost()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

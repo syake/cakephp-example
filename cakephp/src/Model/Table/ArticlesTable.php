@@ -1,8 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-/* use ArrayObject; */
-/* use Cake\Event\Event; */
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -11,9 +9,10 @@ use Cake\Validation\Validator;
 /**
  * Articles Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Authors
- * @property \Cake\ORM\Association\HasMany $Sections
+ * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\ClauseImagesTable|\Cake\ORM\Association\HasMany $ClauseImages
+ * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\HasMany $Sections
  *
  * @method \App\Model\Entity\Article get($primaryKey, $options = [])
  * @method \App\Model\Entity\Article newEntity($data = null, array $options = [])
@@ -52,14 +51,19 @@ class ArticlesTable extends Table
             'foreignKey' => 'author_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('u', [
+        $this->belongsTo('Authors', [
             'foreignKey' => 'author_id',
             'className' => 'Users',
             'joinType' => 'INNER'
         ]);
         $this->hasMany('Sections', [
             'foreignKey' => 'article_id',
+            'saveStrategy' => 'replace',
+            'sort' => ['section_order' => 'ASC'],
             'dependent' => true
+        ]);
+        $this->hasMany('ClauseImages', [
+            'foreignKey' => 'article_id'
         ]);
     }
 
@@ -75,17 +79,17 @@ class ArticlesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('status', 'create')
             ->allowEmpty('status');
 
         $validator
+            ->scalar('title')
+            ->maxLength('title', 255)
             ->allowEmpty('title');
 
         $validator
+            ->scalar('content')
+            ->maxLength('content', 4294967295)
             ->allowEmpty('content');
-
-        $validator
-            ->allowEmpty('header_image');
 
         return $validator;
     }
@@ -146,14 +150,6 @@ class ArticlesTable extends Table
             })
             ->where(['Articles.status' => 'publish'])
             ->contain(['Sections'])
-//             ->group(['Projects.id'])
-/*
-            ->select([
-                'project_id' => 'Projects.title',
-                'modified' => 'Articles.modified',
-                'author' => 'Articles.author'
-            ])
-*/
             ->enableAutoFields(true)
             ->first();
     }

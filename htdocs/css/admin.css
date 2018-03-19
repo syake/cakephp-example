@@ -6269,9 +6269,25 @@ form a.js-upload-delete {
 .posts-edit-content .bd-fieldset {
   background-color: white;
   margin: 0;
+  margin-bottom: 20px;
   padding: 1.5rem;
   border: solid #f7f7f9;
   border-width: .2rem; }
+
+.posts-edit-content .btn-field {
+  margin: 0;
+  display: block;
+  width: 100%;
+  padding: .5rem;
+  background-color: white; }
+  .posts-edit-content .btn-field > span {
+    display: block;
+    padding: 2rem;
+    border-style: dashed;
+    border-width: .2rem;
+    border-color: #666666; }
+  .posts-edit-content .btn-field:hover > span {
+    border-color: #999999; }
 
 /* base
 -------------------------------------------*/

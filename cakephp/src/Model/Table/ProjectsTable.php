@@ -11,8 +11,8 @@ use Cake\Validation\Validator;
 /**
  * Projects Model
  *
- * @property \Cake\ORM\Association\HasMany $Articles
- * @property \Cake\ORM\Association\BelongsToMany $Users
+ * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\HasMany $Articles
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Users
  *
  * @method \App\Model\Entity\Project get($primaryKey, $options = [])
  * @method \App\Model\Entity\Project newEntity($data = null, array $options = [])
@@ -21,8 +21,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Project patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Project[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Project findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ProjectsTable extends Table
 {
@@ -38,7 +36,7 @@ class ProjectsTable extends Table
         parent::initialize($config);
 
         $this->setTable('projects');
-        $this->setDisplayField('id');
+        $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -51,8 +49,7 @@ class ProjectsTable extends Table
         $this->belongsToMany('Users', [
             'foreignKey' => 'project_id',
             'targetForeignKey' => 'user_id',
-            'joinTable' => 'projects_users',
-            'through' => 'ProjectsUsers'
+            'joinTable' => 'projects_users'
         ]);
     }
 
@@ -65,16 +62,13 @@ class ProjectsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('id', 'create')
-            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->allowEmpty('id', 'create');
 
         $validator
-            ->allowEmpty('slug')
-            ->add('slug', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
-
-        $validator
-            ->boolean('status')
-            ->allowEmpty('status');
+            ->scalar('name')
+            ->maxLength('name', 255)
+            ->allowEmpty('name')
+            ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         return $validator;
     }
@@ -88,7 +82,7 @@ class ProjectsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['id']));
+        $rules->add($rules->isUnique(['name']));
 
         return $rules;
     }
@@ -103,7 +97,9 @@ class ProjectsTable extends Table
     public function beforeSave(Event $event, EntityInterface $entity)
     {
         if ($entity->isNew()) {
-            $entity->set('id', $this->_createId());
+            if (empty($entity->name)) {
+                $entity->set('name', $this->_createName());
+            }
         }
     }
 
@@ -112,7 +108,7 @@ class ProjectsTable extends Table
      *
      * @return int
      */
-    private function _createId($d = 7)
+    private function _createName($d = 7)
     {
         $max = 10 ** ($d - 1);
         if (function_exists('random_int')) {
@@ -132,20 +128,29 @@ class ProjectsTable extends Table
                     'Users.id' => $options['user_id']
                 ]);
             })
-            ->leftJoinWith('Articles', function(Query $q) {
+            ->innerJoinWith('Articles', function(Query $q) {
                 return $q
-                    ->where(['Articles.status' => 'publish'])
-                    ->leftJoinWith('u', function(Query $q2) {
+                    ->where([
+                        'OR' => [
+                            ['Articles.status' => 1],
+                            ['Articles.status' => 0]
+                        ]
+                    ])
+                    ->leftJoinWith('Authors', function(Query $q2) {
                         return $q2->select(['username']);
                     })
-                    ->select(['title', 'modified', 'author' => 'u.username']);
+                    ->select(['id', 'title', 'modified', 'author' => 'Authors.username']);
             })
             ->group(['Projects.id'])
             ->select([
+                'project_id' => 'Projects.id',
+                'name' => 'Projects.name',
+                'id' => 'Articles.id',
                 'title' => 'Articles.title',
+                'status' => 'Articles.status',
                 'modified' => 'Articles.modified',
                 'author' => 'Articles.author'
             ])
-            ->enableAutoFields(true);
+            ->enableAutoFields(false);
     }
 }

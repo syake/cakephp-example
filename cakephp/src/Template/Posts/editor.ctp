@@ -5,12 +5,17 @@
  */
 $this->assign('title', __('Edit Post') . ' | ' . __(SITE_TITLE));
 if ($post->status) {
-      $badge_label = __('Publish');
-      $badge_style = 'badge-success';
-  } else {
-      $badge_label = __('Private');
-      $badge_style = 'badge-default';
-  }
+  $badge_label = __('Publish');
+  $badge_style = 'badge-success';
+} else {
+  $badge_label = __('Private');
+  $badge_style = 'badge-default';
+}
+
+// for vue.js
+$this->Html->scriptStart(['block' => true]);
+echo '(function(){window.data.post=' . json_encode($post) . '})();';
+$this->Html->scriptEnd();
 ?>
 <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) . PHP_EOL ?>
   <header class="navbar navbar-expand navbar-dark flex-row bd-navbar">
@@ -27,15 +32,22 @@ if ($post->status) {
           <span class="d-block small text-muted"><?= __('Last Update') ?>  <time><?= $this->Time->format($post->modified, 'yyyy-MM-dd HH:mm') ?></time></span>
         </div>
         <?= $this->Flash->render() . PHP_EOL ?>
-        <fieldset class="bd-fieldset">
-          <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
-          <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
-        </fieldset>
-        <fieldset class="bd-fieldset">
-          <?= $this->Form->control('sections.0.title', ['label' => __('Title')]) . PHP_EOL ?>
-          <?= $this->Form->hidden('sections.0.id', ['value' => '0']) . PHP_EOL ?>
-          <?= $this->Form->hidden('sections.0.article_id', ['value' => $post->id]) . PHP_EOL ?>
-        </fieldset>
+        <div id="editor">
+          <fieldset class="bd-fieldset">
+            <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
+            <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
+            <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
+          </fieldset>
+          <fieldset class="bd-fieldset" v-for="(section, i) in sections">
+            <div class="form-group">
+              <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
+              <input type="text" :name="'sections[' + i + '][section_title]'" :value="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
+            </div>
+            <input type="hidden" :name="'sections[' + i + '][id]'" :value="section.id" v-if="section.id > -1">
+            <input type="hidden" :name="'sections[' + i + '][section_order]'" :value="i">
+          </fieldset>
+          <button class="btn btn-field" v-on:click="addSection"><span><i class="fas fa-plus"></i></span></button>
+        </div>
       </div>
     </div>
   </main>

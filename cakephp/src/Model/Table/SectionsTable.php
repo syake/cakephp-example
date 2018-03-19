@@ -10,7 +10,6 @@ use Cake\Validation\Validator;
  * Sections Model
  *
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
- * @property |\Cake\ORM\Association\HasMany $ClauseImages
  *
  * @method \App\Model\Entity\Section get($primaryKey, $options = [])
  * @method \App\Model\Entity\Section newEntity($data = null, array $options = [])
@@ -34,15 +33,12 @@ class SectionsTable extends Table
         parent::initialize($config);
 
         $this->setTable('sections');
-        $this->setDisplayField('title');
+        $this->setDisplayField('section_title');
         $this->setPrimaryKey(['id', 'article_id']);
 
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
-        ]);
-        $this->hasMany('ClauseImages', [
-            'foreignKey' => 'section_id'
         ]);
     }
 
@@ -58,13 +54,13 @@ class SectionsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('title')
-            ->maxLength('title', 255)
-            ->allowEmpty('title');
+            ->scalar('section_title')
+            ->maxLength('section_title', 255)
+            ->allowEmpty('section_title');
 
         $validator
-            ->integer('menu_order')
-            ->allowEmpty('menu_order');
+            ->integer('section_order')
+            ->allowEmpty('section_order');
 
         return $validator;
     }

@@ -29,9 +29,8 @@ class SectionsTableTest extends TestCase
         'app.projects',
         'app.users',
         'app.projects_users',
-        'app.u',
-        'app.points',
-        'app.items'
+        'app.authors',
+        'app.clause_images'
     ];
 
     /**

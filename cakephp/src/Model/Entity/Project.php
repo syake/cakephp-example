@@ -2,15 +2,12 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
 
 /**
  * Project Entity
  *
  * @property int $id
- * @property bool $status
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property string $name
  *
  * @property \App\Model\Entity\Article[] $articles
  * @property \App\Model\Entity\User[] $users
@@ -28,18 +25,8 @@ class Project extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'name' => true,
+        'articles' => true,
+        'users' => true
     ];
-
-    public function hasAdmin($user_id)
-    {
-        $users = $this->users;
-        foreach ($users as $user) {
-            if (($user->id == $user_id) && ($user->_joinData->role == 'admin')) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

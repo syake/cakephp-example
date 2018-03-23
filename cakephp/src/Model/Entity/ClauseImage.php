@@ -31,12 +31,10 @@ class ClauseImage extends Entity
      * @var array
      */
     protected $_accessible = [
-        'image_name' => true,
-        'image_file' => true,
+        'name' => true,
+        'data' => true,
         'mime_type' => true,
         'clause_order' => true,
-        'article' => true,
-        'section' => true,
-        'clause' => true
+        'section' => true
     ];
 }

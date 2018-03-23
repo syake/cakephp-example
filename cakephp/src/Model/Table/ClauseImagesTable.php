@@ -40,10 +40,6 @@ class ClauseImagesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey(['article_id', 'section_id', 'clause_id']);
 
-        $this->belongsTo('Articles', [
-            'foreignKey' => 'article_id',
-            'joinType' => 'INNER'
-        ]);
         $this->belongsTo('Sections', [
             'foreignKey' => ['article_id', 'section_id'],
             'bindingKey' => ['article_id', 'section_id'],

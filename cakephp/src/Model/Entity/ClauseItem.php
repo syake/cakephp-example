@@ -4,21 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ClauseImage Entity
+ * ClauseItem Entity
  *
  * @property int $article_id
  * @property int $section_id
  * @property int $clause_id
  * @property string $image_name
- * @property string|resource $image_file
- * @property string $mime_type
- * @property int $clause_order
  *
  * @property \App\Model\Entity\Article $article
  * @property \App\Model\Entity\Section $section
  * @property \App\Model\Entity\Clause $clause
  */
-class ClauseImage extends Entity
+class ClauseItem extends Entity
 {
 
     /**
@@ -31,10 +28,7 @@ class ClauseImage extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'data' => true,
-        'mime_type' => true,
-        'clause_order' => true,
+        'image_name' => true,
         'section' => true
     ];
 }

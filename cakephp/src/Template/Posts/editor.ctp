@@ -44,10 +44,10 @@ $this->Html->scriptEnd();
             <fieldset class="bd-fieldset" v-for="(section, i) in sections">
               <div class="d-flex justify-content-between bd-fieldset-header">
                 <div>
-                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 db-btn-up" v-on:click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
-                  <button type="button" class="btn btn-link text-secondary p-0 db-btn-down" v-on:click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 db-btn-up" @click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 db-btn-down" @click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
                 </div>
-                <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" v-on:click="removeSection(i)"><i class="far fa-minus-square"></i></button>
+                <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" @click="removeSection(i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
                 <div class="form-group mb-0">
@@ -58,11 +58,11 @@ $this->Html->scriptEnd();
                 <div class="row">
                   <template v-if="section.images && section.images.length > 0">
                     <div class="col-sm-4 mt-4" v-for="(clause, j) in section.images">
-                      {{clause.name}}
-                      <!-- <input type="file" :name="'sections[' + i + '][images][j].image_file'"> -->
-                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][name]'" :value="clause.name">
+                      {{clause.image_name}}
+                      <input type="file" :name="'sections[' + i + '][images][' + j + '][file]'" @change="selectedFile(i, j)">
+                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][image_name]'" :value="clause.image_name">
                       <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_id]'" :value="j + 1">
-                      <button type="button" class="btn btn-link text-danger bd-btn-remove" v-on:click="removeClause(i, j)"><i class="far fa-minus-square"></i></button>
+                      <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeClause(i, j)"><i class="far fa-minus-square"></i></button>
                       <!-- <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_order]'" :value="j"> -->
                     </div>
                   </template>
@@ -70,7 +70,7 @@ $this->Html->scriptEnd();
                     <input type="hidden" :name="'sections[' + i + '][images]'" value="[]">
                   </template>
                   <div class="col-sm-4 mt-4">
-                    <button class="btn bd-btn-field" v-on:click="addClause(i)"><span><i class="fas fa-plus"></i></span></button>
+                    <button class="btn bd-btn-field" @click="addClause(i)"><span><i class="fas fa-plus"></i></span></button>
                   </div>
                 </div>
               </div>
@@ -80,7 +80,7 @@ $this->Html->scriptEnd();
             <input type="hidden" name="sections" value="[]">
           </template>
           <fieldset class="bd-fieldset">
-            <button class="btn bd-btn-field" v-on:click="addSection"><span><i class="fas fa-plus"></i></span></button>
+            <button class="btn bd-btn-field" @click="addSection"><span><i class="fas fa-plus"></i></span></button>
           </fieldset>
         </div>
       </div>

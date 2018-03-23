@@ -46,7 +46,7 @@ class SectionsTable extends Table
         $this->hasMany('Images', [
             'foreignKey' => ['article_id', 'section_id'],
             'bindingKey' => ['article_id', 'section_id'],
-            'className' => 'ClauseImages',
+            'className' => 'ClauseItems',
             'saveStrategy' => 'replace',
             'sort' => ['clause_id' => 'ASC'],
             'dependent' => true

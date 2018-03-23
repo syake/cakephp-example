@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 var $ = require("jquery");
 
 import fontawesome from '@fortawesome/fontawesome';
@@ -54,7 +56,7 @@ export default function editor() {
           this.sections[index].images = [];
         }
         this.sections[index].images.push({
-          name: 'hoge'
+          image_name: ''
         });
         this.$forceUpdate();
       },
@@ -64,6 +66,23 @@ export default function editor() {
           this.sections[index].images.splice(index2, 1);
         }
         this.$forceUpdate();
+      },
+      selectedFile: function(index, index2) {
+        if (event) event.preventDefault();
+        let file = event.target.files[0];
+        let formData = new FormData();
+        formData.append('data', file);
+        let config = {
+          headers: {'content-type': 'multipart/form-data'}
+        };
+        axios.post('/images/upload', formData, config)
+          .then(response => {
+             this.sections[index].images[index2].image_name = response.data;
+             this.$forceUpdate();
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
     }
   });

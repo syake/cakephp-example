@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ClauseImagesTable;
+use App\Model\Table\ImagesTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ClauseImagesTable Test Case
+ * App\Model\Table\ImagesTable Test Case
  */
-class ClauseImagesTableTest extends TestCase
+class ImagesTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ClauseImagesTable
+     * @var \App\Model\Table\ImagesTable
      */
-    public $ClauseImages;
+    public $Images;
 
     /**
      * Fixtures
@@ -24,15 +24,7 @@ class ClauseImagesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.clause_images',
-        'app.articles',
-        'app.projects',
-        'app.users',
-        'app.projects_users',
-        'app.authors',
-        'app.sections',
-        'app.images',
-        'app.clauses'
+        'app.images'
     ];
 
     /**
@@ -43,8 +35,8 @@ class ClauseImagesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ClauseImages') ? [] : ['className' => ClauseImagesTable::class];
-        $this->ClauseImages = TableRegistry::get('ClauseImages', $config);
+        $config = TableRegistry::exists('Images') ? [] : ['className' => ImagesTable::class];
+        $this->Images = TableRegistry::get('Images', $config);
     }
 
     /**
@@ -54,7 +46,7 @@ class ClauseImagesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ClauseImages);
+        unset($this->Images);
 
         parent::tearDown();
     }

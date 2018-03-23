@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  * Sections Model
  *
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
+ * @property |\Cake\ORM\Association\BelongsTo $Sections
  *
  * @method \App\Model\Entity\Section get($primaryKey, $options = [])
  * @method \App\Model\Entity\Section newEntity($data = null, array $options = [])
@@ -36,11 +37,19 @@ class SectionsTable extends Table
 
         $this->setTable('sections');
         $this->setDisplayField('section_title');
-        $this->setPrimaryKey(['id', 'article_id']);
+        $this->setPrimaryKey(['article_id', 'section_id']);
 
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Images', [
+            'foreignKey' => ['article_id', 'section_id'],
+            'bindingKey' => ['article_id', 'section_id'],
+            'className' => 'ClauseImages',
+            'saveStrategy' => 'replace',
+            'sort' => ['clause_id' => 'ASC'],
+            'dependent' => true
         ]);
     }
 
@@ -52,9 +61,6 @@ class SectionsTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator
-            ->allowEmpty('id', 'create');
-
         $validator
             ->scalar('section_title')
             ->maxLength('section_title', 255)
@@ -92,8 +98,8 @@ class SectionsTable extends Table
     {
         if ($entity->isNew()) {
             $query = $this->find()->where(['article_id' => $entity->article_id]);
-            $ret = $query->select(['max_id' => $query->func()->max('id')])->first();
-            $entity->set('id', $ret['max_id'] +1);
+            $ret = $query->select(['max_id' => $query->func()->max('section_id')])->first();
+            $entity->set('section_id', $ret['max_id'] + 1);
         }
     }
 }

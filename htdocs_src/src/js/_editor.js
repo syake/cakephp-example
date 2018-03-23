@@ -1,6 +1,13 @@
 import Vue from 'vue';
 var $ = require("jquery");
 
+import fontawesome from '@fortawesome/fontawesome';
+import faMinusSquare from '@fortawesome/fontawesome-free-regular/faMinusSquare';
+import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp';
+import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown';
+
+fontawesome.library.add(faMinusSquare, faCaretUp, faCaretDown);
+
 /* ========================================================================
  * editor
  * @see Vue.js
@@ -19,7 +26,7 @@ export default function editor() {
     },
     mounted: function() {
       if (this.post) {
-        this.sections = this.post.sections;
+        this.sections = this.post.sections || [];
       }
     },
     methods: {
@@ -41,48 +48,23 @@ export default function editor() {
         if (event) event.preventDefault();
         this.sections.splice(index, 2, this.sections[index+1], this.sections[index]);
       },
+      addClause: function(index) {
+        if (event) event.preventDefault();
+        if (!this.sections[index].images) {
+          this.sections[index].images = [];
+        }
+        this.sections[index].images.push({
+          name: 'hoge'
+        });
+        this.$forceUpdate();
+      },
+      removeClause: function(index, index2) {
+        if (event) event.preventDefault();
+        if (this.sections[index].images) {
+          this.sections[index].images.splice(index2, 1);
+        }
+        this.$forceUpdate();
+      }
     }
   });
 }
-
-// export default function setupEditor() {
-/*
-  const el_name = '#editor';
-  const $el = $(el_name);
-  if (!$el[0]) return;
-  var app = new Vue({
-    el: $el,
-    data: {
-      sections: []
-    },
-    mounted() {
-      if (window.data.post) {
-        console.log(window.data.post);
-      }
-      this.sections = [
-        {title: 'aaaa'}
-      ];
-    },
-    methods: {
-      add: function() {
-        this.sections.push({
-          title: '',
-          items: []
-        });
-      },
-      remove: function(index) {
-        this.sections.splice(index, 1);
-      },
-      addItem: function(items) {
-        items.push({
-          title: '',
-          description: ''
-        });
-      },
-      removeItem: function(items, index) {
-        items.splice(index, 1);
-      }
-    }
-  });
-*/
-// }

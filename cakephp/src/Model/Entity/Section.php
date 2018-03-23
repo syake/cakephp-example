@@ -6,12 +6,13 @@ use Cake\ORM\Entity;
 /**
  * Section Entity
  *
- * @property int $id
  * @property int $article_id
+ * @property int $section_id
  * @property string $section_title
  * @property int $section_order
  *
  * @property \App\Model\Entity\Article $article
+ * @property \App\Model\Entity\Image[] $images
  */
 class Section extends Entity
 {
@@ -28,6 +29,7 @@ class Section extends Entity
     protected $_accessible = [
         'section_title' => true,
         'section_order' => true,
-        'article' => true
+        'article' => true,
+        'images' => true
     ];
 }

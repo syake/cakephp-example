@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -9,8 +11,9 @@ use Cake\Validation\Validator;
 /**
  * ClauseImages Model
  *
- * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\BelongsTo $Sections
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
+ * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\BelongsTo $Sections
+ * @property \App\Model\Table\ClausesTable|\Cake\ORM\Association\BelongsTo $Clauses
  *
  * @method \App\Model\Entity\ClauseImage get($primaryKey, $options = [])
  * @method \App\Model\Entity\ClauseImage newEntity($data = null, array $options = [])
@@ -34,15 +37,16 @@ class ClauseImagesTable extends Table
         parent::initialize($config);
 
         $this->setTable('clause_images');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'section_id', 'article_id']);
+        $this->setDisplayField('name');
+        $this->setPrimaryKey(['article_id', 'section_id', 'clause_id']);
 
-        $this->belongsTo('Sections', [
-            'foreignKey' => 'section_id',
-            'joinType' => 'INNER'
-        ]);
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
+            'joinType' => 'INNER'
+        ]);
+        $this->belongsTo('Sections', [
+            'foreignKey' => ['article_id', 'section_id'],
+            'bindingKey' => ['article_id', 'section_id'],
             'joinType' => 'INNER'
         ]);
     }
@@ -56,21 +60,21 @@ class ClauseImagesTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('id', 'create');
+            ->scalar('name')
+            ->maxLength('name', 255)
+            ->allowEmpty('name');
 
         $validator
-            ->requirePresence('data', 'create')
-            ->notEmpty('data');
+            ->allowEmpty('data');
 
         $validator
-            ->scalar('mime')
-            ->maxLength('mime', 255)
-            ->requirePresence('mime', 'create')
-            ->notEmpty('mime');
+            ->scalar('mime_type')
+            ->maxLength('mime_type', 255)
+            ->allowEmpty('mime_type');
 
         $validator
-            ->integer('menu_order')
-            ->allowEmpty('menu_order');
+            ->integer('clause_order')
+            ->allowEmpty('clause_order');
 
         return $validator;
     }
@@ -84,9 +88,24 @@ class ClauseImagesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['section_id'], 'Sections'));
-        $rules->add($rules->existsIn(['article_id'], 'Articles'));
+        $rules->add($rules->existsIn(['article_id', 'section_id'], 'Sections'));
 
         return $rules;
+    }
+
+    /**
+     * Before save listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @return void
+     */
+    public function beforeSave(Event $event, EntityInterface $entity)
+    {
+        if ($entity->isNew()) {
+            $query = $this->find()->where(['article_id' => $entity->article_id, 'section_id' => $entity->section_id]);
+            $ret = $query->select(['max_id' => $query->func()->max('clause_id')])->first();
+            $entity->set('clause_id', $ret['max_id'] + 1);
+        }
     }
 }

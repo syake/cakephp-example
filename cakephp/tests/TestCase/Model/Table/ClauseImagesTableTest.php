@@ -25,14 +25,14 @@ class ClauseImagesTableTest extends TestCase
      */
     public $fixtures = [
         'app.clause_images',
-        'app.sections',
         'app.articles',
         'app.projects',
         'app.users',
         'app.projects_users',
-        'app.u',
-        'app.points',
-        'app.items'
+        'app.authors',
+        'app.sections',
+        'app.images',
+        'app.clauses'
     ];
 
     /**

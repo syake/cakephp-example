@@ -159,8 +159,7 @@ class PostsController extends AuthController
     {
         $post = $this->Articles->newEntity([
             'title' => 'Welcome to my page',
-            'content' => 'コンテンツ内容です',
-            'sections' => []
+            'content' => 'コンテンツ内容です'
         ]);
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -176,15 +175,22 @@ class PostsController extends AuthController
             $data['author_id'] = $this->user->id;
             $post = $this->Articles->patchEntity($post, $data, [
                 'associated' => [
+                    'Projects',
                     'Projects.Users',
-                    'Sections'
+                    'Sections',
+                    'Sections.Images',
                 ]
             ]);
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
                 if ($success = $this->Articles->save($post, [
-                    'associated' => ['Projects', 'Sections']
+                    'associated' => [
+                        'Projects',
+                        'Projects.Users',
+                        'Sections',
+                        'Sections.Images'
+                    ]
                 ])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {
@@ -292,14 +298,14 @@ class PostsController extends AuthController
     public function edit($id = null)
     {
         $user_id = $this->user->id;
-        $post = $this->Articles->find('all')
+        $post = $this->Articles->find()
             ->matching('Projects.Users', function(Query $q) use ($user_id) {
                 return $q->where([
                     'Users.id' => $user_id
                 ]);
             })
             ->where(['Articles.id' => $id])
-            ->contain(['Projects', 'Sections'])
+            ->contain(['Projects', 'Sections', 'Sections.Images'])
             ->enableAutoFields(true)
             ->first();
 
@@ -309,12 +315,20 @@ class PostsController extends AuthController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
             $data['author_id'] = $this->user->id;
-            $post = $this->Articles->patchEntity($post, $data);
+            $post = $this->Articles->patchEntity($post, $data, [
+                'associated' => [
+                    'Sections',
+                    'Sections.Images'
+                ]
+            ]);
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
                 if ($success = $this->Articles->save($post, [
-                    'associated' => ['Sections']
+                    'associated' => [
+                        'Sections',
+                        'Sections.Images'
+                    ]
                 ])) {
                     $this->Flash->success(__('The post has been saved.'));
                 } else {

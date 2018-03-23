@@ -50,11 +50,28 @@ $this->Html->scriptEnd();
                 <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" v-on:click="removeSection(i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
-                <div class="form-group">
+                <div class="form-group mb-0">
                   <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
                   <input type="text" :name="'sections[' + i + '][section_title]'" v-model="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
-                  <input type="hidden" :name="'sections[' + i + '][id]'" :value="section.id" v-if="section.id > -1">
-                  <input type="hidden" :name="'sections[' + i + '][section_order]'" :value="i">
+                  <input type="hidden" :name="'sections[' + i + '][section_id]'" :value="i + 1">
+                </div>
+                <div class="row">
+                  <template v-if="section.images && section.images.length > 0">
+                    <div class="col-sm-4 mt-4" v-for="(clause, j) in section.images">
+                      {{clause.name}}
+                      <!-- <input type="file" :name="'sections[' + i + '][images][j].image_file'"> -->
+                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][name]'" :value="clause.name">
+                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_id]'" :value="j + 1">
+                      <button type="button" class="btn btn-link text-danger bd-btn-remove" v-on:click="removeClause(i, j)"><i class="far fa-minus-square"></i></button>
+                      <!-- <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_order]'" :value="j"> -->
+                    </div>
+                  </template>
+                  <template v-else>
+                    <input type="hidden" :name="'sections[' + i + '][images]'" value="[]">
+                  </template>
+                  <div class="col-sm-4 mt-4">
+                    <button class="btn bd-btn-field" v-on:click="addClause(i)"><span><i class="fas fa-plus"></i></span></button>
+                  </div>
                 </div>
               </div>
             </fieldset>

@@ -5,18 +5,8 @@ import fontawesome from '@fortawesome/fontawesome';
 import faPlus from '@fortawesome/fontawesome-free-solid/faPlus';
 import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
 import faBan from '@fortawesome/fontawesome-free-solid/faBan';
-import faMinusSquare from '@fortawesome/fontawesome-free-regular/faMinusSquare';
-import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp';
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown';
 
-// import faCircle from '@fortawesome/fontawesome-free-regular/faCircle'
-// import faFacebook from '@fortawesome/fontawesome-free-brands/faFacebook'
-
-fontawesome.library.add(faPlus, faCheckCircle, faBan, faMinusSquare, faCaretUp, faCaretDown);
-/*
-fontawesome.library.add(faCircle)
-fontawesome.library.add(faFacebook)
-*/
+fontawesome.library.add(faPlus, faCheckCircle, faBan);
 
 /* ========================================================================
  * init

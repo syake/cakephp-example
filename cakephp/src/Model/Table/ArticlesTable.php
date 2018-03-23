@@ -62,9 +62,6 @@ class ArticlesTable extends Table
             'sort' => ['section_order' => 'ASC'],
             'dependent' => true
         ]);
-        $this->hasMany('ClauseImages', [
-            'foreignKey' => 'article_id'
-        ]);
     }
 
     /**
@@ -104,7 +101,7 @@ class ArticlesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['author_id'], 'Users'));
+        $rules->add($rules->existsIn(['author_id'], 'Authors'));
 
         return $rules;
     }

@@ -44,6 +44,7 @@ class PostsController extends AuthController
         parent::initialize();
         $this->Projects = TableRegistry::get('Projects');
         $this->Articles = TableRegistry::get('Articles');
+        $this->Images = TableRegistry::get('Images');
 
         $this->loadComponent('Image', [
             'namerule' => 'sha1',
@@ -291,7 +292,7 @@ class PostsController extends AuthController
     /**
      * Edit method
      *
-     * @param string|null $id Project id.
+     * @param string|null $id Article id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -352,6 +353,9 @@ class PostsController extends AuthController
         $this->set('_serialize', ['post']);
         $this->viewBuilder()->setLayout('admin_editor');
         $this->render('/Posts/editor');
+
+        // Image filter
+        $this->filter($id);
 
 //         return;
 /*
@@ -419,6 +423,38 @@ class PostsController extends AuthController
     }
 
     /**
+     * Filter method
+     *
+     * @param string|null $id Article id.
+     */
+    protected function filter($id)
+    {
+        $images = $this->Images->find('list')
+            ->where(['Images.article_id' => $id])
+            ->notMatching('ClauseItems')
+            ->toArray();
+
+        if (count($images) > 0) {
+            $names = array_values($images);
+            $conditions = ['OR' => []];
+            foreach ($names as $name) {
+                $conditions['OR'][] = ['name' => $name];
+            }
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($this->Images->deleteAll($conditions)) {
+                    // The image has been deleted.
+                }
+                $this->Images->connection()->commit();
+            } catch(Exception $e) {
+                debug($e);
+                $connection->rollback();
+            }
+        }
+    }
+
+    /**
      * Uploads method
      *
      * @param array $data getData
@@ -426,6 +462,7 @@ class PostsController extends AuthController
      * @param Model\Entity\Article $post
      * @return $data
      */
+/*
     private function uploads(&$data, $folder_path, $post)
     {
         foreach ($data as $key => $dat) {
@@ -500,6 +537,7 @@ class PostsController extends AuthController
             }
         }
     }
+*/
 
     /**
      * Delete method

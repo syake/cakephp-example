@@ -75,30 +75,6 @@ class ImagesController extends AppController
     }
 
     /**
-     * Edit method
-     *
-     * @param string|null $id Image id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $image = $this->Images->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $image = $this->Images->patchEntity($image, $this->request->getData());
-            if ($this->Images->save($image)) {
-                $this->Flash->success(__('The image has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The image could not be saved. Please, try again.'));
-        }
-        $this->set(compact('image'));
-    }
-
-    /**
      * Delete method
      *
      * @param string|null $id Image id.

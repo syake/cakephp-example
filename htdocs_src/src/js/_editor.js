@@ -71,6 +71,7 @@ export default function editor() {
         let file = event.target.files[0];
         let formData = new FormData();
         formData.append('data', file);
+        formData.append('article_id', this.post.id);
         let config = {
           headers: {'content-type': 'multipart/form-data'}
         };

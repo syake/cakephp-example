@@ -24,7 +24,14 @@ class ImagesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.images'
+        'app.images',
+        'app.sections',
+        'app.articles',
+        'app.projects',
+        'app.users',
+        'app.projects_users',
+        'app.authors',
+        'app.items'
     ];
 
     /**
@@ -77,6 +84,16 @@ class ImagesTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test beforeSave method
+     *
+     * @return void
+     */
+    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -11,6 +11,8 @@ use Cake\Validation\Validator;
 /**
  * Images Model
  *
+ * @property |\Cake\ORM\Association\BelongsTo $Articles
+ *
  * @method \App\Model\Entity\Image get($primaryKey, $options = [])
  * @method \App\Model\Entity\Image newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Image[] newEntities(array $data, array $options = [])
@@ -36,7 +38,10 @@ class ImagesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('name');
 
-        $this->hasOne('Sections', [
+        $this->belongsTo('Articles', [
+            'foreignKey' => 'article_id'
+        ]);
+        $this->hasOne('ClauseItems', [
             'foreignKey' => 'image_name',
             'joinType' => 'INNER'
         ]);
@@ -77,6 +82,7 @@ class ImagesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['name']));
+        $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;
     }

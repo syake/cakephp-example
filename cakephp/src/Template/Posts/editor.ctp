@@ -44,10 +44,10 @@ $this->Html->scriptEnd();
             <fieldset class="bd-fieldset" v-for="(section, i) in sections">
               <div class="d-flex justify-content-between bd-fieldset-header">
                 <div>
-                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 db-btn-up" @click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
-                  <button type="button" class="btn btn-link text-secondary p-0 db-btn-down" @click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 bd-btn-up" @click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 bd-btn-down" @click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
                 </div>
-                <button type="button" class="btn btn-link text-danger p-0 db-btn-remove" @click="removeSection(i)"><i class="far fa-minus-square"></i></button>
+                <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="removeSection(i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
                 <div class="form-group mb-0">
@@ -58,21 +58,26 @@ $this->Html->scriptEnd();
                 <div class="row">
                   <template v-if="section.items && section.items.length > 0">
                     <div class="col-sm-4 mt-4" v-for="(clause, j) in section.items">
-                      {{clause.image_name}}
-                      <input type="file" @change="selectedFile(i, j)">
-                      <template v-if="clause.image_name">
-                        <input type="hidden" :name="'sections[' + i + '][items][' + j + '][image_name]'" :value="clause.image_name">
-                        <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_id]'" :value="j + 1">
-                      </template>
-                      <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeClause(i, j)"><i class="far fa-minus-square"></i></button>
-                      <!-- <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_order]'" :value="j"> -->
+                      <div class="bd-clause">
+                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeClause(i, j)"><i class="fas fa-minus-square"></i></button>
+                        <template v-if="clause.image_name">
+                          <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
+                          <input type="hidden" :name="'sections[' + i + '][items][' + j + '][image_name]'" :value="clause.image_name">
+                          <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_id]'" :value="j + 1">
+                          <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view']) ?>/' + clause.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
+                        </template>
+                        <template v-else>
+                          <input type="file" :id="'file-' + i + '-' + j" @change="selectedFile(i, j)">
+                        </template>
+                      </div>
                     </div>
                   </template>
                   <template v-else>
                     <input type="hidden" :name="'sections[' + i + '][items]'" value="[]">
                   </template>
                   <div class="col-sm-4 mt-4">
-                    <button class="btn bd-btn-field" @click="addClause(i)"><span><i class="fas fa-plus"></i></span></button>
+                    <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i)">
+                    <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus"></i></span></button>
                   </div>
                 </div>
               </div>

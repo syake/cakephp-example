@@ -6308,6 +6308,13 @@ form a.js-upload-delete {
   .posts-edit-content .bd-fieldset .bd-fieldset-body {
     padding: 1rem; }
 
+.posts-edit-content .bd-clause {
+  position: relative; }
+  .posts-edit-content .bd-clause .bd-btn-remove {
+    position: absolute;
+    right: .5rem;
+    top: .5rem; }
+
 /* base
 -------------------------------------------*/
 /*

@@ -7,8 +7,9 @@ import fontawesome from '@fortawesome/fontawesome';
 import faMinusSquare from '@fortawesome/fontawesome-free-regular/faMinusSquare';
 import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp';
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown';
+import fasMinusSquare from '@fortawesome/fontawesome-free-solid/faMinusSquare';
 
-fontawesome.library.add(faMinusSquare, faCaretUp, faCaretDown);
+fontawesome.library.add(faMinusSquare, faCaretUp, faCaretDown, fasMinusSquare);
 
 /* ========================================================================
  * editor
@@ -77,12 +78,20 @@ export default function editor() {
         };
         axios.post('/images/upload', formData, config)
           .then(response => {
-             this.sections[index].items[index2].image_name = response.data;
-             this.$forceUpdate();
+            if (!index2) {
+              this.addClause(index);
+              index2 = this.sections[index].items.length - 1;
+            }
+            this.sections[index].items[index2].image_name = response.data;
+            this.$forceUpdate();
           })
           .catch(error => {
             console.error(error);
           });
+      },
+      trigger: function(id) {
+        if (event) event.preventDefault();
+        document.getElementById(id).click();
       }
     }
   });

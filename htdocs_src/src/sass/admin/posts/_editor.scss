@@ -55,4 +55,13 @@
       padding: 1rem;
     }
   }
+  
+  .bd-clause {
+    position: relative;
+    .bd-btn-remove {
+      position: absolute;
+      right: .5rem;
+      top: .5rem;
+    }
+  }
 }

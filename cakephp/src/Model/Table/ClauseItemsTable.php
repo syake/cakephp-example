@@ -45,12 +45,10 @@ class ClauseItemsTable extends Table
             'bindingKey' => ['article_id', 'section_id'],
             'joinType' => 'INNER'
         ]);
-/*
         $this->belongsTo('Images', [
             'foreignKey' => 'image_name',
             'joinType' => 'INNER'
         ]);
-*/
     }
 
     /**
@@ -79,6 +77,7 @@ class ClauseItemsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['article_id', 'section_id'], 'Sections'));
+        $rules->add($rules->existsIn(['image_name'], 'Images'));
 
         return $rules;
     }

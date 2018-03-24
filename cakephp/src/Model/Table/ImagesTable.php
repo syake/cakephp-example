@@ -35,6 +35,11 @@ class ImagesTable extends Table
         $this->setTable('images');
         $this->setDisplayField('name');
         $this->setPrimaryKey('name');
+
+        $this->hasOne('Sections', [
+            'foreignKey' => 'image_name',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

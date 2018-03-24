@@ -30,6 +30,6 @@ class Section extends Entity
         'section_title' => true,
         'section_order' => true,
         'article' => true,
-        'images' => true
+        'items' => true
     ];
 }

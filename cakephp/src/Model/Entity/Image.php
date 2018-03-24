@@ -24,6 +24,7 @@ class Image extends Entity
      */
     protected $_accessible = [
         'data' => true,
-        'mime_type' => true
+        'mime_type' => true,
+        'section' => true
     ];
 }

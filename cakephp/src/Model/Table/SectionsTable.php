@@ -43,7 +43,7 @@ class SectionsTable extends Table
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('Images', [
+        $this->hasMany('Items', [
             'foreignKey' => ['article_id', 'section_id'],
             'bindingKey' => ['article_id', 'section_id'],
             'className' => 'ClauseItems',

@@ -178,7 +178,7 @@ class PostsController extends AuthController
                     'Projects',
                     'Projects.Users',
                     'Sections',
-                    'Sections.Images',
+                    'Sections.Items',
                 ]
             ]);
             $connection = ConnectionManager::get('default');
@@ -189,7 +189,7 @@ class PostsController extends AuthController
                         'Projects',
                         'Projects.Users',
                         'Sections',
-                        'Sections.Images'
+                        'Sections.Items'
                     ]
                 ])) {
                     $this->Flash->success(__('The post has been saved.'));
@@ -305,7 +305,7 @@ class PostsController extends AuthController
                 ]);
             })
             ->where(['Articles.id' => $id])
-            ->contain(['Projects', 'Sections', 'Sections.Images'])
+            ->contain(['Projects', 'Sections', 'Sections.Items'])
             ->enableAutoFields(true)
             ->first();
 
@@ -318,7 +318,7 @@ class PostsController extends AuthController
             $post = $this->Articles->patchEntity($post, $data, [
                 'associated' => [
                     'Sections',
-                    'Sections.Images'
+                    'Sections.Items'
                 ]
             ]);
             $connection = ConnectionManager::get('default');
@@ -327,7 +327,7 @@ class PostsController extends AuthController
                 if ($success = $this->Articles->save($post, [
                     'associated' => [
                         'Sections',
-                        'Sections.Images'
+                        'Sections.Items'
                     ]
                 ])) {
                     $this->Flash->success(__('The post has been saved.'));

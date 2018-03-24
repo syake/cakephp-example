@@ -52,18 +52,17 @@ export default function editor() {
       },
       addClause: function(index) {
         if (event) event.preventDefault();
-        if (!this.sections[index].images) {
-          this.sections[index].images = [];
+        if (!this.sections[index].items) {
+          this.sections[index].items = [];
         }
-        this.sections[index].images.push({
-          image_name: ''
+        this.sections[index].items.push({
         });
         this.$forceUpdate();
       },
       removeClause: function(index, index2) {
         if (event) event.preventDefault();
-        if (this.sections[index].images) {
-          this.sections[index].images.splice(index2, 1);
+        if (this.sections[index].items) {
+          this.sections[index].items.splice(index2, 1);
         }
         this.$forceUpdate();
       },
@@ -77,7 +76,7 @@ export default function editor() {
         };
         axios.post('/images/upload', formData, config)
           .then(response => {
-             this.sections[index].images[index2].image_name = response.data;
+             this.sections[index].items[index2].image_name = response.data;
              this.$forceUpdate();
           })
           .catch(error => {

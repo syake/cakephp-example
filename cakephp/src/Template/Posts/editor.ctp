@@ -56,18 +56,20 @@ $this->Html->scriptEnd();
                   <input type="hidden" :name="'sections[' + i + '][section_id]'" :value="i + 1">
                 </div>
                 <div class="row">
-                  <template v-if="section.images && section.images.length > 0">
-                    <div class="col-sm-4 mt-4" v-for="(clause, j) in section.images">
+                  <template v-if="section.items && section.items.length > 0">
+                    <div class="col-sm-4 mt-4" v-for="(clause, j) in section.items">
                       {{clause.image_name}}
-                      <input type="file" :name="'sections[' + i + '][images][' + j + '][file]'" @change="selectedFile(i, j)">
-                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][image_name]'" :value="clause.image_name">
-                      <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_id]'" :value="j + 1">
+                      <input type="file" @change="selectedFile(i, j)">
+                      <template v-if="clause.image_name">
+                        <input type="hidden" :name="'sections[' + i + '][items][' + j + '][image_name]'" :value="clause.image_name">
+                        <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_id]'" :value="j + 1">
+                      </template>
                       <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeClause(i, j)"><i class="far fa-minus-square"></i></button>
-                      <!-- <input type="hidden" :name="'sections[' + i + '][images][' + j + '][clause_order]'" :value="j"> -->
+                      <!-- <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_order]'" :value="j"> -->
                     </div>
                   </template>
                   <template v-else>
-                    <input type="hidden" :name="'sections[' + i + '][images]'" value="[]">
+                    <input type="hidden" :name="'sections[' + i + '][items]'" value="[]">
                   </template>
                   <div class="col-sm-4 mt-4">
                     <button class="btn bd-btn-field" @click="addClause(i)"><span><i class="fas fa-plus"></i></span></button>

@@ -29,6 +29,7 @@ class ClauseItem extends Entity
      */
     protected $_accessible = [
         'image_name' => true,
-        'section' => true
+        'section' => true,
+        'image' => true
     ];
 }

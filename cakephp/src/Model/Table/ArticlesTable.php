@@ -11,7 +11,6 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\ClauseImagesTable|\Cake\ORM\Association\HasMany $ClauseImages
  * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\HasMany $Sections
  *
  * @method \App\Model\Entity\Article get($primaryKey, $options = [])

@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\Filesystem\Folder;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
@@ -232,38 +233,6 @@ class PostsController extends AuthController
     }
 
     /**
-     * Filter method
-     *
-     * @param string|null $id Article id.
-     */
-    protected function filter($id)
-    {
-        $images = $this->Images->find('list')
-            ->where(['Images.article_id' => $id])
-            ->notMatching('Cells')
-            ->toArray();
-
-        if (count($images) > 0) {
-            $names = array_values($images);
-            $conditions = ['OR' => []];
-            foreach ($names as $name) {
-                $conditions['OR'][] = ['name' => $name];
-            }
-            $connection = ConnectionManager::get('default');
-            $connection->begin();
-            try {
-                if ($this->Images->deleteAll($conditions)) {
-                    // The image has been deleted.
-                }
-                $this->Images->connection()->commit();
-            } catch(Exception $e) {
-                debug($e);
-                $connection->rollback();
-            }
-        }
-    }
-
-    /**
      * Save method
      *
      * @param Model\Entity\Article $post
@@ -298,6 +267,42 @@ class PostsController extends AuthController
             $connection->rollback();
         }
         return false;
+    }
+
+    /**
+     * Filter method
+     *
+     * @param string|null $id Article id.
+     */
+    protected function filter($id)
+    {
+        $images = $this->Images->find('list')
+            ->where(['Images.article_id' => $id])
+            ->notMatching('Cells')
+            ->toArray();
+
+        if (count($images) > 0) {
+            $names = array_values($images);
+            $conditions = ['OR' => []];
+            foreach ($names as $name) {
+                $conditions['OR'][] = ['name' => $name];
+            }
+            $connection = ConnectionManager::get('default');
+            $connection->begin();
+            try {
+                if ($this->Images->deleteAll($conditions)) {
+                    // The image has been deleted.
+                    foreach ($names as $name) {
+                        $folder = new Folder(CACHE . 'posts' . DS . $name);
+                        $folder->delete();
+                    }
+                }
+                $this->Images->connection()->commit();
+            } catch(Exception $e) {
+                debug($e);
+                $connection->rollback();
+            }
+        }
     }
 
     /**

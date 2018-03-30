@@ -76,7 +76,7 @@ export default function editor() {
         };
         axios.post('/images/upload', formData, config)
           .then(response => {
-            if (!index2) {
+            if (index2 == -1) {
               this.addCell(index);
               index2 = this.sections[index].cells.length - 1;
             }

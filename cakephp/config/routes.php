@@ -64,6 +64,14 @@ Router::scope('/', function (RouteBuilder $routes) {
 //     $routes->connect('/users', ['controller' => 'Projects', 'action' => 'index']);
     $routes->connect('/:id', ['controller' => 'Posts', 'action' => 'display'], ['id' => '[0-9]+']);
 
+    $routes->connect('/assets/:width-:height/:id', ['controller' => 'Images', 'action' => 'view'])
+        ->setPatterns(['width' => '\d+', 'height' => '\d+'])
+        ->setPass(['id', 'width', 'height']);
+    $routes->connect('/assets/:width-:height/', ['controller' => 'Images', 'action' => 'view'])
+        ->setPatterns(['width' => '\d+', 'height' => '\d+'])
+        ->setPass(['id', 'width', 'height']);
+    $routes->connect('/assets/*', ['controller' => 'Images', 'action' => 'view']);
+
     /**
      * Connect catchall routes for all controllers.
      *

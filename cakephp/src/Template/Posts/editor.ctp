@@ -64,7 +64,7 @@ $this->Html->scriptEnd();
                           <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
                           <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
                           <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][id]'" :value="j + 1">
-                          <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
+                          <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '640', 'height' => '480']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
                         </template>
                         <template v-else>
                           <input type="file" :id="'file-' + i + '-' + j" @change="selectedFile(i, j)">
@@ -76,7 +76,7 @@ $this->Html->scriptEnd();
                     <input type="hidden" :name="'sections[' + i + '][items]'" value="[]">
                   </template>
                   <div class="col-sm-4 mt-4">
-                    <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i)">
+                    <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i, -1)">
                     <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus"></i></span></button>
                   </div>
                 </div>

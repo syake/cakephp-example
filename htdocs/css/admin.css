@@ -6302,7 +6302,8 @@ form a.js-upload-delete {
   margin: 0;
   margin-bottom: 20px;
   border: solid #f7f7f9;
-  border-width: .2rem; }
+  border-width: .2rem;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25)); }
   .posts-edit-content .bd-fieldset .bd-fieldset-header {
     padding: .5rem .5rem 0 1rem; }
   .posts-edit-content .bd-fieldset .bd-fieldset-body {
@@ -6312,8 +6313,51 @@ form a.js-upload-delete {
   position: relative; }
   .posts-edit-content .bd-cell .bd-btn-remove {
     position: absolute;
-    right: .5rem;
-    top: .5rem; }
+    right: 0;
+    top: 0;
+    margin-top: -1rem;
+    margin-right: -1rem;
+    background-color: white;
+    border-radius: 50%;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25)); }
+
+.posts-edit-content .bd-image-empty {
+  position: relative;
+  padding-top: 75%; }
+  .posts-edit-content .bd-image-empty .bd-btn-field {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; }
+    .posts-edit-content .bd-image-empty .bd-btn-field > span {
+      height: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center; }
+
+.posts-edit-content .bd-cells-images {
+  background-color: #f7f7f9;
+  border-radius: 10px;
+  padding: 1.5rem 1.5rem 0; }
+
+.posts-edit-content .bd-cells-items {
+  margin-bottom: -1.5rem; }
+  .posts-edit-content .bd-cells-items .bd-cell {
+    background-color: #f7f7f9;
+    padding: 1.5rem 1.5rem; }
+
+.posts-edit-content .bd-cells-values {
+  margin-bottom: -1.5rem; }
+  .posts-edit-content .bd-cells-values .bd-cell {
+    background-color: #f7f7f9;
+    padding: 1.5rem 1.5rem; }
 
 /* base
 -------------------------------------------*/

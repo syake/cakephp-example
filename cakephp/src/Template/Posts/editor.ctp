@@ -50,34 +50,80 @@ $this->Html->scriptEnd();
                 <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="removeSection(i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
-                <div class="form-group mb-0">
+                <input type="hidden" :name="'sections[' + i + '][id]'" :value="i + 1">
+                <input type="hidden" :name="'sections[' + i + '][style]'" :value="section.style">
+                <div class="form-group">
                   <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
                   <input type="text" :name="'sections[' + i + '][title]'" v-model="section.title" class="form-control" :id="'sections-' + i + '-title'">
-                  <input type="hidden" :name="'sections[' + i + '][id]'" :value="i + 1">
                 </div>
-                <div class="row">
-                  <template v-if="section.cells && section.cells.length > 0">
-                    <div class="col-sm-4 mt-4" v-for="(cell, j) in section.cells">
+                <div class="form-group">
+                  <label class="control-label" :for="'sections-' + i + '-description'"><?= __('Content') ?></label>
+                  <textarea rows="5" :name="'sections[' + i + '][description]'" v-model="section.description" class="form-control" :id="'sections-' + i + '-description'"></textarea>
+                </div>
+
+                <div class="bd-cells" :class="'bd-cells-' + section.style">
+                  <input type="hidden" :name="'sections[' + i + '][cells]'" value="[]" v-if="!section.cells || section.cells.length == 0">
+                  <div class="row">
+                    <div class="mb-4" :class="colStyles[section.style]" v-for="(cell, j) in section.cells">
                       <div class="bd-cell">
-                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeCell(i, j)"><i class="fas fa-minus-square"></i></button>
-                        <template v-if="cell.image_name">
+                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeCell(i, j)"><i class="fas fa-times-circle fa-lg"></i></button>
+                        <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][id]'" :value="j + 1">
+
+                        <template v-if="section.style == 'images'">
                           <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
                           <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
-                          <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][id]'" :value="j + 1">
                           <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '640', 'height' => '480']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
                         </template>
-                        <template v-else>
-                          <input type="file" :id="'file-' + i + '-' + j" @change="selectedFile(i, j)">
+
+                        <template v-if="section.style == 'items'">
+                          <div class="form-group">
+                            <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
+                            <template v-if="cell.image_name">
+                              <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
+                              <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '640', 'height' => '480']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
+                            </template>
+                            <template v-else>
+                              <div class="bd-image-empty">
+                                <button class="btn bd-btn-field" @click="trigger('file-' + i + '-' + j)"><span><i class="far fa-image fa-3x"></i></span></button>
+                              </div>
+                            </template>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label"><?= __('Title') ?></label>
+                            <input type="text" :name="'sections[' + i + '][cells][' + j + '][title]'" v-model="cell.title" class="form-control">
+                          </div>
+                          <div class="form-group mb-0">
+                            <label class="control-label" :for="'sections-' + i + '-description'"><?= __('Content') ?></label>
+                            <textarea rows="5" :name="'sections[' + i + '][cells][' + j + '][description]'" v-model="cell.description" class="form-control"></textarea>
+                          </div>
+                        </template>
+
+                        <template v-if="section.style == 'values'">
+                          <div class="form-group">
+                            <label class="control-label"><?= __('Title') ?></label>
+                            <input type="text" :name="'sections[' + i + '][cells][' + j + '][title]'" v-model="cell.title" class="form-control">
+                          </div>
+                          <div class="form-group mb-0">
+                            <label class="control-label" :for="'sections-' + i + '-description'"><?= __('Content') ?></label>
+                            <textarea rows="5" :name="'sections[' + i + '][cells][' + j + '][description]'" v-model="cell.description" class="form-control"></textarea>
+                          </div>
+                        </template>
+
+                      </div>
+                    </div>
+                    <div class="mb-4" :class="colStyles[section.style]">
+                      <div class="bd-cell-add">
+                        <template v-if="section.style == 'images'">
+                          <div class="bd-image-empty">
+                            <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i, -1)">
+                            <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
+                          </div>
+                        </template>
+                        <template v-if="section.style == 'items' || section.style == 'values'">
+                          <button class="btn bd-btn-field" @click="addCell(i)"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
                         </template>
                       </div>
                     </div>
-                  </template>
-                  <template v-else>
-                    <input type="hidden" :name="'sections[' + i + '][items]'" value="[]">
-                  </template>
-                  <div class="col-sm-4 mt-4">
-                    <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i, -1)">
-                    <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus"></i></span></button>
                   </div>
                 </div>
               </div>
@@ -86,8 +132,21 @@ $this->Html->scriptEnd();
           <template v-else>
             <input type="hidden" name="sections" value="[]">
           </template>
-          <fieldset class="bd-fieldset">
-            <button class="btn bd-btn-field" @click="addSection"><span><i class="fas fa-plus"></i></span></button>
+          <fieldset class="bd-fieldset p-2">
+            <div class="row">
+              <div class="col-sm">
+                <button class="btn bd-btn-field" @click="addSection('values')"><span><i class="far fa-newspaper fa-3x"></i></span></button>
+              </div>
+              <div class="col-sm">
+                <button class="btn bd-btn-field" @click="addSection('images')"><span><i class="fas fa-images fa-3x"></i></span></button>
+              </div>
+              <div class="col-sm">
+                <button class="btn bd-btn-field" @click="addSection('items')"><span><i class="fas fa-id-card fa-3x"></i></span></button>
+              </div>
+              <div class="col-sm">
+                <button class="btn bd-btn-field" @click="addSection('contact')"><span><i class="far fa-envelope fa-3x"></i></span></button>
+              </div>
+            </div>
           </fieldset>
         </div>
       </div>

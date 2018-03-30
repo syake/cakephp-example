@@ -4,12 +4,23 @@ import VueAxios from 'vue-axios'
 var $ = require("jquery");
 
 import fontawesome from '@fortawesome/fontawesome';
-import faMinusSquare from '@fortawesome/fontawesome-free-regular/faMinusSquare';
-import faCaretUp from '@fortawesome/fontawesome-free-solid/faCaretUp';
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown';
-import fasMinusSquare from '@fortawesome/fontawesome-free-solid/faMinusSquare';
-
-fontawesome.library.add(faMinusSquare, faCaretUp, faCaretDown, fasMinusSquare);
+import solid from '@fortawesome/fontawesome-free-solid';
+import regular from '@fortawesome/fontawesome-free-regular';
+import brands from '@fortawesome/fontawesome-free-brands';
+fontawesome.library.add(solid.faMinusSquare);
+fontawesome.library.add(regular.faMinusSquare);
+fontawesome.library.add(solid.faCaretUp);
+fontawesome.library.add(solid.faCaretDown);
+fontawesome.library.add(solid.faInfoCircle);
+fontawesome.library.add(regular.faNewspaper);
+fontawesome.library.add(solid.faImages);
+fontawesome.library.add(brands.faVimeo);
+fontawesome.library.add(solid.faAlignLeft);
+fontawesome.library.add(regular.faEnvelope);
+fontawesome.library.add(solid.faIdCard);
+fontawesome.library.add(solid.faPlusCircle);
+fontawesome.library.add(solid.faTimesCircle);
+fontawesome.library.add(regular.faImage);
 
 /* ========================================================================
  * editor
@@ -25,7 +36,12 @@ export default function editor() {
     el: '#editor',
     data: {
       post: post,
-      sections: []
+      sections: [],
+      colStyles: {
+        images: 'col-sm-4',
+        items: 'col-sm-6',
+        values: 'col-sm-12'
+      }
     },
     mounted: function() {
       if (this.post) {
@@ -33,9 +49,13 @@ export default function editor() {
       }
     },
     methods: {
-      addSection: function(event) {
+      addSection: function(style) {
         if (event) event.preventDefault();
-        this.sections.push({});
+        this.sections.push({
+          title: '',
+          description: '',
+          style: style
+        });
       },
       removeSection: function(index) {
         if (event) event.preventDefault();

@@ -29,8 +29,9 @@ class SectionsTableTest extends TestCase
         'app.projects',
         'app.users',
         'app.projects_users',
-        'app.authors',
-        'app.images'
+        'app.cells',
+        'app.images',
+        'app.mainvisuals'
     ];
 
     /**
@@ -83,16 +84,6 @@ class SectionsTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test beforeSave method
-     *
-     * @return void
-     */
-    public function testBeforeSave()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

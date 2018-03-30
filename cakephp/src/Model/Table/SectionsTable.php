@@ -12,7 +12,6 @@ use Cake\Validation\Validator;
  * Sections Model
  *
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
- * @property |\Cake\ORM\Association\BelongsTo $Sections
  *
  * @method \App\Model\Entity\Section get($primaryKey, $options = [])
  * @method \App\Model\Entity\Section newEntity($data = null, array $options = [])
@@ -36,19 +35,18 @@ class SectionsTable extends Table
         parent::initialize($config);
 
         $this->setTable('sections');
-        $this->setDisplayField('section_title');
-        $this->setPrimaryKey(['article_id', 'section_id']);
+        $this->setDisplayField('title');
+        $this->setPrimaryKey(['article_id', 'id']);
 
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
         ]);
-        $this->hasMany('Items', [
+        $this->hasMany('Cells', [
             'foreignKey' => ['article_id', 'section_id'],
-            'bindingKey' => ['article_id', 'section_id'],
-            'className' => 'ClauseItems',
+            'bindingKey' => ['article_id', 'id'],
             'saveStrategy' => 'replace',
-            'sort' => ['clause_id' => 'ASC'],
+            'sort' => ['id' => 'ASC'],
             'dependent' => true
         ]);
     }
@@ -62,13 +60,21 @@ class SectionsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->scalar('section_title')
-            ->maxLength('section_title', 255)
-            ->allowEmpty('section_title');
+            ->allowEmpty('id', 'create');
 
         $validator
-            ->integer('section_order')
-            ->allowEmpty('section_order');
+            ->scalar('title')
+            ->maxLength('title', 64)
+            ->allowEmpty('title');
+
+        $validator
+            ->scalar('description')
+            ->allowEmpty('description');
+
+        $validator
+            ->scalar('style')
+            ->maxLength('style', 20)
+            ->allowEmpty('style');
 
         return $validator;
     }
@@ -98,8 +104,8 @@ class SectionsTable extends Table
     {
         if ($entity->isNew()) {
             $query = $this->find()->where(['article_id' => $entity->article_id]);
-            $ret = $query->select(['max_id' => $query->func()->max('section_id')])->first();
-            $entity->set('section_id', $ret['max_id'] + 1);
+            $ret = $query->select(['max_id' => $query->func()->max('id')])->first();
+            $entity->set('id', $ret['max_id'] + 1);
         }
     }
 }

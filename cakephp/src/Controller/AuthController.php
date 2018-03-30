@@ -21,6 +21,16 @@ class AuthController extends AppController
     public $helpers = [
         'Form' => [
             'className' => 'Bootstrap.Form',
+            'errorClass' => 'is-invalid',
+            'templates' => [
+                'helpBlock' => '<small class="form-text text-muted">{{content}}</small>',
+                'checkbox' => '<input type="checkbox" class="custom-control-input" name="{{name}}" value="{{value}}"{{attrs}}>',
+                'error' => '<div class="invalid-feedback">{{content}}</div>',
+            ]
+        ],
+/*
+        'Form' => [
+            'className' => 'Bootstrap.Form',
             'templates' => [
                 'radioWrapper' => '{{label}}',
                 'radio' => '<input type="radio" name="{{name}}" value="{{value}}" class="custom-control-input"{{attrs}}><span class="custom-control-indicator"></span><span class="custom-control-description">{{text}}</span>',
@@ -53,6 +63,7 @@ class AuthController extends AppController
                 'sortDesc' => '<a class="desc" href="{{url}}">{{text}}<i class="fa fa-sort-desc" aria-hidden="true"></i></a>'
             ]
         ]
+*/
     ];
 
     /**
@@ -69,6 +80,14 @@ class AuthController extends AppController
         parent::initialize();
         $this->loadComponent('Auth', [
             'authorize' => ['Controller'],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'username',
+                        'password' => 'password'
+                    ]
+                ]
+            ],
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login',

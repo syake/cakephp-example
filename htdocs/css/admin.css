@@ -6308,9 +6308,9 @@ form a.js-upload-delete {
   .posts-edit-content .bd-fieldset .bd-fieldset-body {
     padding: 1rem; }
 
-.posts-edit-content .bd-clause {
+.posts-edit-content .bd-cell {
   position: relative; }
-  .posts-edit-content .bd-clause .bd-btn-remove {
+  .posts-edit-content .bd-cell .bd-btn-remove {
     position: absolute;
     right: .5rem;
     top: .5rem; }

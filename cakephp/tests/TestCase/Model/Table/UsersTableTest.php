@@ -27,9 +27,10 @@ class UsersTableTest extends TestCase
         'app.users',
         'app.projects',
         'app.articles',
-        'app.posts',
-        'app.authors',
+        'app.cells',
         'app.sections',
+        'app.images',
+        'app.mainvisuals',
         'app.projects_users'
     ];
 
@@ -41,7 +42,7 @@ class UsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Users') ? [] : ['className' => 'App\Model\Table\UsersTable'];
+        $config = TableRegistry::exists('Users') ? [] : ['className' => UsersTable::class];
         $this->Users = TableRegistry::get('Users', $config);
     }
 

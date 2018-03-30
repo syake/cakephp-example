@@ -1,14 +1,10 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-// 'production' か 'development' を指定
-var MODE = 'production';
-var MODE = 'development';
-
-module.exports = [
+module.exports = (env, args) => [
   {
     // モード値を production に設定すると最適化された状態で、
     // development に設定するとソースマップ有効でJSファイルが出力される
-    mode: MODE,
+    mode: 'development',
     
     // ビルドの対象となるディレクトリ
     context: __dirname + '/src/js',
@@ -64,7 +60,7 @@ module.exports = [
   },
   
   {
-    mode: MODE,
+    mode: 'development',
     context: __dirname + '/src/sass',
     entry: {
       admin: './admin.scss'
@@ -88,10 +84,10 @@ module.exports = [
                   url: false,
                   
                   // CSSの圧縮
-                  minimize: (MODE !== 'development'),
+                  minimize: (args.mode !== 'development'),
                   
                   // ソースマップの利用有無
-                  sourceMap: (MODE === 'development'),
+                  sourceMap: (args.mode === 'development'),
                   
                   // 0 => no loaders (default);
                   // 1 => postcss-loader;
@@ -102,7 +98,7 @@ module.exports = [
               {
                 loader: 'sass-loader',
                 options: {
-                  sourceMap: (MODE === 'development')
+                  sourceMap: (args.mode === 'development')
                 }
               }
             ]

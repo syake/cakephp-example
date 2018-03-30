@@ -11,6 +11,9 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CellsTable|\Cake\ORM\Association\HasMany $Cells
+ * @property \App\Model\Table\ImagesTable|\Cake\ORM\Association\HasMany $Images
+ * @property \App\Model\Table\MainvisualsTable|\Cake\ORM\Association\HasMany $Mainvisuals
  * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\HasMany $Sections
  *
  * @method \App\Model\Entity\Article get($primaryKey, $options = [])
@@ -46,10 +49,6 @@ class ArticlesTable extends Table
             'foreignKey' => 'project_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'author_id',
-            'joinType' => 'INNER'
-        ]);
         $this->belongsTo('Authors', [
             'foreignKey' => 'author_id',
             'className' => 'Users',
@@ -58,7 +57,7 @@ class ArticlesTable extends Table
         $this->hasMany('Sections', [
             'foreignKey' => 'article_id',
             'saveStrategy' => 'replace',
-            'sort' => ['section_order' => 'ASC'],
+            'sort' => ['id' => 'ASC'],
             'dependent' => true
         ]);
     }
@@ -79,13 +78,13 @@ class ArticlesTable extends Table
 
         $validator
             ->scalar('title')
-            ->maxLength('title', 255)
+            ->maxLength('title', 64)
             ->allowEmpty('title');
 
         $validator
-            ->scalar('content')
-            ->maxLength('content', 4294967295)
-            ->allowEmpty('content');
+            ->scalar('description')
+            ->maxLength('description', 255)
+            ->allowEmpty('description');
 
         return $validator;
     }

@@ -4,17 +4,17 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Section Entity
+ * Mainvisual Entity
  *
  * @property int $article_id
  * @property int $id
- * @property string $title
- * @property string $description
- * @property string $style
+ * @property string $image_name
+ * @property string $link_url
+ * @property string $link_target
  *
  * @property \App\Model\Entity\Article $article
  */
-class Section extends Entity
+class Mainvisual extends Entity
 {
 
     /**
@@ -27,10 +27,9 @@ class Section extends Entity
      * @var array
      */
     protected $_accessible = [
-        'title' => true,
-        'description' => true,
-        'style' => true,
-        'article' => true,
-        'cells' => true
+        'image_name' => true,
+        'link_url' => true,
+        'link_target' => true,
+        'article' => true
     ];
 }

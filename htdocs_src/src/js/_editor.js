@@ -35,9 +35,7 @@ export default function editor() {
     methods: {
       addSection: function(event) {
         if (event) event.preventDefault();
-        this.sections.push({
-          section_title: ''
-        });
+        this.sections.push({});
       },
       removeSection: function(index) {
         if (event) event.preventDefault();
@@ -51,19 +49,19 @@ export default function editor() {
         if (event) event.preventDefault();
         this.sections.splice(index, 2, this.sections[index+1], this.sections[index]);
       },
-      addClause: function(index) {
+      addCell: function(index) {
         if (event) event.preventDefault();
-        if (!this.sections[index].items) {
-          this.sections[index].items = [];
+        if (!this.sections[index].cells) {
+          this.sections[index].cells = [];
         }
-        this.sections[index].items.push({
+        this.sections[index].cells.push({
         });
         this.$forceUpdate();
       },
-      removeClause: function(index, index2) {
+      removeCell: function(index, index2) {
         if (event) event.preventDefault();
-        if (this.sections[index].items) {
-          this.sections[index].items.splice(index2, 1);
+        if (this.sections[index].cells) {
+          this.sections[index].cells.splice(index2, 1);
         }
         this.$forceUpdate();
       },
@@ -79,10 +77,10 @@ export default function editor() {
         axios.post('/images/upload', formData, config)
           .then(response => {
             if (!index2) {
-              this.addClause(index);
-              index2 = this.sections[index].items.length - 1;
+              this.addCell(index);
+              index2 = this.sections[index].cells.length - 1;
             }
-            this.sections[index].items[index2].image_name = response.data;
+            this.sections[index].cells[index2].image_name = response.data;
             this.$forceUpdate();
           })
           .catch(error => {

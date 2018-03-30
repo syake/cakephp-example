@@ -47,8 +47,7 @@ class UsersController extends AuthController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->find('list', ['conditions' => ['role' => 'admin']])->first() == null) {
-                $user->set('role', 'admin');
+            if ($this->Users->find('list', ['conditions' => ['enable' => 1]])->first() == null) {
                 $user->set('enable', 1);
             }
 

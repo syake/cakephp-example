@@ -28,8 +28,10 @@ class ProjectsTableTest extends TestCase
         'app.articles',
         'app.users',
         'app.projects_users',
-        'app.authors',
-        'app.sections'
+        'app.cells',
+        'app.sections',
+        'app.images',
+        'app.mainvisuals'
     ];
 
     /**

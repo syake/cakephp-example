@@ -9,8 +9,8 @@ use Cake\Validation\Validator;
 /**
  * ProjectsUsers Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\ProjectsUser get($primaryKey, $options = [])
  * @method \App\Model\Entity\ProjectsUser newEntity($data = null, array $options = [])
@@ -34,6 +34,7 @@ class ProjectsUsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('projects_users');
+        $this->setDisplayField('project_id');
         $this->setPrimaryKey(['project_id', 'user_id']);
 
         $this->belongsTo('Projects', [
@@ -55,6 +56,7 @@ class ProjectsUsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
+            ->scalar('role')
             ->allowEmpty('role');
 
         return $validator;

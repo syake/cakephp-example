@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ClauseItemsTable;
+use App\Model\Table\MainvisualsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ClauseItemsTable Test Case
+ * App\Model\Table\MainvisualsTable Test Case
  */
-class ClauseItemsTableTest extends TestCase
+class MainvisualsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ClauseItemsTable
+     * @var \App\Model\Table\MainvisualsTable
      */
-    public $ClauseItems;
+    public $Mainvisuals;
 
     /**
      * Fixtures
@@ -24,15 +24,14 @@ class ClauseItemsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.clause_items',
+        'app.mainvisuals',
         'app.articles',
         'app.projects',
         'app.users',
         'app.projects_users',
-        'app.authors',
+        'app.cells',
         'app.sections',
-        'app.images',
-        'app.clauses'
+        'app.images'
     ];
 
     /**
@@ -43,8 +42,8 @@ class ClauseItemsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ClauseItems') ? [] : ['className' => ClauseItemsTable::class];
-        $this->ClauseItems = TableRegistry::get('ClauseItems', $config);
+        $config = TableRegistry::exists('Mainvisuals') ? [] : ['className' => MainvisualsTable::class];
+        $this->Mainvisuals = TableRegistry::get('Mainvisuals', $config);
     }
 
     /**
@@ -54,7 +53,7 @@ class ClauseItemsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->ClauseItems);
+        unset($this->Mainvisuals);
 
         parent::tearDown();
     }

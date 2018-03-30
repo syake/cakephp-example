@@ -9,21 +9,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ClauseItems Model
+ * Cells Model
  *
  * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
  * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\BelongsTo $Sections
- * @property \App\Model\Table\ClausesTable|\Cake\ORM\Association\BelongsTo $Clauses
  *
- * @method \App\Model\Entity\ClauseItem get($primaryKey, $options = [])
- * @method \App\Model\Entity\ClauseItem newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ClauseItem[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ClauseItem|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ClauseItem patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ClauseItem[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ClauseItem findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Cell get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Cell newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Cell[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Cell|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Cell patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Cell[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Cell findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class ClauseItemsTable extends Table
+class CellsTable extends Table
 {
 
     /**
@@ -36,12 +37,14 @@ class ClauseItemsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('clause_items');
-        $this->setDisplayField('clause_id');
-        $this->setPrimaryKey(['article_id', 'section_id', 'clause_id']);
+        $this->setTable('cells');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey(['article_id', 'section_id', 'id']);
+
+        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Sections', [
-            'foreignKey' => ['article_id', 'section_id'],
+            'foreignKey' => ['article_id', 'id'],
             'bindingKey' => ['article_id', 'section_id'],
             'joinType' => 'INNER'
         ]);
@@ -59,6 +62,18 @@ class ClauseItemsTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
+        $validator
+            ->allowEmpty('id', 'create');
+
+        $validator
+            ->scalar('title')
+            ->maxLength('title', 64)
+            ->allowEmpty('title');
+
+        $validator
+            ->scalar('description')
+            ->allowEmpty('description');
+
         $validator
             ->scalar('image_name')
             ->maxLength('image_name', 255)
@@ -93,8 +108,8 @@ class ClauseItemsTable extends Table
     {
         if ($entity->isNew()) {
             $query = $this->find()->where(['article_id' => $entity->article_id, 'section_id' => $entity->section_id]);
-            $ret = $query->select(['max_id' => $query->func()->max('clause_id')])->first();
-            $entity->set('clause_id', $ret['max_id'] + 1);
+            $ret = $query->select(['max_id' => $query->func()->max('id')])->first();
+            $entity->set('id', $ret['max_id'] + 1);
         }
     }
 }

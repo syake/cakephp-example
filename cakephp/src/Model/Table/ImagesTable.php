@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Images Model
  *
- * @property |\Cake\ORM\Association\BelongsTo $Articles
+ * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
  *
  * @method \App\Model\Entity\Image get($primaryKey, $options = [])
  * @method \App\Model\Entity\Image newEntity($data = null, array $options = [])
@@ -20,6 +20,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Image patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Image[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Image findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ImagesTable extends Table
 {
@@ -38,10 +40,12 @@ class ImagesTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('name');
 
+        $this->addBehavior('Timestamp');
+
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id'
         ]);
-        $this->hasOne('ClauseItems', [
+        $this->hasOne('Cells', [
             'foreignKey' => 'image_name',
             'joinType' => 'INNER'
         ]);

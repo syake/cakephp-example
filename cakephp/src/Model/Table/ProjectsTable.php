@@ -66,7 +66,7 @@ class ProjectsTable extends Table
 
         $validator
             ->scalar('name')
-            ->maxLength('name', 255)
+            ->maxLength('name', 32)
             ->allowEmpty('name')
             ->add('name', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 

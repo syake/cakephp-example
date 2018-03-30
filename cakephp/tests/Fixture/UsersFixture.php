@@ -22,8 +22,7 @@ class UsersFixture extends TestFixture
         'email' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'password' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'nickname' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'role' => ['type' => 'string', 'length' => null, 'null' => true, 'default' => 'author', 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'status' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null],
+        'enable' => ['type' => 'boolean', 'length' => null, 'null' => true, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => 'CURRENT_TIMESTAMP', 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -49,10 +48,9 @@ class UsersFixture extends TestFixture
             'email' => 'Lorem ipsum dolor sit amet',
             'password' => 'Lorem ipsum dolor sit amet',
             'nickname' => 'Lorem ipsum dolor sit amet',
-            'role' => 'Lorem ipsum dolor sit amet',
-            'status' => 1,
-            'created' => '2017-06-12 19:45:32',
-            'modified' => '2017-06-12 19:45:32'
+            'enable' => 1,
+            'created' => '2018-03-30 13:57:38',
+            'modified' => '2018-03-30 13:57:38'
         ],
     ];
 }

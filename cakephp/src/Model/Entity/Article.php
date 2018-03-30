@@ -11,15 +11,16 @@ use Cake\ORM\Entity;
  * @property int $author_id
  * @property int $status
  * @property string $title
- * @property string $content
+ * @property string $description
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Project $project
  * @property \App\Model\Entity\User $user
- * @property \App\Model\Entity\User $author
+ * @property \App\Model\Entity\Cell[] $cells
+ * @property \App\Model\Entity\Image[] $images
+ * @property \App\Model\Entity\Mainvisual[] $mainvisuals
  * @property \App\Model\Entity\Section[] $sections
- * @property \App\Model\Entity\ClauseImage[] $clause_images
  */
 class Article extends Entity
 {
@@ -38,13 +39,14 @@ class Article extends Entity
         'author_id' => true,
         'status' => true,
         'title' => true,
-        'content' => true,
+        'description' => true,
         'created' => true,
         'modified' => true,
         'project' => true,
-        'user' => true,
         'author' => true,
-        'sections' => true,
-        'clause_images' => true
+        'cells' => true,
+        'images' => true,
+        'mainvisuals' => true,
+        'sections' => true
     ];
 }

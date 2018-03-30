@@ -37,7 +37,7 @@ $this->Html->scriptEnd();
             <div class="bd-fieldset-body">
               <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
               <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
-              <?= $this->Form->control('content', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
+              <?= $this->Form->control('description', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
             </div>
           </fieldset>
           <template v-if="sections.length > 0">
@@ -52,19 +52,19 @@ $this->Html->scriptEnd();
               <div class="bd-fieldset-body">
                 <div class="form-group mb-0">
                   <label class="control-label" :for="'sections-' + i + '-title'"><?= __('Title') ?></label>
-                  <input type="text" :name="'sections[' + i + '][section_title]'" v-model="section.section_title" class="form-control" :id="'sections-' + i + '-title'">
-                  <input type="hidden" :name="'sections[' + i + '][section_id]'" :value="i + 1">
+                  <input type="text" :name="'sections[' + i + '][title]'" v-model="section.title" class="form-control" :id="'sections-' + i + '-title'">
+                  <input type="hidden" :name="'sections[' + i + '][id]'" :value="i + 1">
                 </div>
                 <div class="row">
-                  <template v-if="section.items && section.items.length > 0">
-                    <div class="col-sm-4 mt-4" v-for="(clause, j) in section.items">
-                      <div class="bd-clause">
-                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeClause(i, j)"><i class="fas fa-minus-square"></i></button>
-                        <template v-if="clause.image_name">
+                  <template v-if="section.cells && section.cells.length > 0">
+                    <div class="col-sm-4 mt-4" v-for="(cell, j) in section.cells">
+                      <div class="bd-cell">
+                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeCell(i, j)"><i class="fas fa-minus-square"></i></button>
+                        <template v-if="cell.image_name">
                           <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
-                          <input type="hidden" :name="'sections[' + i + '][items][' + j + '][image_name]'" :value="clause.image_name">
-                          <input type="hidden" :name="'sections[' + i + '][items][' + j + '][clause_id]'" :value="j + 1">
-                          <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view']) ?>/' + clause.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
+                          <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
+                          <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][id]'" :value="j + 1">
+                          <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
                         </template>
                         <template v-else>
                           <input type="file" :id="'file-' + i + '-' + j" @change="selectedFile(i, j)">

@@ -6132,6 +6132,8 @@ form a.js-upload-delete {
   min-height: 4rem;
   background-color: #563d7c;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1); }
+  .bd-navbar a {
+    color: white; }
 
 @media (min-width: 768px) {
   .bd-navbar {
@@ -6260,6 +6262,19 @@ form a.js-upload-delete {
   border-radius: 5px;
   padding: 10px 20px;
   margin-top: 1rem; }
+
+/* header
+-------------------------------------------*/
+.bd-navbar .nav-item {
+  font-size: 1.8em; }
+  .bd-navbar .nav-item .btn-icon {
+    padding: 0;
+    border-radius: 0;
+    border: 0;
+    line-height: 1;
+    background-color: transparent;
+    font-size: 1.0em;
+    color: white; }
 
 /* posts edit content
 -------------------------------------------*/

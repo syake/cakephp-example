@@ -1,16 +1,27 @@
 import Vue from 'vue';
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import moment from 'moment';
+import ElementUI from 'element-ui';
+import locale from 'element-ui/lib/locale/lang/ja';
+import 'element-ui/lib/theme-chalk/index.css'
+
+Vue.use(ElementUI, {locale});
 var $ = require("jquery");
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import regular from '@fortawesome/fontawesome-free-regular';
 import brands from '@fortawesome/fontawesome-free-brands';
-fontawesome.library.add(solid.faMinusSquare);
+fontawesome.library.add(solid.faEye);
+fontawesome.library.add(regular.faSave);
+
 fontawesome.library.add(regular.faMinusSquare);
 fontawesome.library.add(solid.faCaretUp);
 fontawesome.library.add(solid.faCaretDown);
+fontawesome.library.add(solid.faPlusCircle);
+fontawesome.library.add(solid.faTimesCircle);
+
 fontawesome.library.add(solid.faInfoCircle);
 fontawesome.library.add(regular.faNewspaper);
 fontawesome.library.add(solid.faImages);
@@ -18,9 +29,53 @@ fontawesome.library.add(brands.faVimeo);
 fontawesome.library.add(solid.faAlignLeft);
 fontawesome.library.add(regular.faEnvelope);
 fontawesome.library.add(solid.faIdCard);
-fontawesome.library.add(solid.faPlusCircle);
-fontawesome.library.add(solid.faTimesCircle);
 fontawesome.library.add(regular.faImage);
+
+/* ========================================================================
+ * component
+ * @see Vue.js
+ * ======================================================================== */
+/*
+Vue.component('my-component', {
+  template: '<div>A custom component!</div>'
+})
+*/
+
+/* ========================================================================
+ * controls
+ * @see Vue.js
+ * @see jQuery
+ * ======================================================================== */
+export function controls() {
+  const $el = $('#controls');
+  if (!$el[0]) return;
+  const app = new Vue({
+    el: '#controls',
+    data: {
+      form: $el.parents('form:first')[0]
+    },
+    methods: {
+      preview: function() {
+        if (event) event.preventDefault();
+
+        let default_action = this.form.action;
+        let default_target = this.form.target;
+
+        // submit
+        this.form.action = $('#previewPostlink').attr('href');
+        this.form.target = 'preview';
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+        let win = window.open('', 'preview','width=' + w + ',height=' + h + ',scrollbars=yes');
+        win.focus();
+        this.form.submit();
+
+        this.form.action = default_action;
+        this.form.target = default_target;
+      }
+    }
+  });
+}
 
 /* ========================================================================
  * editor
@@ -28,6 +83,10 @@ fontawesome.library.add(regular.faImage);
  * @see jQuery
  * ======================================================================== */
 export default function editor() {
+  moment().format();
+  
+  controls.call();
+  
   const $el = $('#editor');
   if (!$el[0]) return;
   let post = null;
@@ -38,9 +97,14 @@ export default function editor() {
       post: post,
       sections: [],
       colStyles: {
-        images: 'col-sm-4',
-        items: 'col-sm-6',
+        images: 'col-sm-3',
+        items: 'col-sm-4',
         values: 'col-sm-12'
+      },
+      deafult_title: {
+        images: 'イメージ',
+        items: '概要',
+        values: 'お知らせ'
       }
     },
     mounted: function() {
@@ -52,7 +116,7 @@ export default function editor() {
       addSection: function(style) {
         if (event) event.preventDefault();
         this.sections.push({
-          title: '',
+          title: this.deafult_title[style] || '',
           description: '',
           style: style
         });
@@ -75,6 +139,7 @@ export default function editor() {
           this.sections[index].cells = [];
         }
         this.sections[index].cells.push({
+          modified: new Date()
         });
         this.$forceUpdate();
       },
@@ -110,6 +175,11 @@ export default function editor() {
       trigger: function(id) {
         if (event) event.preventDefault();
         document.getElementById(id).click();
+      }
+    },
+    filters: {
+      moment: function (date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
       }
     }
   });

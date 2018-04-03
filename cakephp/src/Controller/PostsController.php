@@ -7,6 +7,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\RecordNotFoundException;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Exception;
@@ -137,17 +138,28 @@ class PostsController extends AuthController
      */
     public function view($id = null)
     {
-        $this->viewBuilder()->layout('post');
-
-        $post = $this->Articles->find('view', ['Articles.id' => $id]);
-        if ($post == null) {
-            // error
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $post = $this->Articles->get($id, [
+                'contain' => [
+                    'Projects',
+                    'Sections',
+                    'Sections.Cells',
+                ]
+            ]);
+            $post = $this->Articles->patchEntity($post, $this->request->getData(), [
+                'validate' => false,
+                'associated' => [
+                    'Projects',
+                    'Sections',
+                    'Sections.Cells'
+                ]
+            ]);
+        } else {
+            throw new RecordNotFoundException();
         }
-        $filepath = DS . ASSETS_PATH . DS . $post->project->uuid . DS;
-        $post->setFilepath($filepath);
-
-        $this->set(compact('post'));
-        $this->set('_serialize', ['post']);
+        $this->set('post', $post);
+        $this->viewBuilder()->setLayout(false);
+        $this->render('/Posts/view');
     }
 
     /**

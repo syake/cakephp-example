@@ -17,11 +17,15 @@ $this->Html->scriptStart(['block' => true]);
 echo '(function(){window.data.post=' . json_encode($post) . '})();';
 $this->Html->scriptEnd();
 ?>
-<?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) . PHP_EOL ?>
-  <header class="navbar navbar-expand navbar-dark flex-row bd-navbar">
+<?= $this->Form->create($post) . PHP_EOL ?>
+  <header id="controls" class="navbar navbar-expand navbar-dark flex-row bd-navbar">
     <a href="/" class="navbar-brand mr-0 mr-md-2"><?= __(SITE_TITLE) ?></a>
-    <ul class="navbar-nav flex-row ml-auto d-md-flex">
-      <li class="nav-item"><?= $this->Form->button(__('Save'), ['class' => 'btn-outline-light btn-sm']) ?></li>
+    <ul class="nav navbar-nav flex-row ml-auto d-md-flex">
+      <li class="nav-item"><?= $this->Html->link('<span><i class="fas fa-eye"></i></span>',
+        ['action' => 'view', $post->id],
+        ['id' => 'previewPostlink', 'class' => 'btn btn-icon mr-md-3', 'escape' => false, '@click' => 'preview']) ?></li>
+      <li class="nav-item"><?= $this->Form->button('<i class="far fa-save"></i>',
+        ['class' => 'btn-outline-light btn-sm btn-icon']) ?></li>
     </ul>
   </header>
   <main id="content" role="main">
@@ -103,9 +107,14 @@ $this->Html->scriptEnd();
                             <label class="control-label"><?= __('Title') ?></label>
                             <input type="text" :name="'sections[' + i + '][cells][' + j + '][title]'" v-model="cell.title" class="form-control">
                           </div>
-                          <div class="form-group mb-0">
+                          <div class="form-group">
                             <label class="control-label" :for="'sections-' + i + '-description'"><?= __('Content') ?></label>
                             <textarea rows="5" :name="'sections[' + i + '][cells][' + j + '][description]'" v-model="cell.description" class="form-control"></textarea>
+                          </div>
+                          <div class="form-group mb-0">
+                            <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][modified]'" :value="cell.modified" v-if="cell.modified">
+                            <label class="control-label mr-1" :for="'sections-' + i + '-description'"><?= __('Last Update') ?></label>
+                            <el-date-picker v-model="cell.modified" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="<?= __('Select time') ?>"></el-date-picker>
                           </div>
                         </template>
 

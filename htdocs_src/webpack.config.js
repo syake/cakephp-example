@@ -49,6 +49,13 @@ module.exports = (env, args) => [
         {
           test: /\.vue$/,
           loader: 'vue-loader'
+        },
+        {
+          test: /\.css$/, loader: 'style-loader!css-loader'
+        },
+        {
+          test: /\.(otf|eot|svg|ttf|woff|woff2)(\?.+)?$/,
+          loader: 'url-loader'
         }
       ]
     },
@@ -63,7 +70,8 @@ module.exports = (env, args) => [
     mode: 'development',
     context: __dirname + '/src/sass',
     entry: {
-      admin: './admin.scss'
+      admin: './admin.scss',
+      style: './style.scss'
     },
     output: {
       path: __dirname + '/../htdocs/css',

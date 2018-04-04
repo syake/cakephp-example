@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI, {locale});
 
 import $ from 'jquery';
-// var $ = require("jquery");
+import 'bootstrap';
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';

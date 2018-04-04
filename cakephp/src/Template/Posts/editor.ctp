@@ -48,7 +48,7 @@ $this->Html->scriptEnd();
           <fieldset class="bd-fieldset">
             <div class="bd-fieldset-body pb-0">
               <div class="form-group mb-0">
-                <label class="control-label" for="mainvisuals"><?= __('Main Visuals') ?></label>
+                <label class="control-label" for="mainvisuals"><i class="fas fa-images fa-2x mr-2"></i><?= __('Main Visuals') ?></label>
                 <input type="hidden" name="mainvisuals" value="[]" v-if="!mainvisuals || mainvisuals.length == 0">
                 <div class="row">
                   <div class="col-sm-3 mb-4" v-for="(mainvisual, i) in mainvisuals">
@@ -63,7 +63,7 @@ $this->Html->scriptEnd();
                   <div class="col-sm-3 mb-4">
                       <div class="bd-image-empty" style="padding-top: 52.24%">
                         <input type="file" id="file-mainvisual" style="display:none" @change="selectedFile(addMainvisual())">
-                        <button class="btn bd-btn-field" @click="trigger('file-mainvisual')"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
+                        <button class="btn bd-btn-field" @click="trigger('file-mainvisual')"><span><i class="fas fa-plus-circle fa-3x text-primary"></i></span></button>
                       </div>
                     </div>
                 </div>
@@ -75,10 +75,11 @@ $this->Html->scriptEnd();
             <fieldset class="bd-fieldset" v-for="(section, i) in sections">
               <div class="d-flex justify-content-between bd-fieldset-header">
                 <div>
+                  <i class="fa-lg mr-2" :class="iconStyles[section.style]"></i>
                   <button type="button" class="btn btn-link text-secondary p-0 mr-1 bd-btn-up" @click="up(sections, i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
                   <button type="button" class="btn btn-link text-secondary p-0 bd-btn-down" @click="down(sections, i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
                 </div>
-                <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="remove(sections, i)"><i class="far fa-minus-square"></i></button>
+                <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="remove(sections, i)"><i class="far fa-window-close"></i></button>
               </div>
               <div class="bd-fieldset-body">
                 <input type="hidden" :name="'sections[' + i + '][id]'" :value="i + 1">
@@ -152,11 +153,11 @@ $this->Html->scriptEnd();
                         <template v-if="section.style == 'images'">
                           <div class="bd-image-empty">
                             <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(addCell(i))">
-                            <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
+                            <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus-circle fa-3x text-primary"></i></span></button>
                           </div>
                         </template>
                         <template v-if="section.style == 'items' || section.style == 'values'">
-                          <button class="btn bd-btn-field" @click="addCell(i)"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
+                          <button class="btn bd-btn-field" @click="addCell(i);$forceUpdate();"><span><i class="fas fa-plus-circle fa-3x text-primary"></i></span></button>
                         </template>
                       </div>
                     </div>
@@ -171,16 +172,44 @@ $this->Html->scriptEnd();
           <fieldset class="bd-fieldset p-2">
             <div class="row">
               <div class="col-sm">
-                <button class="btn bd-btn-field" @click="addSection('values')"><span><i class="far fa-newspaper fa-3x"></i></span></button>
+                <button class="btn bd-btn-field" @click="addSection('values')">
+                  <span>
+                    <span class="fa-layers fa-fw fa-4x">
+                      <i class="fas fa-newspaper" data-fa-transform="shrink-2"></i>
+                      <span class="fa-layers-counter fa-layers-top-left bg-primary"><i class="fa-inverse fas fa-plus text-white"></i></span>
+                    </span>
+                  </span>
+                </button>
               </div>
               <div class="col-sm">
-                <button class="btn bd-btn-field" @click="addSection('images')"><span><i class="fas fa-images fa-3x"></i></span></button>
+                <button class="btn bd-btn-field" @click="addSection('images')">
+                  <span>
+                    <span class="fa-layers fa-fw fa-4x">
+                      <i class="fas fa-images" data-fa-transform="shrink-2"></i>
+                      <span class="fa-layers-counter fa-layers-top-left bg-primary"><i class="fa-inverse fas fa-plus text-white"></i></span>
+                    </span>
+                  </span>
+                </button>
               </div>
               <div class="col-sm">
-                <button class="btn bd-btn-field" @click="addSection('items')"><span><i class="fas fa-id-card fa-3x"></i></span></button>
+                <button class="btn bd-btn-field" @click="addSection('items')">
+                  <span>
+                    <span class="fa-layers fa-fw fa-4x">
+                      <i class="fas fa-id-card" data-fa-transform="shrink-2"></i>
+                      <span class="fa-layers-counter fa-layers-top-left bg-primary"><i class="fa-inverse fas fa-plus text-white"></i></span>
+                    </span>
+                  </span>
+                </button>
               </div>
               <div class="col-sm">
-                <button class="btn bd-btn-field" @click="addSection('contact')"><span><i class="far fa-envelope fa-3x"></i></span></button>
+                <button class="btn bd-btn-field" @click="addSection('contact')">
+                  <span>
+                    <span class="fa-layers fa-fw fa-4x">
+                      <i class="far fa-envelope" data-fa-transform="shrink-2"></i>
+                      <span class="fa-layers-counter fa-layers-top-left bg-primary"><i class="fa-inverse fas fa-plus text-white"></i></span>
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
           </fieldset>

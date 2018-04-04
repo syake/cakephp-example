@@ -17,20 +17,18 @@ import brands from '@fortawesome/fontawesome-free-brands';
 fontawesome.library.add(solid.faEye);
 fontawesome.library.add(regular.faSave);
 
-fontawesome.library.add(regular.faMinusSquare);
 fontawesome.library.add(solid.faCaretUp);
 fontawesome.library.add(solid.faCaretDown);
 fontawesome.library.add(solid.faPlusCircle);
 fontawesome.library.add(solid.faTimesCircle);
+fontawesome.library.add(solid.faWindowClose);
+fontawesome.library.add(regular.faImage);
 
-fontawesome.library.add(solid.faInfoCircle);
+fontawesome.library.add(solid.faPlus);
 fontawesome.library.add(regular.faNewspaper);
 fontawesome.library.add(solid.faImages);
-fontawesome.library.add(brands.faVimeo);
-fontawesome.library.add(solid.faAlignLeft);
 fontawesome.library.add(regular.faEnvelope);
 fontawesome.library.add(solid.faIdCard);
-fontawesome.library.add(regular.faImage);
 
 /* ========================================================================
  * controls
@@ -93,10 +91,17 @@ export default function editor() {
         items: 'col-sm-4',
         values: 'col-sm-12'
       },
+      iconStyles: {
+        images: 'fas fa-images',
+        items: 'fas fa-id-card',
+        values: 'fas fa-newspaper',
+        contact: 'far fa-envelope'
+      },
       deafult_title: {
         images: 'イメージ',
         items: '概要',
-        values: 'お知らせ'
+        values: 'お知らせ',
+        contact: 'お問い合わせ'
       }
     },
     mounted: function() {
@@ -109,14 +114,17 @@ export default function editor() {
       remove: function(items, index) {
         if (event) event.preventDefault();
         items.splice(index, 1);
+        this.$forceUpdate();
       },
       up: function(items, index) {
         if (event) event.preventDefault();
         items.splice(index-1, 2, items[index], items[index-1]);
+        this.$forceUpdate();
       },
       down: function(items, index) {
         if (event) event.preventDefault();
         items.splice(index, 2, items[index+1], items[index]);
+        this.$forceUpdate();
       },
       addMainvisual: function() {
         if (event) event.preventDefault();

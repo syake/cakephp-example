@@ -5,9 +5,10 @@ import moment from 'moment';
 import ElementUI from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/ja';
 import 'element-ui/lib/theme-chalk/index.css'
-
 Vue.use(ElementUI, {locale});
-var $ = require("jquery");
+
+import $ from 'jquery';
+// var $ = require("jquery");
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
@@ -30,16 +31,6 @@ fontawesome.library.add(solid.faAlignLeft);
 fontawesome.library.add(regular.faEnvelope);
 fontawesome.library.add(solid.faIdCard);
 fontawesome.library.add(regular.faImage);
-
-/* ========================================================================
- * component
- * @see Vue.js
- * ======================================================================== */
-/*
-Vue.component('my-component', {
-  template: '<div>A custom component!</div>'
-})
-*/
 
 /* ========================================================================
  * controls

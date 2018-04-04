@@ -142,6 +142,7 @@ class PostsController extends AuthController
             $post = $this->Articles->get($id, [
                 'contain' => [
                     'Projects',
+                    'Mainvisuals',
                     'Sections',
                     'Sections.Cells',
                 ]
@@ -150,6 +151,7 @@ class PostsController extends AuthController
                 'validate' => false,
                 'associated' => [
                     'Projects',
+                    'Mainvisuals',
                     'Sections',
                     'Sections.Cells'
                 ]

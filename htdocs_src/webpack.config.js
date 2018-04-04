@@ -11,7 +11,8 @@ module.exports = (env, args) => [
     
     // メインとなるJavaScriptファイル（エントリーポイント）
     entry: {
-      admin: './admin.js'
+      admin: './admin.js',
+      app: './app.js'
     },
     
     // ファイルの出力設定

@@ -15,12 +15,14 @@
   box-sizing: border-box
 }
 
-/* view
+/* container
 -------------------------------------------*/
 .container {
   max-width: 960px;
 }
 
+/* header
+-------------------------------------------*/
 .site-header {
   background-color: rgba(0, 0, 0, .85);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -35,6 +37,40 @@
   text-decoration: none;
 }
 
+/* carousel
+-------------------------------------------*/
+.carousel {
+  margin-bottom: 4rem;
+  font-size: 1.87vw;
+}
+
+.carousel-caption {
+  z-index: 10;
+  height: 100%;
+  
+  h1 {
+    font-size: 240%;
+  }
+  p {
+    font-size: 100%;
+  }
+}
+
+.carousel-item {
+  background-color: #777;
+  padding-top: 52.24%;
+  
+  & > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* cell
+-------------------------------------------*/
 .card-title {
   font-size: 1.2rem;
 }

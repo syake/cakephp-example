@@ -13,6 +13,7 @@ $this->assign('title', $post->title);
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?= $this->fetch('title') ?></title>
   <?= $this->Html->css('style.css') . PHP_EOL ?>
+  <?= $this->Html->script('app.js') . PHP_EOL ?>
   <?= $this->fetch('meta') . PHP_EOL ?>
   <?= $this->fetch('css') . PHP_EOL ?>
 </head>
@@ -26,11 +27,41 @@ $this->assign('title', $post->title);
     </div>
   </nav>
 
+<!--
   <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
     <div class="col-md-5 p-lg-5 mx-auto my-5">
       <h1 class="display-4 font-weight-normal">Punny headline</h1>
       <p class="lead font-weight-normal"><?= $post->description ?></p>
     </div>
+  </div>
+-->
+  <div id="mainvisuals" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+<?php foreach ($post->mainvisuals as $i => $mainvisual): $active = ($i == 0) ? ' active' : ''; ?>
+      <li data-target="#mainvisuals" data-slide-to="<?= $i ?>" class="<?= $active ?>"></li>
+<?php endforeach; ?>
+    </ol>
+    <div class="carousel-inner">
+<?php foreach ($post->mainvisuals as $i => $mainvisual): $active = ($i == 0) ? ' active' : ''; ?>
+      <div class="carousel-item<?= $active ?>">
+        <?= $this->Html->image(['controller' => 'Images', 'action' => 'view', 'width' => '980', 'height' => '512', 'id' => $mainvisual->image_name]) ?>
+        <div class="container">
+          <div class="carousel-caption d-flex flex-column justify-content-center align-items-start text-left">
+            <h1>Example headline.</h1>
+            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+          </div>
+        </div>
+      </div>
+<?php endforeach; ?>
+    </div>
+    <a class="carousel-control-prev" href="#mainvisuals" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#mainvisuals" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
   </div>
 
   <main id="content" role="main" class="p-3">

@@ -44,14 +44,41 @@ $this->Html->scriptEnd();
               <?= $this->Form->control('description', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
             </div>
           </fieldset>
+
+          <fieldset class="bd-fieldset">
+            <div class="bd-fieldset-body pb-0">
+              <div class="form-group mb-0">
+                <label class="control-label" for="mainvisuals"><?= __('Main Visuals') ?></label>
+                <input type="hidden" name="mainvisuals" value="[]" v-if="!mainvisuals || mainvisuals.length == 0">
+                <div class="row">
+                  <div class="col-sm-3 mb-4" v-for="(mainvisual, i) in mainvisuals">
+                    <div class="bd-cell" v-if="mainvisual.image_name">
+                      <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="remove(mainvisuals, i)"><i class="fas fa-times-circle fa-lg"></i></button>
+                      <input type="file" :id="'file-mainvisual-' + i" style="display:none" @change="selectedFile(mainvisual)">
+                      <input type="hidden" :name="'mainvisuals[' + i + '][id]'" :value="i">
+                      <input type="hidden" :name="'mainvisuals[' + i + '][image_name]'" :value="mainvisual.image_name">
+                      <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '980', 'height' => '512']) ?>/' + mainvisual.image_name" alt="" width="100%" @click="trigger('file-mainvisual-' + i)">
+                    </div>
+                  </div>
+                  <div class="col-sm-3 mb-4">
+                      <div class="bd-image-empty" style="padding-top: 52.24%">
+                        <input type="file" id="file-mainvisual" style="display:none" @change="selectedFile(addMainvisual())">
+                        <button class="btn bd-btn-field" @click="trigger('file-mainvisual')"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
           <template v-if="sections.length > 0">
             <fieldset class="bd-fieldset" v-for="(section, i) in sections">
               <div class="d-flex justify-content-between bd-fieldset-header">
                 <div>
-                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 bd-btn-up" @click="upSection(i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
-                  <button type="button" class="btn btn-link text-secondary p-0 bd-btn-down" @click="downSection(i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 mr-1 bd-btn-up" @click="up(sections, i)" :disabled="i == 0"><i class="fas fa-caret-up"></i></button>
+                  <button type="button" class="btn btn-link text-secondary p-0 bd-btn-down" @click="down(sections, i)" :disabled="i >= sections.length - 1"><i class="fas fa-caret-down"></i></button>
                 </div>
-                <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="removeSection(i)"><i class="far fa-minus-square"></i></button>
+                <button type="button" class="btn btn-link text-danger p-0 bd-btn-remove" @click="remove(sections, i)"><i class="far fa-minus-square"></i></button>
               </div>
               <div class="bd-fieldset-body">
                 <input type="hidden" :name="'sections[' + i + '][id]'" :value="i + 1">
@@ -70,18 +97,18 @@ $this->Html->scriptEnd();
                   <div class="row">
                     <div class="mb-4" :class="colStyles[section.style]" v-for="(cell, j) in section.cells">
                       <div class="bd-cell">
-                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="removeCell(i, j)"><i class="fas fa-times-circle fa-lg"></i></button>
+                        <button type="button" class="btn btn-link text-danger bd-btn-remove" @click="remove(section.cells, j)"><i class="fas fa-times-circle fa-lg"></i></button>
                         <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][id]'" :value="j + 1">
 
-                        <template v-if="section.style == 'images'">
-                          <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
+                        <template v-if="section.style == 'images' && cell.image_name">
+                          <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(cell)">
                           <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
                           <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '640', 'height' => '480']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
                         </template>
 
                         <template v-if="section.style == 'items'">
                           <div class="form-group">
-                            <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(i, j)">
+                            <input type="file" :id="'file-' + i + '-' + j" style="display:none" @change="selectedFile(cell)">
                             <template v-if="cell.image_name">
                               <input type="hidden" :name="'sections[' + i + '][cells][' + j + '][image_name]'" :value="cell.image_name">
                               <img :src="'<?= $this->Url->build(['controller' => 'Images', 'action' => 'view', 'width' => '640', 'height' => '480']) ?>/' + cell.image_name" alt="" width="100%" @click="trigger('file-' + i + '-' + j)">
@@ -124,7 +151,7 @@ $this->Html->scriptEnd();
                       <div class="bd-cell-add">
                         <template v-if="section.style == 'images'">
                           <div class="bd-image-empty">
-                            <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(i, -1)">
+                            <input type="file" :id="'file-' + i" style="display:none" @change="selectedFile(addCell(i))">
                             <button class="btn bd-btn-field" @click="trigger('file-' + i)"><span><i class="fas fa-plus-circle fa-3x"></i></span></button>
                           </div>
                         </template>

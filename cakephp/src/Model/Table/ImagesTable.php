@@ -49,6 +49,10 @@ class ImagesTable extends Table
             'foreignKey' => 'image_name',
             'joinType' => 'INNER'
         ]);
+        $this->hasOne('Mainvisuals', [
+            'foreignKey' => 'image_name',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

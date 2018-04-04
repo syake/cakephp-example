@@ -183,6 +183,7 @@ class PostsController extends AuthController
             $post = $this->Articles->patchEntity($post, $this->request->getData(), [
                 'associated' => [
                     'Projects',
+                    'Mainvisuals',
                     'Sections',
                     'Sections.Cells',
                 ]
@@ -215,7 +216,12 @@ class PostsController extends AuthController
                 ]);
             })
             ->where(['Articles.id' => $id])
-            ->contain(['Projects', 'Sections', 'Sections.Cells'])
+            ->contain([
+                'Projects',
+                'Mainvisuals',
+                'Sections',
+                'Sections.Cells'
+            ])
             ->enableAutoFields(true)
             ->first();
 
@@ -225,6 +231,7 @@ class PostsController extends AuthController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->Articles->patchEntity($post, $this->request->getData(), [
                 'associated' => [
+                    'Mainvisuals',
                     'Sections',
                     'Sections.Cells'
                 ]
@@ -259,6 +266,7 @@ class PostsController extends AuthController
                 'associated' => [
                     'Projects',
                     'Projects.Users',
+                    'Mainvisuals',
                     'Sections',
                     'Sections.Cells'
                 ]
@@ -291,6 +299,7 @@ class PostsController extends AuthController
         $images = $this->Images->find('list')
             ->where(['Images.article_id' => $id])
             ->notMatching('Cells')
+            ->notMatching('Mainvisuals')
             ->toArray();
 
         if (count($images) > 0) {

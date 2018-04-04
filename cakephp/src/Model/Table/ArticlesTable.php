@@ -54,6 +54,12 @@ class ArticlesTable extends Table
             'className' => 'Users',
             'joinType' => 'INNER'
         ]);
+        $this->hasMany('Mainvisuals', [
+            'foreignKey' => 'article_id',
+            'saveStrategy' => 'replace',
+            'sort' => ['id' => 'ASC'],
+            'dependent' => true
+        ]);
         $this->hasMany('Sections', [
             'foreignKey' => 'article_id',
             'saveStrategy' => 'replace',

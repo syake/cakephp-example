@@ -95,6 +95,7 @@ export default function editor() {
     el: '#editor',
     data: {
       post: post,
+      mainvisuals: [],
       sections: [],
       colStyles: {
         images: 'col-sm-3',
@@ -109,10 +110,30 @@ export default function editor() {
     },
     mounted: function() {
       if (this.post) {
+        this.mainvisuals = this.post.mainvisuals || [];
         this.sections = this.post.sections || [];
       }
     },
     methods: {
+      remove: function(items, index) {
+        if (event) event.preventDefault();
+        items.splice(index, 1);
+      },
+      up: function(items, index) {
+        if (event) event.preventDefault();
+        items.splice(index-1, 2, items[index], items[index-1]);
+      },
+      down: function(items, index) {
+        if (event) event.preventDefault();
+        items.splice(index, 2, items[index+1], items[index]);
+      },
+      addMainvisual: function() {
+        if (event) event.preventDefault();
+        this.mainvisuals.push({
+        });
+        let i = this.mainvisuals.length - 1;
+        return this.mainvisuals[i];
+      },
       addSection: function(style) {
         if (event) event.preventDefault();
         this.sections.push({
@@ -120,18 +141,6 @@ export default function editor() {
           description: '',
           style: style
         });
-      },
-      removeSection: function(index) {
-        if (event) event.preventDefault();
-        this.sections.splice(index, 1);
-      },
-      upSection: function(index) {
-        if (event) event.preventDefault();
-        this.sections.splice(index-1, 2, this.sections[index], this.sections[index-1]);
-      },
-      downSection: function(index) {
-        if (event) event.preventDefault();
-        this.sections.splice(index, 2, this.sections[index+1], this.sections[index]);
       },
       addCell: function(index) {
         if (event) event.preventDefault();
@@ -141,16 +150,10 @@ export default function editor() {
         this.sections[index].cells.push({
           modified: new Date()
         });
-        this.$forceUpdate();
+        let i = this.sections[index].cells.length - 1;
+        return this.sections[index].cells[i];
       },
-      removeCell: function(index, index2) {
-        if (event) event.preventDefault();
-        if (this.sections[index].cells) {
-          this.sections[index].cells.splice(index2, 1);
-        }
-        this.$forceUpdate();
-      },
-      selectedFile: function(index, index2) {
+      selectedFile: function(item) {
         if (event) event.preventDefault();
         let file = event.target.files[0];
         let formData = new FormData();
@@ -161,11 +164,7 @@ export default function editor() {
         };
         axios.post('/images/upload', formData, config)
           .then(response => {
-            if (index2 == -1) {
-              this.addCell(index);
-              index2 = this.sections[index].cells.length - 1;
-            }
-            this.sections[index].cells[index2].image_name = response.data;
+            item.image_name = response.data;
             this.$forceUpdate();
           })
           .catch(error => {

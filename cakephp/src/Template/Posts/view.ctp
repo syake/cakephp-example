@@ -21,20 +21,13 @@ $this->assign('title', $post->title);
   <nav class="site-header sticky-top py-1">
     <div class="container d-flex flex-column flex-md-row justify-content-between">
       <a class="py-2" href="#"><?= $this->fetch('title') ?></a>
-<?php foreach ($post->sections as $i => $section): ?>
+<?php if ($post->sections): foreach ($post->sections as $i => $section): ?>
       <a class="py-2 d-none d-md-inline-block" href="#p<?= $i ?>"><?= $section->title ?></a>
-><?php endforeach; ?>
+><?php endforeach; endif; ?>
     </div>
   </nav>
 
-<!--
-  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
-    <div class="col-md-5 p-lg-5 mx-auto my-5">
-      <h1 class="display-4 font-weight-normal">Punny headline</h1>
-      <p class="lead font-weight-normal"><?= $post->description ?></p>
-    </div>
-  </div>
--->
+<?php if ($post->mainvisuals): ?>
   <div id="mainvisuals" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
 <?php foreach ($post->mainvisuals as $i => $mainvisual): $active = ($i == 0) ? ' active' : ''; ?>
@@ -63,9 +56,10 @@ $this->assign('title', $post->title);
       <span class="sr-only">Next</span>
     </a>
   </div>
+<?php endif; ?>
 
   <main id="content" role="main" class="p-3">
-<?php foreach ($post->sections as $i => $section): ?>
+<?php if ($post->sections): foreach ($post->sections as $i => $section): ?>
     <section id="p<?= $i ?>" class="mb-5">
       <h2><?= $section->title ?></h2>
       <p><?= $section->description ?></p>
@@ -107,7 +101,7 @@ $this->assign('title', $post->title);
 <?php endforeach; endif; ?>
       </div>
     </section>
-<?php endforeach; ?>
+<?php endforeach; endif; ?>
   </main>
   <footer role="contentinfo">
     <div class="container-fluid p-3 p-md-5 text-muted">

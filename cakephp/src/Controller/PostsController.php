@@ -141,7 +141,6 @@ class PostsController extends AuthController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->Articles->get($id, [
                 'contain' => [
-                    'Projects',
                     'Mainvisuals',
                     'Sections',
                     'Sections.Cells',
@@ -150,7 +149,6 @@ class PostsController extends AuthController
             $post = $this->Articles->patchEntity($post, $this->request->getData(), [
                 'validate' => false,
                 'associated' => [
-                    'Projects',
                     'Mainvisuals',
                     'Sections',
                     'Sections.Cells'
@@ -250,7 +248,7 @@ class PostsController extends AuthController
         $this->render('/Posts/editor');
 
         // Image filter
-        $this->filter($id);
+        $this->filter($post->project->id);
     }
 
     /**
@@ -294,12 +292,12 @@ class PostsController extends AuthController
     /**
      * Filter method
      *
-     * @param string|null $id Article id.
+     * @param string|null $id Project id.
      */
     protected function filter($id)
     {
         $images = $this->Images->find('list')
-            ->where(['Images.article_id' => $id])
+            ->where(['Images.project_id' => $id])
             ->notMatching('Cells')
             ->notMatching('Mainvisuals')
             ->toArray();

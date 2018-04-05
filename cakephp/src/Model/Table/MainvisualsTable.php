@@ -65,14 +65,14 @@ class MainvisualsTable extends Table
             ->allowEmpty('image_name');
 
         $validator
-            ->scalar('link_url')
-            ->maxLength('link_url', 255)
-            ->allowEmpty('link_url');
+            ->scalar('title')
+            ->maxLength('title', 45)
+            ->allowEmpty('title');
 
         $validator
-            ->scalar('link_target')
-            ->maxLength('link_target', 45)
-            ->allowEmpty('link_target');
+            ->scalar('description')
+            ->maxLength('description', 255)
+            ->allowEmpty('description');
 
         return $validator;
     }

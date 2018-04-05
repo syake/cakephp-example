@@ -84,6 +84,7 @@ export default function editor() {
     el: '#editor',
     data: {
       post: post,
+      project_id: -1,
       mainvisuals: [],
       sections: [],
       colStyles: {
@@ -106,6 +107,7 @@ export default function editor() {
     },
     mounted: function() {
       if (this.post) {
+        this.project_id = this.post.project.id;
         this.mainvisuals = this.post.mainvisuals || [];
         this.sections = this.post.sections || [];
       }
@@ -157,7 +159,7 @@ export default function editor() {
         let file = event.target.files[0];
         let formData = new FormData();
         formData.append('data', file);
-        formData.append('article_id', this.post.id);
+        formData.append('project_id', this.project_id);
         let config = {
           headers: {'content-type': 'multipart/form-data'}
         };

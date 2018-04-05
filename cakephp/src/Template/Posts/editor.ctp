@@ -41,7 +41,7 @@ $this->Html->scriptEnd();
             <div class="bd-fieldset-body">
               <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
               <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
-              <?= $this->Form->control('description', ['type' => 'textarea', 'label' => __('Content'), 'class' => 'js-content-field']) . PHP_EOL ?>
+              <?= $this->Form->control('description', ['type' => 'textarea', 'label' => __('Content')]) . PHP_EOL ?>
             </div>
           </fieldset>
 

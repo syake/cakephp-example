@@ -54,8 +54,8 @@ class ArticlesFixture extends TestFixture
             'status' => 1,
             'title' => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet',
-            'created' => '2018-03-30 13:57:29',
-            'modified' => '2018-03-30 13:57:29'
+            'created' => '2018-04-05 10:21:01',
+            'modified' => '2018-04-05 10:21:01'
         ],
     ];
 }

@@ -53,8 +53,8 @@ class CellsFixture extends TestFixture
             'title' => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'image_name' => 'Lorem ipsum dolor sit amet',
-            'created' => '2018-03-30 13:57:29',
-            'modified' => '2018-03-30 13:57:29'
+            'created' => '2018-04-05 10:21:04',
+            'modified' => '2018-04-05 10:21:04'
         ],
     ];
 }

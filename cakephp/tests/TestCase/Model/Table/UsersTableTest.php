@@ -29,8 +29,8 @@ class UsersTableTest extends TestCase
         'app.articles',
         'app.cells',
         'app.sections',
-        'app.images',
         'app.mainvisuals',
+        'app.images',
         'app.projects_users'
     ];
 

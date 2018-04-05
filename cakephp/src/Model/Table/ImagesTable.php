@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Images Model
  *
- * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
+ * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
  *
  * @method \App\Model\Entity\Image get($primaryKey, $options = [])
  * @method \App\Model\Entity\Image newEntity($data = null, array $options = [])
@@ -42,8 +42,8 @@ class ImagesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Articles', [
-            'foreignKey' => 'article_id'
+        $this->belongsTo('Projects', [
+            'foreignKey' => 'project_id'
         ]);
         $this->hasOne('Cells', [
             'foreignKey' => 'image_name',
@@ -90,7 +90,7 @@ class ImagesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['name']));
-        $rules->add($rules->existsIn(['article_id'], 'Articles'));
+        $rules->add($rules->existsIn(['project_id'], 'Projects'));
 
         return $rules;
     }
@@ -115,6 +115,7 @@ class ImagesTable extends Table
             unset($entity->data);
         }
     }
+
     /**
      * Create blob data from file or URL
      *

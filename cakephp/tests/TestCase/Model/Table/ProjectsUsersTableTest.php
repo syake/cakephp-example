@@ -30,8 +30,8 @@ class ProjectsUsersTableTest extends TestCase
         'app.users',
         'app.cells',
         'app.sections',
-        'app.images',
-        'app.mainvisuals'
+        'app.mainvisuals',
+        'app.images'
     ];
 
     /**

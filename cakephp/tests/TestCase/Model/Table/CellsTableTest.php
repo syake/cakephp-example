@@ -28,8 +28,6 @@ class CellsTableTest extends TestCase
         'app.articles',
         'app.projects',
         'app.users',
-        'app.projects_users',
-        'app.images',
         'app.mainvisuals',
         'app.sections'
     ];

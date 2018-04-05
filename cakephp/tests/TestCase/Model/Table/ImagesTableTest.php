@@ -25,13 +25,7 @@ class ImagesTableTest extends TestCase
      */
     public $fixtures = [
         'app.images',
-        'app.articles',
-        'app.projects',
-        'app.users',
-        'app.projects_users',
-        'app.cells',
-        'app.sections',
-        'app.mainvisuals'
+        'app.projects'
     ];
 
     /**

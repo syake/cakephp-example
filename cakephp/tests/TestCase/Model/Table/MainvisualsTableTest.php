@@ -28,10 +28,8 @@ class MainvisualsTableTest extends TestCase
         'app.articles',
         'app.projects',
         'app.users',
-        'app.projects_users',
         'app.cells',
-        'app.sections',
-        'app.images'
+        'app.sections'
     ];
 
     /**

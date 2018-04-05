@@ -9,10 +9,10 @@ use Cake\ORM\Entity;
  * @property string $name
  * @property string|resource $data
  * @property string $mime_type
- * @property int $article_id
+ * @property int $project_id
  * @property \Cake\I18n\FrozenTime $created
  *
- * @property \App\Model\Entity\Article $article
+ * @property \App\Model\Entity\Project $project
  */
 class Image extends Entity
 {
@@ -29,8 +29,8 @@ class Image extends Entity
     protected $_accessible = [
         'data' => true,
         'mime_type' => true,
-        'article_id' => true,
+        'project_id' => true,
         'created' => true,
-        'article' => true
+        'project' => true
     ];
 }

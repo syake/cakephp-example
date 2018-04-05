@@ -27,10 +27,10 @@ class SectionsTableTest extends TestCase
         'app.sections',
         'app.articles',
         'app.projects',
+        'app.images',
         'app.users',
         'app.projects_users',
         'app.cells',
-        'app.images',
         'app.mainvisuals'
     ];
 

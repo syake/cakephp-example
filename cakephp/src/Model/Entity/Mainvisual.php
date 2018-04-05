@@ -9,8 +9,8 @@ use Cake\ORM\Entity;
  * @property int $article_id
  * @property int $id
  * @property string $image_name
- * @property string $link_url
- * @property string $link_target
+ * @property string $title
+ * @property string $description
  *
  * @property \App\Model\Entity\Article $article
  */
@@ -28,8 +28,8 @@ class Mainvisual extends Entity
      */
     protected $_accessible = [
         'image_name' => true,
-        'link_url' => true,
-        'link_target' => true,
+        'title' => true,
+        'description' => true,
         'article' => true
     ];
 }

@@ -16,6 +16,8 @@ import regular from '@fortawesome/fontawesome-free-regular';
 import brands from '@fortawesome/fontawesome-free-brands';
 fontawesome.library.add(solid.faEye);
 fontawesome.library.add(regular.faSave);
+fontawesome.library.add(solid.faCheckCircle);
+fontawesome.library.add(solid.faMinusCircle);
 
 fontawesome.library.add(solid.faCaretUp);
 fontawesome.library.add(solid.faCaretDown);

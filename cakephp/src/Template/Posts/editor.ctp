@@ -24,6 +24,16 @@ $this->Html->scriptEnd();
       <li class="nav-item"><?= $this->Html->link('<span><i class="fas fa-eye"></i></span>',
         ['action' => 'view', $post->id],
         ['id' => 'previewPostlink', 'class' => 'btn btn-icon mr-md-3', 'escape' => false, '@click' => 'preview']) ?></li>
+      <li class="nav-item">
+        <div class="btn-group btn-group-toggle mr-md-3" data-toggle="buttons">
+          <label class="btn btn-outline-light btn-sm<?= ($post->status == 1) ? ' active' : '' ?>">
+            <input type="radio" name="status" value="1" autocomplete="off"<?= ($post->status == 1) ? ' checked' : '' ?>><i class="fas fa-check-circle"></i> <?= __('Public') ?>
+          </label>
+          <label class="btn btn-outline-light btn-sm<?= ($post->status == 0) ? ' active' : '' ?>">
+            <input type="radio" name="status" value="0" autocomplete="off"<?= ($post->status == 0) ? ' checked' : '' ?>><i class="fas fa-minus-circle"></i> <?= __('Private') ?>
+          </label>
+        </div>
+      </li>
       <li class="nav-item"><?= $this->Form->button('<i class="far fa-save"></i>',
         ['class' => 'btn-outline-light btn-sm btn-icon']) ?></li>
     </ul>

@@ -3,6 +3,13 @@
 /* header
 -------------------------------------------*/
 .bd-navbar {
+  .active .fa-check-circle {
+    color: #28a745;
+  }
+  .active .fa-minus-circle {
+    color: #dc3545;
+  }
+  
   .nav-item {
     font-size: 1.8em;
 

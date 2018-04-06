@@ -6265,6 +6265,12 @@ form a.js-upload-delete {
 
 /* header
 -------------------------------------------*/
+.bd-navbar .active .fa-check-circle {
+  color: #28a745; }
+
+.bd-navbar .active .fa-minus-circle {
+  color: #dc3545; }
+
 .bd-navbar .nav-item {
   font-size: 1.8em; }
   .bd-navbar .nav-item .btn-icon {

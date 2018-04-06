@@ -18,6 +18,7 @@ fontawesome.library.add(solid.faEye);
 fontawesome.library.add(regular.faSave);
 fontawesome.library.add(solid.faCheckCircle);
 fontawesome.library.add(solid.faMinusCircle);
+fontawesome.library.add(regular.faTrashAlt);
 
 fontawesome.library.add(solid.faCaretUp);
 fontawesome.library.add(solid.faCaretDown);

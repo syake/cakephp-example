@@ -21,9 +21,18 @@ $this->Html->scriptEnd();
   <header id="controls" class="navbar navbar-expand navbar-dark flex-row bd-navbar">
     <a href="/" class="navbar-brand mr-0 mr-md-2"><?= __(SITE_TITLE) ?></a>
     <ul class="nav navbar-nav flex-row ml-auto d-md-flex">
-      <li class="nav-item"><?= $this->Html->link('<span><i class="fas fa-eye"></i></span>',
-        ['action' => 'view', $post->id],
-        ['id' => 'previewPostlink', 'class' => 'btn btn-icon mr-md-3', 'escape' => false, '@click' => 'preview']) ?></li>
+<?php if ($post->id): ?>
+      <li class="nav-item"><?= $this->Form->postLink(
+          '<span><i class="far fa-trash-alt"></i></span>',
+          ['action' => 'delete', $post->id],
+          ['class' => 'btn btn-icon mr-md-3', 'escape' => false, 'block' => true, 'aria-pressed' => 'true', 'confirm' => __('Are you sure you want to remove?')]
+        ) ?></li>
+<?php endif; ?>
+      <li class="nav-item"><?= $this->Html->link(
+          '<span><i class="fas fa-eye"></i></span>',
+          ['action' => 'view', $post->id],
+          ['id' => 'previewPostlink', 'class' => 'btn btn-icon mr-md-3', 'escape' => false, '@click' => 'preview']
+        ) ?></li>
       <li class="nav-item">
         <div class="btn-group btn-group-toggle mr-md-3" data-toggle="buttons">
           <label class="btn btn-outline-light btn-sm<?= ($post->status == 1) ? ' active' : '' ?>">

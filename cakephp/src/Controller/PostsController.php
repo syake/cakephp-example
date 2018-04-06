@@ -336,13 +336,24 @@ class PostsController extends AuthController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $post = $this->Articles->get($id);
-        if ($this->Articles->delete($post)) {
-            $this->Flash->success(__('The post has been deleted.'));
-        } else {
+        $post = $this->Articles->get($id, ['contain' => ['Projects']]);
+
+        $connection = ConnectionManager::get('default');
+        $connection->begin();
+        try {
+            if ($this->Articles->delete($post)) {
+                $this->Flash->success(__('The post has been deleted.'));
+            } else {
+                $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+            }
+            $this->Articles->connection()->commit();
+            $this->Projects->connection()->commit();
+        } catch(Exception $e) {
             $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+            debug($e);
+            $connection->rollback();
         }
 
-        return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
+        return $this->redirect(['controller' => 'Posts', 'action' => 'index']);
     }
 }

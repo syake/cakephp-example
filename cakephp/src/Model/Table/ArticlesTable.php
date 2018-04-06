@@ -1,9 +1,13 @@
 <?php
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -66,6 +70,8 @@ class ArticlesTable extends Table
             'sort' => ['id' => 'ASC'],
             'dependent' => true
         ]);
+
+        $this->Projects = TableRegistry::get('Projects');
     }
 
     /**
@@ -110,48 +116,22 @@ class ArticlesTable extends Table
         return $rules;
     }
 
-    public function findView(Query $query, array $options)
+    /**
+     * after deltete listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @param ArrayObject $options
+     * @return void
+     */
+    public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        return $query->where($options)
-            ->limit(1)
-            ->contain('Projects')
-            ->contain(['Points' => function($q){
-                    return $q
-                        ->where(['visible' => 1])
-                        ->order(['item_order' => 'ASC'])
-                        ->limit(6);
-                }
-            ])
-            ->contain(['Items' => function($q){
-                    return $q
-                        ->where(['visible' => 1])
-                        ->order(['item_order' => 'ASC'])
-                        ->limit(6);
-                }
-            ])
-            ->first();
-    }
-
-    public function findPost(Query $query, array $options)
-    {
-/*
-        if (isset($options['user_id'])) {
-            $query->matching('Users', function(Query $q) use ($options) {
-                    return $q->where([
-                        'Users.id' => $options['user_id']
-                    ]);
-                });
+        if ($entity->project) {
+            $query = $this->find('list')
+                ->where(['project_id' => $entity->project_id]);
+            if ($query->count() === 0) {
+                $this->Projects->delete($entity->project);
+            }
         }
-*/
-        return $query
-            ->matching('Projects', function(Query $q) use ($options) {
-                return $q->where([
-                    'Projects.id' => $options['id']
-                ]);
-            })
-            ->where(['Articles.status' => 'publish'])
-            ->contain(['Sections'])
-            ->enableAutoFields(true)
-            ->first();
     }
 }

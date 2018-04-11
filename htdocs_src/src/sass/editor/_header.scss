@@ -1,0 +1,59 @@
+/* header
+-------------------------------------------*/
+.bd-navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: #333;
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
+  
+  .active .fa-check-circle {
+    color: #28a745;
+  }
+  .active .fa-minus-circle {
+    color: #dc3545;
+  }
+  
+  .btn-icon {
+    border-radius: 0;
+    border: 0;
+    background-color: transparent;
+    font-size: 1.0em;
+  }
+  
+  .nav-item {
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    
+    & + .nav-item {
+      border-left: 0;
+    }
+    
+    & > .navbar-brand {
+      padding-left: 1rem;
+    }
+    & > .btn-group {
+      margin-right: 1rem;
+      margin-left: 1rem;
+      margin-top: 0.375rem;
+    }
+  }
+}
+
+.navbar-expand .navbar-nav .nav-link {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .bd-navbar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1071;
+  }
+}

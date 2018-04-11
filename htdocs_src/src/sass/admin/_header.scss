@@ -1,13 +1,15 @@
 /* header
 -------------------------------------------*/
 .bd-navbar {
-  min-height: 4rem;
-  background-color: #563d7c;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: #333;
+  background: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0.5rem 1rem rgba(0,0,0,.05), inset 0 -1px 0 rgba(0,0,0,.1);
-  
-  a {
-    color: white;
-  }
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white;
 }
 
 @media (min-width: 768px) {

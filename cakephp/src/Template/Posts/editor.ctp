@@ -19,22 +19,29 @@ $this->Html->scriptEnd();
 ?>
 <?= $this->Form->create($post) . PHP_EOL ?>
   <header id="controls" class="navbar navbar-expand navbar-dark flex-row bd-navbar">
-    <a href="/" class="navbar-brand mr-0 mr-md-2"><?= __(SITE_TITLE) ?></a>
+    <ul class="nav navbar-nav flex-row d-md-flex">
+      <li class="nav-item"><a href="/" class="navbar-brand"><?= __(SITE_TITLE) ?></a></li>
+      <li class="nav-item"><?= $this->Html->link(
+          '<i class="fas fa-plus"></i>',
+          '#',
+          ['class' => 'btn nav-link', 'escape' => false]
+        ) ?></li>
+    </ul>
     <ul class="nav navbar-nav flex-row ml-auto d-md-flex">
 <?php if ($post->id): ?>
       <li class="nav-item"><?= $this->Form->postLink(
           '<span><i class="far fa-trash-alt"></i></span>',
           ['action' => 'delete', $post->id],
-          ['class' => 'btn btn-icon mr-md-3', 'escape' => false, 'block' => true, 'aria-pressed' => 'true', 'confirm' => __('Are you sure you want to remove?')]
+          ['class' => 'btn nav-link', 'escape' => false, 'block' => true, 'aria-pressed' => 'true', 'confirm' => __('Are you sure you want to remove?')]
         ) ?></li>
 <?php endif; ?>
       <li class="nav-item"><?= $this->Html->link(
           '<span><i class="fas fa-eye"></i></span>',
           ['action' => 'view', $post->id],
-          ['id' => 'previewPostlink', 'class' => 'btn btn-icon mr-md-3', 'escape' => false, '@click' => 'preview']
+          ['id' => 'previewPostlink', 'class' => 'btn nav-link', 'escape' => false, '@click' => 'preview']
         ) ?></li>
       <li class="nav-item">
-        <div class="btn-group btn-group-toggle mr-md-3" data-toggle="buttons">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
           <label class="btn btn-outline-light btn-sm<?= ($post->status == 1) ? ' active' : '' ?>">
             <input type="radio" name="status" value="1" autocomplete="off"<?= ($post->status == 1) ? ' checked' : '' ?>><i class="fas fa-check-circle"></i> <?= __('Public') ?>
           </label>
@@ -43,8 +50,10 @@ $this->Html->scriptEnd();
           </label>
         </div>
       </li>
-      <li class="nav-item"><?= $this->Form->button('<i class="far fa-save"></i>',
-        ['class' => 'btn-outline-light btn-sm btn-icon']) ?></li>
+      <li class="nav-item"><?= $this->Form->button(
+          '<i class="far fa-save"></i>',
+          ['class' => 'btn-outline-light btn-icon nav-link']
+        ) ?></li>
     </ul>
   </header>
   <main id="content" role="main">

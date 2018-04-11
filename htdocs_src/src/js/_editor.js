@@ -14,12 +14,6 @@ import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
 import regular from '@fortawesome/fontawesome-free-regular';
 import brands from '@fortawesome/fontawesome-free-brands';
-fontawesome.library.add(solid.faEye);
-fontawesome.library.add(regular.faSave);
-fontawesome.library.add(solid.faCheckCircle);
-fontawesome.library.add(solid.faMinusCircle);
-fontawesome.library.add(regular.faTrashAlt);
-
 fontawesome.library.add(solid.faCaretUp);
 fontawesome.library.add(solid.faCaretDown);
 fontawesome.library.add(solid.faPlusCircle);
@@ -34,50 +28,12 @@ fontawesome.library.add(regular.faEnvelope);
 fontawesome.library.add(solid.faIdCard);
 
 /* ========================================================================
- * controls
- * @see Vue.js
- * @see jQuery
- * ======================================================================== */
-export function controls() {
-  const $el = $('#controls');
-  if (!$el[0]) return;
-  const app = new Vue({
-    el: '#controls',
-    data: {
-      form: $el.parents('form:first')[0]
-    },
-    methods: {
-      preview: function() {
-        if (event) event.preventDefault();
-
-        let default_action = this.form.action;
-        let default_target = this.form.target;
-
-        // submit
-        this.form.action = $('#previewPostlink').attr('href');
-        this.form.target = 'preview';
-        let w = window.innerWidth;
-        let h = window.innerHeight;
-        let win = window.open('', 'preview','width=' + w + ',height=' + h + ',scrollbars=yes');
-        win.focus();
-        this.form.submit();
-
-        this.form.action = default_action;
-        this.form.target = default_target;
-      }
-    }
-  });
-}
-
-/* ========================================================================
  * editor
  * @see Vue.js
  * @see jQuery
  * ======================================================================== */
 export default function editor() {
   moment().format();
-  
-  controls.call();
   
   const $el = $('#editor');
   if (!$el[0]) return;

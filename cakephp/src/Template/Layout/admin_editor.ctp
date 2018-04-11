@@ -15,11 +15,19 @@
 ?>
 <!doctype html>
 <html>
-<?= $this->Element('admin_headmeta') ?>
+<head>
+  <?= $this->Html->charset() . PHP_EOL ?>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><?= $this->fetch('title') ?></title>
+  <?= $this->Html->meta('icon') . PHP_EOL ?>
+  <?= $this->Html->css('editor.css') . PHP_EOL ?>
+  <?= $this->Html->script('editor.js') . PHP_EOL ?>
+  <?= $this->fetch('meta') . PHP_EOL ?>
+</head>
 <body>
 <?= $this->fetch('content') ?>
 <?= $this->Element('admin_footer', ['class' => 'bd-footer']) ?>
 <?= $this->fetch('postLink') ?>
-<?= $this->fetch('script') ?>
 </body>
 </html>

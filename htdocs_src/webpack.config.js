@@ -12,6 +12,7 @@ module.exports = (env, args) => [
     // メインとなるJavaScriptファイル（エントリーポイント）
     entry: {
       admin: './admin.js',
+      editor: './editor.js',
       app: './app.js'
     },
     
@@ -72,6 +73,7 @@ module.exports = (env, args) => [
     context: __dirname + '/src/sass',
     entry: {
       admin: './admin.scss',
+      editor: './editor.scss',
       style: './style.scss'
     },
     output: {

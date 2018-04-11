@@ -6129,11 +6129,14 @@ form a.js-upload-delete {
 /* header
 -------------------------------------------*/
 .bd-navbar {
-  min-height: 4rem;
-  background-color: #563d7c;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: #333;
+  background: rgba(0, 0, 0, 0.8);
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.1); }
-  .bd-navbar a {
-    color: white; }
+
+.navbar-dark .navbar-nav .nav-link {
+  color: white; }
 
 @media (min-width: 768px) {
   .bd-navbar {
@@ -6262,123 +6265,6 @@ form a.js-upload-delete {
   border-radius: 5px;
   padding: 10px 20px;
   margin-top: 1rem; }
-
-/* header
--------------------------------------------*/
-.bd-navbar .active .fa-check-circle {
-  color: #28a745; }
-
-.bd-navbar .active .fa-minus-circle {
-  color: #dc3545; }
-
-.bd-navbar .nav-item {
-  font-size: 1.8em; }
-  .bd-navbar .nav-item .btn-icon {
-    padding: 0;
-    border-radius: 0;
-    border: 0;
-    line-height: 1;
-    background-color: transparent;
-    font-size: 1.0em;
-    color: white; }
-
-/* posts edit content
--------------------------------------------*/
-.posts-edit-content .bd-btn-down,
-.posts-edit-content .bd-btn-up {
-  padding: 0;
-  font-size: 1.6rem;
-  line-height: 1; }
-
-.posts-edit-content .bd-btn-up {
-  margin-right: .25rem; }
-
-.posts-edit-content .bd-btn-remove {
-  padding: 0;
-  font-size: 1.6rem;
-  line-height: 1; }
-
-.posts-edit-content .bd-btn-field {
-  margin: 0;
-  display: block;
-  width: 100%;
-  padding: 0;
-  background-color: white; }
-  .posts-edit-content .bd-btn-field > span {
-    display: block;
-    padding: 2rem;
-    border-style: dashed;
-    border-width: .2rem;
-    border-color: #666666; }
-  .posts-edit-content .bd-btn-field:hover > span {
-    border-color: #999999; }
-
-.posts-edit-content .bd-fieldset {
-  margin: 0;
-  margin-bottom: 20px;
-  background-color: white;
-  border: solid #f7f7f9;
-  border-width: .2rem;
-  background-color: white;
-  margin: 0;
-  margin-bottom: 20px;
-  border: solid #f7f7f9;
-  border-width: .2rem;
-  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25)); }
-  .posts-edit-content .bd-fieldset .bd-fieldset-header {
-    padding: .5rem .5rem 0 1rem; }
-  .posts-edit-content .bd-fieldset .bd-fieldset-body {
-    padding: 1rem; }
-
-.posts-edit-content .bd-cell {
-  position: relative; }
-  .posts-edit-content .bd-cell .bd-btn-remove {
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin-top: -1rem;
-    margin-right: -1rem;
-    background-color: white;
-    border-radius: 50%;
-    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25)); }
-
-.posts-edit-content .bd-image-empty {
-  position: relative;
-  padding-top: 75%; }
-  .posts-edit-content .bd-image-empty .bd-btn-field {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%; }
-    .posts-edit-content .bd-image-empty .bd-btn-field > span {
-      height: 100%;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -ms-flex-align: center;
-      -webkit-box-align: center;
-      align-items: center;
-      -webkit-box-pack: center;
-      -ms-flex-pack: center;
-      justify-content: center; }
-
-.posts-edit-content .bd-cells-images {
-  background-color: #f7f7f9;
-  border-radius: 10px;
-  padding: 1.5rem 1.5rem 0; }
-
-.posts-edit-content .bd-cells-items {
-  margin-bottom: -1.5rem; }
-  .posts-edit-content .bd-cells-items .bd-cell {
-    background-color: #f7f7f9;
-    padding: 1.5rem 1.5rem; }
-
-.posts-edit-content .bd-cells-values {
-  margin-bottom: -1.5rem; }
-  .posts-edit-content .bd-cells-values .bd-cell {
-    background-color: #f7f7f9;
-    padding: 1.5rem 1.5rem; }
 
 /* base
 -------------------------------------------*/

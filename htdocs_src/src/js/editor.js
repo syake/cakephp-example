@@ -1,3 +1,4 @@
+import 'bootstrap';
 import $ from 'jquery';
 if (!window.data) window.data = {};
 
@@ -5,10 +6,12 @@ if (!window.data) window.data = {};
  * import
  * ======================================================================== */
 import controls from './_controls';
-import editor from './_editor';
+import sidebar from './_sidebar';
+import fieldset from './_fieldset';
 $(function(){
   controls();
-  editor();
+  sidebar();
+  fieldset();
 });
 
 

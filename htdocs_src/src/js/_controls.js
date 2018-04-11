@@ -1,14 +1,5 @@
 import Vue from 'vue';
-import axios from 'axios';
-import VueAxios from 'vue-axios';
-import moment from 'moment';
-import ElementUI from 'element-ui';
-import locale from 'element-ui/lib/locale/lang/ja';
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI, {locale});
-
 import $ from 'jquery';
-import 'bootstrap';
 
 import fontawesome from '@fortawesome/fontawesome';
 import solid from '@fortawesome/fontawesome-free-solid';
@@ -35,6 +26,19 @@ export default function controls() {
       form: $el.parents('form:first')[0]
     },
     methods: {
+      panel: function() {
+        if (event) event.preventDefault();
+        
+        const $content = $('#content');
+        const $sidebar = $('#sidebar');
+        if ($content.hasClass('on')) {
+          $content.removeClass('on');
+          $sidebar.removeClass('on');
+        } else {
+          $content.addClass('on');
+          $sidebar.addClass('on');
+        }
+      },
       preview: function() {
         if (event) event.preventDefault();
 

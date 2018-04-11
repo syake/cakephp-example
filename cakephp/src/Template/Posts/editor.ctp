@@ -24,7 +24,7 @@ $this->Html->scriptEnd();
       <li class="nav-item"><?= $this->Html->link(
           '<i class="fas fa-plus"></i>',
           '#',
-          ['class' => 'btn nav-link', 'escape' => false]
+          ['class' => 'btn nav-link', 'escape' => false, '@click' => 'panel']
         ) ?></li>
     </ul>
     <ul class="nav navbar-nav flex-row ml-auto d-md-flex">
@@ -56,15 +56,15 @@ $this->Html->scriptEnd();
         ) ?></li>
     </ul>
   </header>
-  <main id="content" role="main">
-    <div class="posts-edit-content py-4">
+  <div class="contents">
+    <main id="content" class="posts-edit-content py-4" role="main">
       <div class="container">
         <div class="d-flex justify-content-between mb-3">
           <h4 class="mb-3"><?= __('Edit Post') ?></h4>
           <span class="d-block small text-muted"><?= __('Last Update') ?>  <time><?= $this->Time->format($post->modified, 'yyyy-MM-dd HH:mm') ?></time></span>
         </div>
         <?= $this->Flash->render() . PHP_EOL ?>
-        <div id="editor">
+        <div id="fieldset">
           <fieldset class="bd-fieldset">
             <div class="bd-fieldset-body">
               <?= $this->Form->control('project.name', ['label' => __('Page URL')]) . PHP_EOL ?>
@@ -243,36 +243,49 @@ $this->Html->scriptEnd();
           </fieldset>
         </div>
       </div>
-    </div>
-  </main>
-<?= $this->Form->end() . PHP_EOL ?>
+    </main>
 
-<?php /*
-<?= $this->element('Users/breadcrumb') ?>
-<div class="content edit-post-content">
-    <?= $this->Form->create($post, ['enctype' => 'multipart/form-data']) . PHP_EOL ?>
-        <div class="title">
-            <h1><?= $this->fetch('title') ?><span class="badge badge-pill <?= $badge_style ?>"><?= $badge_label ?></span></h1>
-            <ul class="controllers">
-                <li><?= $this->Html->link(__('Preview'), ['controller' => 'Posts', 'action' => 'view', $post->id], ['class' => 'view-link btn btn-secondary btn-sm', 'target' => '_blank']) ?></li>
-                <li><?= $this->Form->button(__('Save'), ['class' => 'btn-secondary btn-sm']) ?></li>
-            </ul>
+    <aside id="sidebar" class="panel-content">
+      <div class="panel-container">
+        <div class="row justify-content-start">
+          <div class="col">
+            <a class="add-block" href="javascript:void(0)">
+              <span class="icon">
+                <span class="fa-layers fa-fw fa-2x">
+                  <i class="fas fa-image" data-fa-transform="up-2"></i>
+                  <i class="fas fa-circle fa-inverse" data-fa-transform="shrink-12 down-9 left-6"></i>
+                  <i class="far fa-circle fa-inverse" data-fa-transform="shrink-12 down-9"></i>
+                  <i class="far fa-circle fa-inverse" data-fa-transform="shrink-12 down-9 right-6"></i>
+                </span>
+              </span>
+              <span class="label"><?= __('Main Visuals') ?></span>
+            </a>
+          </div>
+          <div class="col">
+            <a class="add-block" href="javascript:void(0)">
+              <span class="icon"><i class="fas fa-images fa-2x"></i></span>
+              <span class="label"><?= __('Images') ?></span>
+            </a>
+          </div>
+          <div class="col">
+            <a class="add-block" href="javascript:void(0)">
+              <span class="icon">
+                <span class="fa-layers fa-fw fa-2x">
+                  <i class="fas fa-align-left" data-fa-transform="shrink-2 right-6"></i>
+                  <i class="fas fa-image fa-inverse" data-fa-transform="shrink-4 left-8"></i>
+                </span>
+              </span>
+              <span class="label"><?= __('Items') ?></span>
+            </a>
+          </div>
+          <div class="col">
+            <a class="add-block" href="javascript:void(0)">
+              <span class="icon"><i class="far fa-envelope fa-2x"></i></span>
+              <span class="label"><?= __('contact') ?></span>
+            </a>
+          </div>
         </div>
-        <?= $this->Flash->render() ?>
-        <div class="status">
-            <dl class="project_id">
-                <dt><?= __('Project ID:') ?></dt>
-                <dd><?= $project->uuid ?></dd>
-            </dl>
-            <dl class="modified">
-                <dt><?= __('Date Modified:') ?></dt>
-                <dd><?= $this->Time->format($post->modified, 'yyyy/MM/dd HH:mm') ?></dd>
-            </dl>
-        </div>
-        <div class="form">
-<?= $this->element('Posts/form') ?>
-        </div>
-    <?= $this->Form->end() . PHP_EOL ?>
-</div>
-*/
-?>
+      </div>
+    </aside>
+  </div>
+<?= $this->Form->end() . PHP_EOL ?>

@@ -10,8 +10,11 @@ import sidebar from './_sidebar';
 import fieldset from './_fieldset';
 $(function(){
   controls();
-  sidebar();
-  fieldset();
+  const slide = sidebar();
+  const app = fieldset();
+  slide.$on('drag', function(type) {
+    app.draggingType = type;
+  });
 });
 
 

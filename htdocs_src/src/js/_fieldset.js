@@ -45,6 +45,8 @@ export default function fieldset() {
       project_id: -1,
       mainvisuals: [],
       sections: [],
+      draggingType: null,
+      
       colStyles: {
         images: 'col-sm-3',
         items: 'col-sm-4',
@@ -71,6 +73,25 @@ export default function fieldset() {
       }
     },
     methods: {
+      dragover: function() {
+//         console.log(event);
+      },
+      drop: function() {
+        console.log(this.draggingType);
+        
+        switch(this.draggingType) {
+          case 'mainvisual':
+//             this.mainvisuals.push({});
+            break;
+          case 'images':
+            break;
+          case 'items':
+            break;
+          case 'contact':
+            break;
+          default:
+        } 
+      },
       remove: function(items, index) {
         if (event) event.preventDefault();
         items.splice(index, 1);
@@ -141,4 +162,5 @@ export default function fieldset() {
       }
     }
   });
+  return app;
 }

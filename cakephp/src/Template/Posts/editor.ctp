@@ -71,13 +71,20 @@ $this->Html->scriptEnd();
               <?= $this->Form->control('title', ['label' => __('Title')]) . PHP_EOL ?>
               <?= $this->Form->control('description', ['type' => 'textarea', 'label' => __('Content')]) . PHP_EOL ?>
             </div>
+            <input type="hidden" name="mainvisuals" value="[]" v-if="!mainvisuals || mainvisuals.length == 0">
+          </fieldset>
+
+          <fieldset class="bd-fieldset">
+            <div class="bd-fieldset-body bd-drop-area" @dragover="dragover" @dragleave="drop">
+
+            </div>
           </fieldset>
 
           <fieldset class="bd-fieldset">
             <div class="bd-fieldset-body pb-0">
               <div class="form-group mb-0">
                 <label class="control-label" for="mainvisuals"><i class="fas fa-images fa-2x mr-2"></i><?= __('Main Visuals') ?></label>
-                <input type="hidden" name="mainvisuals" value="[]" v-if="!mainvisuals || mainvisuals.length == 0">
+
                 <div class="row">
                   <div class="col-sm-3 mb-4" v-for="(mainvisual, i) in mainvisuals">
                     <div class="bd-cell" v-if="mainvisual.image_name">
@@ -249,7 +256,7 @@ $this->Html->scriptEnd();
       <div class="panel-container">
         <div class="row justify-content-start">
           <div class="col">
-            <a class="add-block" href="javascript:void(0)">
+            <a class="add-block" draggable="true" @dragstart="dragstart('mainvisual')" @dragend="dragend">
               <span class="icon">
                 <span class="fa-layers fa-fw fa-2x">
                   <i class="fas fa-image" data-fa-transform="up-2"></i>
@@ -262,13 +269,13 @@ $this->Html->scriptEnd();
             </a>
           </div>
           <div class="col">
-            <a class="add-block" href="javascript:void(0)">
+            <a class="add-block" draggable="true" @dragstart="dragstart('images')" @dragend="dragend">
               <span class="icon"><i class="fas fa-images fa-2x"></i></span>
               <span class="label"><?= __('Images') ?></span>
             </a>
           </div>
           <div class="col">
-            <a class="add-block" href="javascript:void(0)">
+            <a class="add-block" draggable="true" @dragstart="dragstart('items')" @dragend="dragend">
               <span class="icon">
                 <span class="fa-layers fa-fw fa-2x">
                   <i class="fas fa-align-left" data-fa-transform="shrink-2 right-6"></i>
@@ -279,7 +286,7 @@ $this->Html->scriptEnd();
             </a>
           </div>
           <div class="col">
-            <a class="add-block" href="javascript:void(0)">
+            <a class="add-block" draggable="true" @dragstart="dragstart('contact')" @dragend="dragend">
               <span class="icon"><i class="far fa-envelope fa-2x"></i></span>
               <span class="label"><?= __('contact') ?></span>
             </a>

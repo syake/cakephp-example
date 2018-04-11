@@ -20,10 +20,16 @@ export default function sidebar() {
   const app = new Vue({
     el: '#sidebar',
     data: {
-      
+      draggingItem: null,
     },
     methods: {
-      
+      dragstart: function(type) {
+        this.$emit('drag', type);
+      },
+      dragend: function() {
+        this.$emit('drag', null);
+      }
     }
   });
+  return app;
 }

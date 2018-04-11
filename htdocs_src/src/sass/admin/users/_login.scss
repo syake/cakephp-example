@@ -1,0 +1,32 @@
+
+/* login user content
+-------------------------------------------*/
+.login-user-content {
+  .container-fluid {
+    width: 340px;
+    padding: 50px 0 30px;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 300;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .field-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+  }
+  .control-label {
+    font-weight: 600;
+  }
+  div.create-account-content {
+    background-color: white;
+    border: 1px solid #d8dee2;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+  }
+}

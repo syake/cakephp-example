@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -9,8 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Sections Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Sections
- * @property \Cake\ORM\Association\BelongsTo $Articles
+ * @property \App\Model\Table\ArticlesTable|\Cake\ORM\Association\BelongsTo $Articles
  *
  * @method \App\Model\Entity\Section get($primaryKey, $options = [])
  * @method \App\Model\Entity\Section newEntity($data = null, array $options = [])
@@ -35,11 +36,18 @@ class SectionsTable extends Table
 
         $this->setTable('sections');
         $this->setDisplayField('title');
-        $this->setPrimaryKey('id');
-        
+        $this->setPrimaryKey(['article_id', 'id']);
+
         $this->belongsTo('Articles', [
             'foreignKey' => 'article_id',
             'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Cells', [
+            'foreignKey' => ['article_id', 'section_id'],
+            'bindingKey' => ['article_id', 'id'],
+            'saveStrategy' => 'replace',
+            'sort' => ['id' => 'ASC'],
+            'dependent' => true
         ]);
     }
 
@@ -52,25 +60,21 @@ class SectionsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->requirePresence('tag', 'create')
-            ->notEmpty('tag');
+            ->allowEmpty('id', 'create');
 
         $validator
-            ->integer('item_order')
-            ->allowEmpty('item_order');
-
-        $validator
-            ->boolean('visible')
-            ->allowEmpty('visible');
-
-        $validator
+            ->scalar('title')
+            ->maxLength('title', 64)
             ->allowEmpty('title');
 
         $validator
+            ->scalar('description')
             ->allowEmpty('description');
 
         $validator
-            ->allowEmpty('image');
+            ->scalar('style')
+            ->maxLength('style', 20)
+            ->allowEmpty('style');
 
         return $validator;
     }
@@ -87,5 +91,21 @@ class SectionsTable extends Table
         $rules->add($rules->existsIn(['article_id'], 'Articles'));
 
         return $rules;
+    }
+
+    /**
+     * Before save listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @return void
+     */
+    public function beforeSave(Event $event, EntityInterface $entity)
+    {
+        if ($entity->isNew()) {
+            $query = $this->find()->where(['article_id' => $entity->article_id]);
+            $ret = $query->select(['max_id' => $query->func()->max('id')])->first();
+            $entity->set('id', $ret['max_id'] + 1);
+        }
     }
 }

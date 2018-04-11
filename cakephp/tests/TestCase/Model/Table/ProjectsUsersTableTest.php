@@ -27,11 +27,11 @@ class ProjectsUsersTableTest extends TestCase
         'app.projects_users',
         'app.projects',
         'app.articles',
-        'app.posts',
-        'app.authors',
-        'app.sections',
         'app.users',
-        'app.posts_users'
+        'app.cells',
+        'app.sections',
+        'app.mainvisuals',
+        'app.images'
     ];
 
     /**
@@ -42,7 +42,7 @@ class ProjectsUsersTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('ProjectsUsers') ? [] : ['className' => 'App\Model\Table\ProjectsUsersTable'];
+        $config = TableRegistry::exists('ProjectsUsers') ? [] : ['className' => ProjectsUsersTable::class];
         $this->ProjectsUsers = TableRegistry::get('ProjectsUsers', $config);
     }
 

@@ -1,0 +1,22 @@
+/* edit user
+-------------------------------------------*/
+.edit-user-content {
+  padding: 20px 0 40px;
+  
+  h1 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    border-bottom: 1px #e1e4e8 solid;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .control-label,
+  .custom-control {
+    font-weight: 500;
+  }
+  
+  .required > label:after {
+    content: '';
+  }
+}

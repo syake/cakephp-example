@@ -1,0 +1,18 @@
+/* footer
+-------------------------------------------*/
+.bd-footer {
+  font-size: 85%;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.login-footer {
+  font-size: 85%;
+  text-align: center;
+}
+
+@media (min-width: 576px) {
+  .bd-footer {
+    text-align: left;
+  }
+}

@@ -6,7 +6,6 @@ use Cake\ORM\Entity;
 /**
  * ProjectsUser Entity
  *
- * @property int $id
  * @property int $project_id
  * @property int $user_id
  * @property string $role
@@ -27,7 +26,8 @@ class ProjectsUser extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'role' => true,
+        'project' => true,
+        'user' => true
     ];
 }

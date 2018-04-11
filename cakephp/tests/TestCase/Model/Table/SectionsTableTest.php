@@ -27,9 +27,11 @@ class SectionsTableTest extends TestCase
         'app.sections',
         'app.articles',
         'app.projects',
+        'app.images',
         'app.users',
         'app.projects_users',
-        'app.authors'
+        'app.cells',
+        'app.mainvisuals'
     ];
 
     /**
@@ -40,7 +42,7 @@ class SectionsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Sections') ? [] : ['className' => 'App\Model\Table\SectionsTable'];
+        $config = TableRegistry::exists('Sections') ? [] : ['className' => SectionsTable::class];
         $this->Sections = TableRegistry::get('Sections', $config);
     }
 

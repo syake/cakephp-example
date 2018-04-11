@@ -27,8 +27,8 @@ class ArticlesTableTest extends TestCase
         'app.articles',
         'app.projects',
         'app.users',
-        'app.projects_users',
-        'app.authors',
+        'app.cells',
+        'app.mainvisuals',
         'app.sections'
     ];
 
@@ -40,7 +40,7 @@ class ArticlesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Articles') ? [] : ['className' => 'App\Model\Table\ArticlesTable'];
+        $config = TableRegistry::exists('Articles') ? [] : ['className' => ArticlesTable::class];
         $this->Articles = TableRegistry::get('Articles', $config);
     }
 

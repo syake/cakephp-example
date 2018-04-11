@@ -1,0 +1,15 @@
+/* bootstrap
+-------------------------------------------*/
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
+
+/* global
+-------------------------------------------*/
+@import 'admin/_basic.scss';
+@import 'admin/_footer.scss';
+
+/* editor
+-------------------------------------------*/
+@import 'editor/_header.scss';
+@import 'editor/_layout.scss';
+@import 'editor/_panel.scss';
+@import 'editor/_posts.scss';

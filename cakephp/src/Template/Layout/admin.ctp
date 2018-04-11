@@ -1,33 +1,34 @@
+<?php
+/**
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @since         0.10.0
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
+ */
+?>
 <!doctype html>
-<html lang="ja">
-<head>
-<?= $this->Html->charset() ?>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<?= $this->fetch('meta') . PHP_EOL ?>
-<title><?= $this->fetch('title') ?></title>
-<?= $this->Html->meta('icon') . PHP_EOL ?>
-<?= $this->Html->css('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css') . PHP_EOL ?>
-<?= $this->Html->css('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css') . PHP_EOL ?>
-<?= $this->Html->css('admin.css') . PHP_EOL ?>
-<?= $this->fetch('css') ?>
-</head>
-<body class="<?= $style ?>">
-<?= $this->element($header) ?>
-<main>
-<div class="container">
-<?= $this->fetch('content') ?>
-</div>
-</main>
-<footer>
-    <div class="container">
-        <p class="copyright">&copy; 2017</p>
-    </div>
-</footer>
-<?= $this->Html->script('//code.jquery.com/jquery-3.2.1.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=']) . PHP_EOL ?>
-<?= $this->Html->script('//code.jquery.com/ui/1.12.1/jquery-ui.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=']) . PHP_EOL ?>
-<?= $this->Html->script('//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb']) . PHP_EOL ?>
-<?= $this->Html->script('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', ['crossorigin' => 'anonymous', 'integrity' => 'sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn']) . PHP_EOL ?>
-<?= $this->Html->script('admin.js') . PHP_EOL ?>
+<html>
+<?= $this->Element('admin_headmeta') ?>
+<body>
+  <header class="navbar navbar-expand navbar-dark flex-row bd-navbar">
+    <a href="/" class="navbar-brand mr-0 mr-md-2"><?= __(SITE_TITLE) ?></a>
+    <ul class="navbar-nav flex-row ml-auto d-md-flex">
+      <li class="nav-item"><?= $this->Html->link(__('Sign out'), ['controller' => 'Users', 'action' => 'logout'], ['class' => 'nav-link logout-link']) ?></li>
+    </ul>
+  </header>
+  <main id="content" role="main">
+    <?= $this->Flash->render() . PHP_EOL ?>
+    <?= $this->fetch('content') ?>
+  </main>
+<?= $this->Element('admin_footer', ['class' => 'bd-footer']) ?>
+<?= $this->fetch('postLink') ?>
 <?= $this->fetch('script') ?>
 </body>
 </html>

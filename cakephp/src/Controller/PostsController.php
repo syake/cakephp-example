@@ -1,9 +1,15 @@
 <?php
 namespace App\Controller;
 
+use Cake\ORM\Query;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\Filesystem\Folder;
+use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\RecordNotFoundException;
+use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 use Exception;
 use RuntimeException;
 
@@ -17,6 +23,15 @@ use RuntimeException;
 class PostsController extends AuthController
 {
     public $helpers = ['Custom'];
+    public $paginate = [
+        'limit' => 10,
+        'sortWhitelist' => [
+            'id',
+            'status',
+            'Articles.title',
+            'Articles.modified'
+        ]
+    ];
 
     /**
      * Initialization hook method.
@@ -30,6 +45,10 @@ class PostsController extends AuthController
     public function initialize()
     {
         parent::initialize();
+        $this->Projects = TableRegistry::get('Projects');
+        $this->Articles = TableRegistry::get('Articles');
+        $this->Images = TableRegistry::get('Images');
+
         $this->loadComponent('Image', [
             'namerule' => 'sha1',
             'size' => [
@@ -46,18 +65,33 @@ class PostsController extends AuthController
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
      */
+/*
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->Auth->allow(['index']);
     }
+*/
 
     public function isAuthorized($user = null)
     {
-        if ($user['enable'] == 1) {
+        if ($this->user->enable == 1) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Index method
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function index()
+    {
+        $query = $this->Projects->find('posts', ['user_id' => $this->user->id]);
+        $posts = $this->paginate($query);
+        $this->set(compact('posts'));
+        $this->set('_serialize', ['posts']);
     }
 
     /**
@@ -78,24 +112,24 @@ class PostsController extends AuthController
             'valueField' => 'id',
             'limit' => 1
         ]);
-        
+
         if ($project_id != null) {
             $post = $this->Articles->find('view', ['Articles.project_id' => $project_id]);
         } else {
             $post = null;
         }
-        
+
         if ($post == null) {
             return $this->redirect(['controller' => 'Pages', 'action' => 'display']);
         }
         $filepath = DS . ASSETS_PATH . DS . $uuid . DS;
         $post->setFilepath($filepath);
-        
+
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
         $this->render('view');
     }
-    
+
     /**
      * View method
      *
@@ -104,17 +138,28 @@ class PostsController extends AuthController
      */
     public function view($id = null)
     {
-        $this->viewBuilder()->layout('post');
-        
-        $post = $this->Articles->find('view', ['Articles.id' => $id]);
-        if ($post == null) {
-            // error
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $post = $this->Articles->get($id, [
+                'contain' => [
+                    'Mainvisuals',
+                    'Sections',
+                    'Sections.Cells',
+                ]
+            ]);
+            $post = $this->Articles->patchEntity($post, $this->request->getData(), [
+                'validate' => false,
+                'associated' => [
+                    'Mainvisuals',
+                    'Sections',
+                    'Sections.Cells'
+                ]
+            ]);
+        } else {
+            throw new RecordNotFoundException();
         }
-        $filepath = DS . ASSETS_PATH . DS . $post->project->uuid . DS;
-        $post->setFilepath($filepath);
-        
-        $this->set(compact('post'));
-        $this->set('_serialize', ['post']);
+        $this->set('post', $post);
+        $this->viewBuilder()->setLayout(false);
+        $this->render('/Posts/view');
     }
 
     /**
@@ -124,73 +169,34 @@ class PostsController extends AuthController
      */
     public function add()
     {
+        $user = $this->user;
+        $user->_joinData = new Entity(['role' => 'admin'], ['markNew' => true]);
         $post = $this->Articles->newEntity([
-            'points' => [
-                ['tag' => 'point', 'item_order' => 0],
-                ['tag' => 'point', 'item_order' => 1],
-                ['tag' => 'point', 'item_order' => 2]
-            ],
-            'items' => [
-                ['tag' => 'item', 'item_order' => 0],
-                ['tag' => 'item', 'item_order' => 1],
-                ['tag' => 'item', 'item_order' => 2]
+            'title' => 'Welcome to my page',
+            'description' => 'コンテンツ内容です',
+            'author_id' => $this->user->id,
+            'project' => [
+                'users' => [$user]
             ]
         ]);
-        
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $login_user_id = $this->Auth->user('id');
-            
-            if (isset($data['project_id']) != null) {
-                $uuid = $this->Projects->find('list', [
-                        'conditions' => [
-                            'Projects.id' => $data['project_id']
-                        ],
-                        'valueField' => 'uuid',
-                    ])
-                    ->limit(1)
-                    ->first();
-            } else {
-                // new projects
-                $uuid = $this->Projects::uuid();
-                $project = ['uuid' => $uuid];
-                // publish
-                if (isset($data['publish']) && ($data['publish'] == 1)) {
-                    $project['status'] = 1;
-                }
-                // users join
-                $project['users'] = [
-                    [
-                        'id' => $login_user_id,
-                        '_joinData' => [
-                            'role' => 'admin'
-                        ]
-                    ]
-                ];
-                $data['project'] = $project;
-            }
-            
-            // default
-            $data['author_id'] = $login_user_id;
-            $data['status'] = 'publish';
-            unset($data['publish']);
-            
-            // upload files
-            $folder_path = WWW_ROOT . ASSETS_PATH . DS . $uuid;
-            $this->uploads($data, $folder_path, $post);
-            
-            $post = $this->Articles->patchEntity($post, $data, ['associated' => ['Projects.Users', 'Points', 'Items']]);
-            if ($this->Articles->save($post)) {
-                $this->Flash->success(__('The post has been saved.'));
-
-                return $this->redirect(['controller' => 'Posts', 'action' => 'edit', $post->id]);
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+            $post = $this->Articles->patchEntity($post, $this->request->getData(), [
+                'associated' => [
+                    'Projects',
+                    'Mainvisuals',
+                    'Sections',
+                    'Sections.Cells',
+                ]
+            ]);
+            if ($this->save($post)) {
+                return $this->redirect(['action' => 'edit', $post->id]);
             }
         }
-        
+
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
+        $this->viewBuilder()->setLayout('admin_editor');
+        $this->render('/Posts/editor');
     }
 
     /**
@@ -202,142 +208,120 @@ class PostsController extends AuthController
      */
     public function edit($id = null)
     {
-        $post = $this->Articles->get($id, [
-            'contain' => [
+        $user_id = $this->user->id;
+        $post = $this->Articles->find()
+            ->matching('Projects.Users', function(Query $q) use ($user_id) {
+                return $q->where([
+                    'Users.id' => $user_id
+                ]);
+            })
+            ->where(['Articles.id' => $id])
+            ->contain([
                 'Projects',
-                'Projects.Users',
-                'Points',
-                'Items'
-            ]
-        ]);
-        $project = $post->project;
-        $filepath = DS . ASSETS_PATH . DS . $project->uuid . DS;
-        $post->setFilepath($filepath);
-        
+                'Mainvisuals',
+                'Sections',
+                'Sections.Cells'
+            ])
+            ->enableAutoFields(true)
+            ->first();
+
+        if ($post == NULL) {
+            throw new ForbiddenException();
+        }
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $data = $this->request->getData();
-            
-            // upload files
-            $folder_path = WWW_ROOT . ASSETS_PATH . DS . $project->uuid;
-            $this->uploads($data, $folder_path, $post);
-            
-            $post = $this->Articles->patchEntity($post, $data);
+            $post = $this->Articles->patchEntity($post, $this->request->getData(), [
+                'associated' => [
+                    'Mainvisuals',
+                    'Sections',
+                    'Sections.Cells'
+                ]
+            ]);
+            $post->set('author_id', $this->user->id);
+            if ($this->save($post)) {
+                return $this->redirect(['action' => 'edit', $post->id]);
+            }
+        }
+
+        $this->set(compact('post'));
+        $this->set('_serialize', ['post']);
+        $this->viewBuilder()->setLayout('admin_editor');
+        $this->render('/Posts/editor');
+
+        // Image filter
+        $this->filter($post->project->id);
+    }
+
+    /**
+     * Save method
+     *
+     * @param Model\Entity\Article $post
+     * @return bool
+     */
+    protected function save($post)
+    {
+        $connection = ConnectionManager::get('default');
+        $connection->begin();
+        try {
+            if ($success = $this->Articles->save($post, [
+                'associated' => [
+                    'Projects',
+                    'Projects.Users',
+                    'Mainvisuals',
+                    'Sections',
+                    'Sections.Cells'
+                ]
+            ])) {
+                $this->Flash->success(__('The post has been saved.'));
+            } else {
+                $this->log(print_r($post->errors(),true), LOG_DEBUG);
+                debug($post->errors());
+                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+            }
+            $this->Articles->connection()->commit();
+            if ($success) {
+                return true;
+            }
+        } catch(Exception $e) {
+            $this->Flash->error($e);
+            debug($e);
+            $connection->rollback();
+        }
+        return false;
+    }
+
+    /**
+     * Filter method
+     *
+     * @param string|null $id Project id.
+     */
+    protected function filter($id)
+    {
+        $images = $this->Images->find('list')
+            ->where(['Images.project_id' => $id])
+            ->notMatching('Cells')
+            ->notMatching('Mainvisuals')
+            ->toArray();
+
+        if (count($images) > 0) {
+            $names = array_values($images);
+            $conditions = ['OR' => []];
+            foreach ($names as $name) {
+                $conditions['OR'][] = ['name' => $name];
+            }
             $connection = ConnectionManager::get('default');
             $connection->begin();
             try {
-                if ($this->Articles->save($post)) {
-                    $this->Flash->success(__('The post has been saved.'));
-                } else {
-                    $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                if ($this->Images->deleteAll($conditions)) {
+                    // The image has been deleted.
+                    foreach ($names as $name) {
+                        $folder = new Folder(CACHE . 'posts' . DS . $name);
+                        $folder->delete();
+                    }
                 }
-                $this->Articles->connection()->commit();
+                $this->Images->connection()->commit();
             } catch(Exception $e) {
-                $this->Flash->error($e);
+                debug($e);
                 $connection->rollback();
-            }
-            
-            // sort
-            $compare = function($a, $b) {
-                if ($a['item_order'] > $b['item_order']) {
-                    return +1;
-                } else {
-                    return -1;
-                }
-            };
-            usort($post->points, $compare);
-            usort($post->items, $compare);
-        }
-        
-        // user admin
-        $is_admin = false;
-        $users = $project->users;
-        $login_user_id = $this->Auth->user('id');
-        foreach ($users as $user) {
-            if (($user->id == $login_user_id) && ($user->_joinData->role == 'admin')) {
-                $is_admin = true;
-                break;
-            }
-        }
-        
-        $this->set(compact('post', 'project', 'is_admin'));
-        $this->set('_serialize', ['post']);
-    }
-    
-    /**
-     * Uploads method
-     *
-     * @param array $data getData
-     * @param string $folder_path folder path for image
-     * @param Model\Entity\Article $post
-     * @return $data
-     */
-    private function uploads(&$data, $folder_path, $post)
-    {
-        foreach ($data as $key => $dat) {
-            if (!is_array($dat)) {
-                continue;
-            }
-            
-            if (isset($dat['tmp_name'])) {
-                $disable_key = $key . '_disable';
-                if (isset($data[$disable_key]) && $data[$disable_key] == 1) {
-                    unset($data[$key]);
-                } else if (empty($dat['name'])) {
-                    $data[$key] = null;
-                } else {
-                    try {
-                        $success = $this->Image->upload($folder_path, $dat);
-                        if ($success) {
-                            $data[$key] = $dat['name'];
-                        }
-                    } catch (RuntimeException $e) {
-                        $post->setError($key, $e->getMessage());
-                    }
-                }
-            } else {
-                foreach ($dat as $i => $da) {
-                    foreach ($da as $k => $d) {
-                        if (isset($d['tmp_name'])) {
-                            $disable_key = $k . '_disable';
-                            if (isset($da[$disable_key]) && $da[$disable_key] == 1) {
-                                unset($data[$key][$i][$k]);
-                            } else if (empty($d['name'])) {
-                                $data[$key][$i][$k] = null;
-                            } else {
-                                switch ($key) {
-                                    case 'points':
-                                        $options = [
-                                            'size' => [
-                                                'width' => 640,
-                                                'height' => 480
-                                            ]
-                                        ];
-                                        break;
-                                    case 'items':
-                                        $options = [
-                                            'size' => [
-                                                'width' => 640,
-                                                'height' => 640
-                                            ]
-                                        ];
-                                        break;
-                                    default:
-                                        $options = [];
-                                        break;
-                                }
-                                try {
-                                    $success = $this->Image->upload($folder_path, $d, $options);
-                                    if ($success) {
-                                        $data[$key][$i][$k] = $d['name'];
-                                    }
-                                } catch (RuntimeException $e) {
-                                    $id = $key . '_' . $i . '_' . $k;
-                                    $post->setError($id, $e->getMessage());
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -352,13 +336,24 @@ class PostsController extends AuthController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $post = $this->Articles->get($id);
-        if ($this->Articles->delete($post)) {
-            $this->Flash->success(__('The post has been deleted.'));
-        } else {
+        $post = $this->Articles->get($id, ['contain' => ['Projects']]);
+
+        $connection = ConnectionManager::get('default');
+        $connection->begin();
+        try {
+            if ($this->Articles->delete($post)) {
+                $this->Flash->success(__('The post has been deleted.'));
+            } else {
+                $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+            }
+            $this->Articles->connection()->commit();
+            $this->Projects->connection()->commit();
+        } catch(Exception $e) {
             $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+            debug($e);
+            $connection->rollback();
         }
 
-        return $this->redirect(['controller' => 'Projects', 'action' => 'index']);
+        return $this->redirect(['controller' => 'Posts', 'action' => 'index']);
     }
 }

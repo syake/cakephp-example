@@ -17,12 +17,17 @@ class ProjectsUsersFixture extends TestFixture
      */
     // @codingStandardsIgnoreStart
     public $fields = [
-        'id' => ['type' => 'biginteger', 'length' => 20, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'project_id' => ['type' => 'biginteger', 'length' => 20, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'user_id' => ['type' => 'biginteger', 'length' => 20, 'unsigned' => true, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'role' => ['type' => 'string', 'length' => null, 'null' => true, 'default' => 'author', 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        '_indexes' => [
+            'fk_projects_has_users1_users1_idx' => ['type' => 'index', 'columns' => ['user_id'], 'length' => []],
+            'fk_projects_has_users1_projects1_idx' => ['type' => 'index', 'columns' => ['project_id'], 'length' => []],
+        ],
         '_constraints' => [
-            'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+            'primary' => ['type' => 'primary', 'columns' => ['project_id', 'user_id'], 'length' => []],
+            'fk_projects_has_users1_projects1' => ['type' => 'foreign', 'columns' => ['project_id'], 'references' => ['projects', 'id'], 'update' => 'noAction', 'delete' => 'noAction', 'length' => []],
+            'fk_projects_has_users1_users1' => ['type' => 'foreign', 'columns' => ['user_id'], 'references' => ['users', 'id'], 'update' => 'noAction', 'delete' => 'noAction', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -38,7 +43,6 @@ class ProjectsUsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
             'project_id' => 1,
             'user_id' => 1,
             'role' => 'Lorem ipsum dolor sit amet'

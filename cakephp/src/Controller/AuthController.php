@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
+use Cake\Network\Exception\ForbiddenException;
 use Exception;
 
 /**
@@ -15,7 +16,19 @@ use Exception;
  */
 class AuthController extends AppController
 {
+    protected $user = null;
+
     public $helpers = [
+        'Form' => [
+            'className' => 'Bootstrap.Form',
+            'errorClass' => 'is-invalid',
+            'templates' => [
+                'helpBlock' => '<small class="form-text text-muted">{{content}}</small>',
+                'checkbox' => '<input type="checkbox" class="custom-control-input" name="{{name}}" value="{{value}}"{{attrs}}>',
+                'error' => '<div class="invalid-feedback">{{content}}</div>',
+            ]
+        ],
+/*
         'Form' => [
             'className' => 'Bootstrap.Form',
             'templates' => [
@@ -50,6 +63,7 @@ class AuthController extends AppController
                 'sortDesc' => '<a class="desc" href="{{url}}">{{text}}<i class="fa fa-sort-desc" aria-hidden="true"></i></a>'
             ]
         ]
+*/
     ];
 
     /**
@@ -65,27 +79,29 @@ class AuthController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Auth', [
-            'authorize' => 'Controller',
+            'authorize' => ['Controller'],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'username',
+                        'password' => 'password'
+                    ]
+                ]
+            ],
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login',
                 'prefix' => false
             ],
-            'loginRedirect' => [
-                'controller' => 'Projects',
-                'action' => 'index',
-                'prefix' => false
-            ],
+            'loginRedirect' => [],
             'logoutRedirect' => [
                 'controller' => 'Users',
                 'action' => 'login',
                 'prefix' => false
             ]
         ]);
-        
+
         $this->Users = TableRegistry::get('Users');
-        $this->Projects = TableRegistry::get('Projects');
-        $this->Articles = TableRegistry::get('Articles');
     }
 
     /**
@@ -98,31 +114,28 @@ class AuthController extends AppController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        
-        $this->viewBuilder()->setLayout('admin');
-        $this->set('header', 'Users/header');
-        $this->set('style', 'index');
-        $this->set('referer', null);
-        
+
+        $this->viewBuilder()->setLayout('logging_off');
+
         $user_id = $this->Auth->user('id');
         if ($user_id != null) {
             try {
                 $user = $this->Users->get($user_id);
-                $this->Auth->setUser($user);
-                if ($user->role == 'admin') {
-                    $this->set('header', 'Users/header_admin');
-                }
+                $this->user = $user;
             } catch(Exception $e) {
-                $this->Flash->error($e);
                 $this->request->session()->destroy();
+                throw new ForbiddenException();
             }
+            $this->viewBuilder()->setLayout('admin');
         }
     }
 
+/*
     public function isAuthorized($user = null)
     {
         return true;
     }
+*/
 
     /**
      * Called after the controller action is run, but before the view is rendered. You can use this method
@@ -134,7 +147,7 @@ class AuthController extends AppController
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-        
+
         $user_id = $this->Auth->user('id');
         $user_name = $this->Auth->user('nickname');
         if (($user_name == null) || empty($user_name)) {

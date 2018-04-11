@@ -1,19 +1,24 @@
 <?php
 namespace App\Model\Table;
 
-/* use ArrayObject; */
-/* use Cake\Event\Event; */
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
  * Articles Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Projects
- * @property \Cake\ORM\Association\BelongsTo $Authors
- * @property \Cake\ORM\Association\HasMany $Sections
+ * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsTo $Projects
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\CellsTable|\Cake\ORM\Association\HasMany $Cells
+ * @property \App\Model\Table\ImagesTable|\Cake\ORM\Association\HasMany $Images
+ * @property \App\Model\Table\MainvisualsTable|\Cake\ORM\Association\HasMany $Mainvisuals
+ * @property \App\Model\Table\SectionsTable|\Cake\ORM\Association\HasMany $Sections
  *
  * @method \App\Model\Entity\Article get($primaryKey, $options = [])
  * @method \App\Model\Entity\Article newEntity($data = null, array $options = [])
@@ -48,26 +53,25 @@ class ArticlesTable extends Table
             'foreignKey' => 'project_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('Users', [
+        $this->belongsTo('Authors', [
             'foreignKey' => 'author_id',
+            'className' => 'Users',
             'joinType' => 'INNER'
+        ]);
+        $this->hasMany('Mainvisuals', [
+            'foreignKey' => 'article_id',
+            'saveStrategy' => 'replace',
+            'sort' => ['id' => 'ASC'],
+            'dependent' => true
         ]);
         $this->hasMany('Sections', [
             'foreignKey' => 'article_id',
+            'saveStrategy' => 'replace',
+            'sort' => ['id' => 'ASC'],
             'dependent' => true
         ]);
-        $this->hasMany('Points', [
-            'foreignKey' => 'article_id',
-            'className' => 'Sections',
-            'conditions' => ['tag' => 'point'],
-            'sort' => ['item_order' => 'ASC']
-        ]);
-        $this->hasMany('Items', [
-            'foreignKey' => 'article_id',
-            'className' => 'Sections',
-            'conditions' => ['tag' => 'item'],
-            'sort' => ['item_order' => 'ASC']
-        ]);
+
+        $this->Projects = TableRegistry::get('Projects');
     }
 
     /**
@@ -82,17 +86,17 @@ class ArticlesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('status', 'create')
             ->allowEmpty('status');
 
         $validator
+            ->scalar('title')
+            ->maxLength('title', 64)
             ->allowEmpty('title');
 
         $validator
-            ->allowEmpty('content');
-
-        $validator
-            ->allowEmpty('header_image');
+            ->scalar('description')
+            ->maxLength('description', 255)
+            ->allowEmpty('description');
 
         return $validator;
     }
@@ -107,30 +111,27 @@ class ArticlesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
-        $rules->add($rules->existsIn(['author_id'], 'Users'));
+        $rules->add($rules->existsIn(['author_id'], 'Authors'));
 
         return $rules;
     }
 
-    public function findView(Query $query, array $options)
+    /**
+     * after deltete listener.
+     *
+     * @param \Cake\Event\Event $event The beforeSave event that was fired
+     * @param \Cake\Datasource\EntityInterface $entity The entity that is going to be saved
+     * @param ArrayObject $options
+     * @return void
+     */
+    public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        return $query->where($options)
-            ->limit(1)
-            ->contain('Projects')
-            ->contain(['Points' => function($q){
-                    return $q
-                        ->where(['visible' => 1])
-                        ->order(['item_order' => 'ASC'])
-                        ->limit(6);
-                }
-            ])
-            ->contain(['Items' => function($q){
-                    return $q
-                        ->where(['visible' => 1])
-                        ->order(['item_order' => 'ASC'])
-                        ->limit(6);
-                }
-            ])
-            ->first();
+        if ($entity->project) {
+            $query = $this->find('list')
+                ->where(['project_id' => $entity->project_id]);
+            if ($query->count() === 0) {
+                $this->Projects->delete($entity->project);
+            }
+        }
     }
 }

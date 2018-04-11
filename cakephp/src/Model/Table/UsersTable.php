@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \Cake\ORM\Association\BelongsToMany $Projects
+ * @property \App\Model\Table\ProjectsTable|\Cake\ORM\Association\BelongsToMany $Projects
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -35,7 +35,7 @@ class UsersTable extends Table
         parent::initialize($config);
 
         $this->setTable('users');
-        $this->setDisplayField('id');
+        $this->setDisplayField('username');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -88,15 +88,16 @@ class UsersTable extends Table
             ->notEmpty('email', __('A email is required'));
 
         $validator
+            ->scalar('password')
             ->minLength('password', 4, __('Password is too short (minimum is 4 characters)'))
+            ->maxLength('password', 255)
             ->requirePresence('password', 'create')
             ->notEmpty('password', __('A password is required'));
 
         $validator
+            ->scalar('nickname')
+            ->maxLength('nickname', 255)
             ->allowEmpty('nickname');
-
-        $validator
-            ->allowEmpty('role');
 
         $validator
             ->boolean('enable')

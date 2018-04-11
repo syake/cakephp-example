@@ -1,0 +1,26 @@
+/* error
+-------------------------------------------*/
+.error-content {
+  color: #666666;
+  text-align: center;
+  padding: 8rem 0;
+  
+  h1 {
+    font-weight: 700;
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    
+    small {
+      font-weight: 400;
+      font-size: 2rem;
+      color: #9b9b9b;
+      padding-left: 1rem;
+      vertical-align: baseline;
+    }
+  }
+  
+  p {
+    font-weight: 500;
+    font-size: 1.5rem;
+  }
+}

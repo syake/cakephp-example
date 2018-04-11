@@ -1,0 +1,19 @@
+/* posts index content
+-------------------------------------------*/
+.posts-index-content {
+  
+  .box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  }
+  a.post_id {
+    font-weight: bold;
+  }
+  
+  a.add-link {
+    display: inline-block;
+    border: 1px dotted #d8dee2;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 1rem;
+  }
+}

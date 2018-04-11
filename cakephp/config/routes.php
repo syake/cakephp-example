@@ -49,19 +49,29 @@ Router::scope('/', function (RouteBuilder $routes) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+//     $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-    
+
     /**
      * custom role
      */
-    $routes->connect('/users', ['controller' => 'Projects', 'action' => 'index']);
+    $routes->connect('/', ['controller' => 'Posts', 'action' => 'index']);
+    $routes->connect('/:controller', ['controller' => 'Users', 'action' => 'login']);
+//     $routes->connect('/users', ['controller' => 'Projects', 'action' => 'index']);
     $routes->connect('/:id', ['controller' => 'Posts', 'action' => 'display'], ['id' => '[0-9]+']);
-    
+
+    $routes->connect('/assets/:width-:height/:id', ['controller' => 'Images', 'action' => 'view'])
+        ->setPatterns(['width' => '\d+', 'height' => '\d+'])
+        ->setPass(['id', 'width', 'height']);
+    $routes->connect('/assets/:width-:height/', ['controller' => 'Images', 'action' => 'view'])
+        ->setPatterns(['width' => '\d+', 'height' => '\d+'])
+        ->setPass(['id', 'width', 'height']);
+    $routes->connect('/assets/*', ['controller' => 'Images', 'action' => 'view']);
+
     /**
      * Connect catchall routes for all controllers.
      *

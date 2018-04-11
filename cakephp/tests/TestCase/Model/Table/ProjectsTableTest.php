@@ -26,11 +26,11 @@ class ProjectsTableTest extends TestCase
     public $fixtures = [
         'app.projects',
         'app.articles',
-        'app.posts',
         'app.users',
-        'app.posts_users',
-        'app.authors',
+        'app.cells',
         'app.sections',
+        'app.mainvisuals',
+        'app.images',
         'app.projects_users'
     ];
 
@@ -42,7 +42,7 @@ class ProjectsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Projects') ? [] : ['className' => 'App\Model\Table\ProjectsTable'];
+        $config = TableRegistry::exists('Projects') ? [] : ['className' => ProjectsTable::class];
         $this->Projects = TableRegistry::get('Projects', $config);
     }
 
